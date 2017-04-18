@@ -1,0 +1,24 @@
+### 主要指标
+订单数  orderCount
+销售额  totalRevenue
+访客数  visitorCount
+消费用户数  ConsumerCount
+消费用户转换率  ConsumerConversionRate
+客单价  AvgOrderRevenue
+毛利  GrossMargin
+
+同比  yoy(yearOnYear)
+环比  chainIndex
+
+### 排行
+商品销售排行  GoodsSaleRank
+商品销售排行  GoodsRevenueRank
+
+结束团数  finishedGroup
+完成团数  CompletedGroup
+取消团数  CancelledGroup
+
+排行  Rank
+历史  LastPosition 
+趋势  Trend
+销量  Sales

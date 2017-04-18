@@ -1,0 +1,24 @@
+{"panelId":10,"range":{"from":"2017-03-01T16:00:00.000Z","to":"2017-04-08T15:59:59.999Z"},"rangeRaw":{"from":"now-1w/w","to":"now-1w/w"},"interval":"1d","targets":[{"target":"关闭团数","refId":"A"}],"format":"json","maxDataPoints":3,"platform":"ios","cacheTimeout":null}
+
+{
+    "panelId": 10,
+    "range": {
+        "from": "2017-03-01T16:00:00.000Z",
+        "to": "2017-04-08T15:59:59.999Z"
+    },
+    "rangeRaw": {
+        "from": "now-1w/w",
+        "to": "now-1w/w"
+    },
+    "interval": "1d",
+    "targets": [
+        {
+            "target": "关闭团数",
+            "refId": "A"
+        }
+    ],
+    "format": "json",
+    "maxDataPoints": 3,
+    "platform": "ios",
+    "cacheTimeout": null
+}

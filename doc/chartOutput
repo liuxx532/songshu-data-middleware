@@ -1,0 +1,32 @@
+[
+    {
+        "target": "坚果",
+        "datapoints": [
+            [
+                25,
+                1492484041446
+            ]
+        ],
+        "columnName": ""
+    },
+    {
+        "target": "果脯",
+        "datapoints": [
+            [
+                12,
+                1492484041449
+            ]
+        ],
+        "columnName": ""
+    },
+
+        "target": "饮料",
+        "datapoints": [
+            [
+                11,
+                1492484041449
+            ]
+        ],
+        "columnName": ""
+    }
+]
