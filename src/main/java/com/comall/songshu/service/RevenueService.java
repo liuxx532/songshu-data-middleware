@@ -4,8 +4,6 @@ import com.comall.songshu.repository.RevenueRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-
 /**
  * Created by lgx on 17/4/18.
  */
@@ -16,6 +14,7 @@ public class RevenueService {
     private RevenueRepository revenueRepository;
 
     public Object[]  getRevenue() {
-        return null;
+
+        return revenueRepository.findAll().toArray();
     }
 }

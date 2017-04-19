@@ -1,8 +1,6 @@
 package com.comall.songshu.web.rest;
 
 import com.comall.songshu.SongshuDataMiddlewareApp;
-import com.comall.songshu.repository.AuthorRepository;
-import com.comall.songshu.repository.RevenueRepository;
 import com.comall.songshu.service.RevenueService;
 import com.comall.songshu.web.rest.errors.ExceptionTranslator;
 import com.comall.songshu.web.rest.util.TargetsMap;
@@ -21,15 +19,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.hamcrest.Matchers.hasItem;
-import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
