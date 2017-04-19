@@ -1,3 +1,18 @@
+
+### DashBoard
+
+1. 销售额  Revenue
+2. 订单量  Order
+3. 客单价  AvgOrderRevenue
+4. 活跃用户数   Visitors
+5. 退款金额    Refund
+6. 毛利率     GrossMargin
+7. 新注册用户数  NewSubscribers
+8. 首单用户数   FirstOrder
+9. 非首单用户数  NotFirstOrder
+
+
+
 ### 主要指标
 订单数  orderCount
 销售额  totalRevenue
@@ -19,6 +34,6 @@
 取消团数  CancelledGroup
 
 排行  Rank
-历史  LastPosition 
+历史  LastPosition
 趋势  Trend
 销量  Sales
