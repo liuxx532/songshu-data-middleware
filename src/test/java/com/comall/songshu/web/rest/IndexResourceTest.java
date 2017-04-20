@@ -1,7 +1,7 @@
 package com.comall.songshu.web.rest;
 
 import com.comall.songshu.SongshuDataMiddlewareApp;
-import com.comall.songshu.service.RevenueService;
+import com.comall.songshu.service.*;
 import com.comall.songshu.web.rest.errors.ExceptionTranslator;
 import com.comall.songshu.web.rest.util.TargetsMap;
 import org.junit.Before;
@@ -37,6 +37,31 @@ public class IndexResourceTest {
     @Mock
     private RevenueService revenueService;
 
+    @Mock
+    private OrderService orderService;
+
+    @Mock
+    private AvgOrderRevenueService avgOrderRevenueService;
+
+    @Mock
+    private VisitorsService visitorsService;
+
+    @Mock
+    private RefundService refundService;
+
+    @Mock
+    private GrossMarginService grossMarginService;
+
+    @Mock
+    private NewSubscribersService newSubscribersService;
+
+    @Mock
+    private FirstOrderService firstOrderService;
+
+    @Mock
+    private NotFirstOrderService notFirstOrderService;
+
+
     @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
 
@@ -51,7 +76,13 @@ public class IndexResourceTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        IndexResource ir = new IndexResource(revenueService);
+        //IndexResource ir = new IndexResource(revenueService);
+        IndexResource ir = new IndexResource(notFirstOrderService);
+
+
+
+
+
         this.restAuthorMockMvc = MockMvcBuilders.standaloneSetup(ir)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
@@ -76,13 +107,16 @@ public class IndexResourceTest {
 
     @Test
     public void query() throws Exception {
-        String requstBody = "{\"panelId\":10,\"range\":{\"from\":\"2017-03-01T16:00:00.000Z\",\"to\":\"2017-04-08T15:59:59.999Z\"},\"rangeRaw\":{\"from\":\"now-1w/w\",\"to\":\"now-1w/w\"},\"interval\":\"1d\",\"targets\":[{\"target\":\"Revenue\",\"refId\":\"A\"}],\"format\":\"json\",\"maxDataPoints\":3,\"platform\":\"ios\",\"cacheTimeout\":null}\n";
+        //String requstBody = "{\"panelId\":10,\"range\":{\"from\":\"2017-03-01T16:00:00.000Z\",\"to\":\"2017-04-08T15:59:59.999Z\"},\"rangeRaw\":{\"from\":\"now-1w/w\",\"to\":\"now-1w/w\"},\"interval\":\"1d\",\"targets\":[{\"target\":\"Revenue\",\"refId\":\"A\"}],\"format\":\"json\",\"maxDataPoints\":3,\"platform\":\"ios\",\"cacheTimeout\":null}\n";
+        String requstBody = "{\"panelId\":10,\"range\":{\"from\":\"2017-03-01T16:00:00.000Z\",\"to\":\"2017-04-08T15:59:59.999Z\"},\"rangeRaw\":{\"from\":\"now-1w/w\",\"to\":\"now-1w/w\"},\"interval\":\"1d\",\"targets\":[{\"target\":\"NotFirstOrder" +
+            "\",\"refId\":\"A\"}],\"format\":\"json\",\"maxDataPoints\":3,\"platform\":\"ios\",\"cacheTimeout\":null}\n";
 
         String[] s = new String[2];
         s[0] = "1111";
         s[1] = "2222";
 
-        when(revenueService.getRevenue()).thenReturn(s);
+        //when(revenueService.getRevenue()).thenReturn(s);
+        when(orderService.getOrder()).thenReturn(s);
 
         restAuthorMockMvc.perform(post("/index/query")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
