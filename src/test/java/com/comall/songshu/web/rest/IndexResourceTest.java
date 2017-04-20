@@ -52,15 +52,6 @@ public class IndexResourceTest {
     @Mock
     private GrossMarginService grossMarginService;
 
-    @Mock
-    private NewSubscribersService newSubscribersService;
-
-    @Mock
-    private FirstOrderService firstOrderService;
-
-    @Mock
-    private NotFirstOrderService notFirstOrderService;
-
 
     @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
@@ -77,7 +68,7 @@ public class IndexResourceTest {
     public void setup() {
         MockitoAnnotations.initMocks(this);
         //IndexResource ir = new IndexResource(revenueService);
-        IndexResource ir = new IndexResource(notFirstOrderService);
+        IndexResource ir = new IndexResource(grossMarginService);
 
 
 
@@ -108,7 +99,7 @@ public class IndexResourceTest {
     @Test
     public void query() throws Exception {
         //String requstBody = "{\"panelId\":10,\"range\":{\"from\":\"2017-03-01T16:00:00.000Z\",\"to\":\"2017-04-08T15:59:59.999Z\"},\"rangeRaw\":{\"from\":\"now-1w/w\",\"to\":\"now-1w/w\"},\"interval\":\"1d\",\"targets\":[{\"target\":\"Revenue\",\"refId\":\"A\"}],\"format\":\"json\",\"maxDataPoints\":3,\"platform\":\"ios\",\"cacheTimeout\":null}\n";
-        String requstBody = "{\"panelId\":10,\"range\":{\"from\":\"2017-03-01T16:00:00.000Z\",\"to\":\"2017-04-08T15:59:59.999Z\"},\"rangeRaw\":{\"from\":\"now-1w/w\",\"to\":\"now-1w/w\"},\"interval\":\"1d\",\"targets\":[{\"target\":\"NotFirstOrder" +
+        String requstBody = "{\"panelId\":10,\"range\":{\"from\":\"2017-03-01T16:00:00.000Z\",\"to\":\"2017-04-08T15:59:59.999Z\"},\"rangeRaw\":{\"from\":\"now-1w/w\",\"to\":\"now-1w/w\"},\"interval\":\"1d\",\"targets\":[{\"target\":\"GrossMargin" +
             "\",\"refId\":\"A\"}],\"format\":\"json\",\"maxDataPoints\":3,\"platform\":\"ios\",\"cacheTimeout\":null}\n";
 
         String[] s = new String[2];
@@ -116,7 +107,7 @@ public class IndexResourceTest {
         s[1] = "2222";
 
         //when(revenueService.getRevenue()).thenReturn(s);
-        when(orderService.getOrder()).thenReturn(s);
+        when(grossMarginService.getGrossMargin()).thenReturn(s);
 
         restAuthorMockMvc.perform(post("/index/query")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)

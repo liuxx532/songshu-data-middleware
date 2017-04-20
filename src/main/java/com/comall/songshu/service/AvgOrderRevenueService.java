@@ -13,7 +13,9 @@ public class AvgOrderRevenueService {
     @Autowired
     private AvgOrderRevenueRepository avgOrderRevenueRepository;
 
-
+    public Object[] getAvgOrderRevenue(){
+        return  avgOrderRevenueRepository.findAll().toArray();
+    }
 
 
 }

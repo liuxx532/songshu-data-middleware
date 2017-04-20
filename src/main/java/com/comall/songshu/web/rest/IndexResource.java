@@ -2,7 +2,7 @@ package com.comall.songshu.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import com.comall.songshu.repository.AuthorRepository;
-import com.comall.songshu.service.RevenueService;
+import com.comall.songshu.service.*;
 import com.comall.songshu.web.rest.util.TargetsMap;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
@@ -30,11 +30,58 @@ public class IndexResource {
     @Autowired
     private RevenueService revenueService;
 
+    @Autowired
+    private OrderService orderService;
+
+    @Autowired
+    private AvgOrderRevenueService avgOrderRevenueService;
+
+    @Autowired
+    private VisitorsService visitorsService;
+
+    @Autowired
+    private RefundService refundService;
+
+    @Autowired
+    private GrossMarginService grossMarginService;
+
+
 
     private final Logger log = LoggerFactory.getLogger(AuthorResource.class);
 
-    public IndexResource(RevenueService revenueService){
-        this.revenueService = revenueService;
+//    public IndexResource(RevenueService revenueService){
+//        this.revenueService = revenueService;
+//    }
+
+    /**
+    public IndexResource(OrderService orderService){
+        this.orderService = orderService;
+    }
+
+
+
+    public IndexResource(AvgOrderRevenueService avgOrderRevenueService){
+        this.avgOrderRevenueService = avgOrderRevenueService;
+    }
+
+
+    public IndexResource(VisitorsService visitorsService){
+        this.visitorsService = visitorsService;
+    }
+
+
+    public IndexResource(RefundService refundService){
+        this.refundService = refundService;
+    }
+
+    public IndexResource(GrossMarginService grossMarginService){
+        this.grossMarginService = grossMarginService;
+    }
+
+     */
+
+    public IndexResource(GrossMarginService grossMarginService){
+        this.grossMarginService = grossMarginService;
     }
 
     @GetMapping("")
@@ -75,11 +122,74 @@ public class IndexResource {
 
         String platform = obj.get("platform").toString();
 
-        if (target.equals("Revenue")) {
-            return revenueService.getRevenue();
-        }
 
-        return null;
+//        if (target.endsWith("Trend")){
+//
+//            switch (target){
+//                case "RevenueTrend" :
+//
+//                    break;
+//
+//                case "OrderTrend" :
+//
+//                    break;
+//                case "AvgOrderRevenueTrend" :
+//
+//                    break;
+//                case "VisitorsTrend" :
+//
+//                    break;
+//                case "RefundTrend" :
+//
+//                    break;
+//                case "GrossMarginTrend" :
+//
+//                    break;
+//                case "NewSubscribersTrend" :
+//
+//                    break;
+//                case "FirstOrderTrend" :
+//
+//                    break;
+//                case "NotFirstOrderTrend" :
+//
+//                    break;
+//                default:
+//                    throw new IllegalArgumentException("target Trend"+target);
+//            }
+
+      //  }else {
+            switch (target) {
+
+                case "Revenue":
+                    return revenueService.getRevenue();
+                case "Order":
+                    return orderService.getOrder();
+                case "AvgOrderRevenue":
+                    return avgOrderRevenueService.getAvgOrderRevenue();
+                case "Visitors":
+                    return visitorsService.getVisitors();
+                case "Refund":
+                    return refundService.getRefund();
+                case "GrossMargin":
+                    return grossMarginService.getGrossMargin();
+                default:
+                    throw new IllegalArgumentException("target=" + target);
+
+
+            }
+       // }
+
+
+
+
+
+
+
+
+
+
+       // return null;
     }
 
 }
