@@ -67,8 +67,12 @@ public class IndexResource {
         Timestamp fromTime = Timestamp.valueOf(new DateTime(range.get("from")).toString(dateTimeFormat));
         Timestamp toTime = Timestamp.valueOf(new DateTime(range.get("to")).toString(dateTimeFormat));
         JSONArray targets = (JSONArray)obj.get("targets");
-        JSONObject targetObj = (JSONObject)targets.get(0);
-        String target = targetObj.get("target").toString();
+        String target = "";
+        if (targets.length() > 0) {
+            JSONObject targetObj = (JSONObject)targets.get(0);
+            target = targetObj.get("target").toString();
+        }
+
         String platform = obj.get("platform").toString();
 
         if (target.equals("Revenue")) {
