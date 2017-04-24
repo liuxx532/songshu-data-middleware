@@ -2,14 +2,14 @@
 ### DashBoard
 
 1. 销售额  Revenue
-2. 订单量  Order
+2. 订单量  OrderCount
 3. 客单价  AvgOrderRevenue
-4. 活跃用户数   Visitors
+4. 访客数   UniqueVisitors
 5. 退款金额    Refund
-6. 毛利率     GrossMargin
-7. 新注册用户数  NewSubscribers
-8. 首单用户数   FirstOrder
-9. 非首单用户数  NotFirstOrder
+6. 毛利率     GrossMarginRate
+7. 注册用户数  NewRegisterCount
+8. 首单用户数   FirstOrderdConsumerCount
+9. 非首单用户数  NotFirstOrderConsumerCount
 
 
 

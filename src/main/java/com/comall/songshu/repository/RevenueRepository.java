@@ -1,8 +1,11 @@
 package com.comall.songshu.repository;
 
+
 import com.comall.songshu.domain.Author;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+
+import java.sql.Timestamp;
 
 import java.sql.Timestamp;
 
@@ -49,4 +52,5 @@ public interface RevenueRepository extends JpaRepository<Author, Long> {
     // TODO trend
 
 
+    //public double getRevenueRe(int platform, Timestamp startTime, Timestamp toTime);
 }

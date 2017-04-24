@@ -28,7 +28,7 @@ import java.util.Map;
 public class IndexResource {
 
     @Autowired
-    private RevenueService revenueService;
+    private RevenueService revenueService; //销售额
 
     @Autowired
     private OrderService orderService;
@@ -99,7 +99,7 @@ public class IndexResource {
 
     @PostMapping("/query")
     @Timed
-    public Object[] query(HttpServletRequest request,
+    public String query(HttpServletRequest request,
                                     HttpServletResponse response,
                                     @RequestBody String requestBody) throws Exception{
 
@@ -114,6 +114,7 @@ public class IndexResource {
         Timestamp fromTime = Timestamp.valueOf(new DateTime(range.get("from")).toString(dateTimeFormat));
         Timestamp toTime = Timestamp.valueOf(new DateTime(range.get("to")).toString(dateTimeFormat));
         JSONArray targets = (JSONArray)obj.get("targets");
+
         String target = "";
         if (targets.length() > 0) {
             JSONObject targetObj = (JSONObject)targets.get(0);
@@ -162,17 +163,17 @@ public class IndexResource {
             switch (target) {
 
                 case "Revenue":
-                    return revenueService.getRevenue();
-                case "Order":
-                    return orderService.getOrder();
+                    return revenueService.getRevenue(platform,range.getString("from"),range.getString("to"));
+                case "OrderCount":
+                    // return orderService.getOrder();
                 case "AvgOrderRevenue":
-                    return avgOrderRevenueService.getAvgOrderRevenue();
-                case "Visitors":
-                    return visitorsService.getVisitors();
+                      return avgOrderRevenueService.getAvgOrderRevenue(platform,range.getString("from"),range.getString("to"));
+                case "UniqueVisitors":
+                    //   return visitorsService.getVisitors();
                 case "Refund":
-                    return refundService.getRefund();
-                case "GrossMargin":
-                    return grossMarginService.getGrossMargin();
+                    //   return refundService.getRefund();
+                case "GrossMarginRate":
+                    //  return grossMarginService.getGrossMargin();
                 default:
                     throw new IllegalArgumentException("target=" + target);
 
