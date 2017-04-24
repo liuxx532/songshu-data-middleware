@@ -28,7 +28,7 @@ public interface OrderRepository extends JpaRepository<Author,Long> {
     @Query(value = "SELECT count(DISTINCT o.\"Id\")\n" +
         "FROM songshu_cs_order o JOIN songshu_cs_payment_record r ON o.\"OrderNumber\" = r.\"MergePaymentNo\"\n" +
         "  JOIN songshu_cs_order_payable p ON o.\"Id\" = p.\"OrderId\"\n" +
-        "WHERE (o.\"OrderStatus\" not IN (7, 8))\n" +
+        "WHERE (o.\"OrderStatus\" not IN (6, 7))\n" +
         "      AND (r.\"PaymentModeType\" = 2)\n" +
         "      AND (r.\"PaidTime\" BETWEEN ?1 AND ?2)\n" +
         "      AND (p.\"PaymentStatus\" = 1)\n" +
@@ -40,7 +40,7 @@ public interface OrderRepository extends JpaRepository<Author,Long> {
     @Query(value = "SELECT count(DISTINCT o.\"Id\")\n" +
         "FROM songshu_cs_order o JOIN songshu_cs_payment_record r ON o.\"OrderNumber\" = r.\"MergePaymentNo\"\n" +
         "  JOIN songshu_cs_order_payable p ON o.\"Id\" = p.\"OrderId\"\n" +
-        "WHERE (o.\"OrderStatus\" not IN (7, 8))\n" +
+        "WHERE (o.\"OrderStatus\" not IN (6, 7))\n" +
         "      AND (r.\"PaymentModeType\" = 2)\n" +
         "      AND (r.\"PaidTime\" BETWEEN ?2 AND ?3)\n" +
         "      AND (p.\"PaymentStatus\" = 1)\n" +
