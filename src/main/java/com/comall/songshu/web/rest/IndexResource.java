@@ -118,7 +118,10 @@ public class IndexResource {
         String target = "";
         if (targets.length() > 0) {
             JSONObject targetObj = (JSONObject)targets.get(0);
-            target = targetObj.get("target").toString();
+            //获取指标中文名称
+            String targetName = targetObj.get("target").toString();
+            //获取指标英文名称
+            target = TargetsMap.getTargets().get(targetName);
         }
 
         String platform = obj.get("platform").toString();
@@ -163,7 +166,7 @@ public class IndexResource {
             switch (target) {
 
                 case "Revenue":
-                    return revenueService.getRevenue(platform,range.getString("from"),range.getString("to"));
+                    return revenueService.getRevenue(target,platform,range.getString("from"),range.getString("to"));
                 case "OrderCount":
                     // return orderService.getOrder();
                 case "AvgOrderRevenue":
