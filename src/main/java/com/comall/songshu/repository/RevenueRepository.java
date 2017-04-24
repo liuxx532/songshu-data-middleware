@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.sql.Timestamp;
 
-import java.sql.Timestamp;
+
 
 /**
  * Created by lgx on 17/4/18.
@@ -52,5 +52,4 @@ public interface RevenueRepository extends JpaRepository<Author, Long> {
     // TODO trend
 
 
-    //public double getRevenueRe(int platform, Timestamp startTime, Timestamp toTime);
 }
