@@ -66,11 +66,11 @@ public class AvgOrderRevenueService {
         TopStat result=null;
         if (avgOrderRevenue <=0|| chainAvgOrderRevenue <=0){
             result =new TopStat(avgOrderRevenue,0.0);
-
         }else {
             //比例
             double percent =Math.abs(avgOrderRevenue-chainAvgOrderRevenue)/chainAvgOrderRevenue;
             int flag= ServiceUtil.getInstance().getChainIndexFlag(avgOrderRevenue,chainAvgOrderRevenue);
+            result = new TopStat(avgOrderRevenue,percent,flag);
         }
 
 
