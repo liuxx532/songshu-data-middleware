@@ -2,7 +2,7 @@ package com.comall.songshu.service;
 
 import com.comall.songshu.SongshuDataMiddlewareApp;
 import com.comall.songshu.domain.Author;
-import com.comall.songshu.repository.OrderRepository;
+import com.comall.songshu.repository.OrderCountRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -22,13 +22,13 @@ import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = SongshuDataMiddlewareApp.class)
-public class OrderServiceTest {
+public class OrderCountServiceTest {
 
     @InjectMocks
-    private OrderService orderService;
+    private OrderCountService orderCountService;
 
     @Mock
-    private OrderRepository orderRepository;
+    private OrderCountRepository orderCountRepository;
 
 
     @Test
@@ -37,9 +37,9 @@ public class OrderServiceTest {
         list.add(new Author());
         list.add(new Author());
 
-        when(orderRepository.findAll()).thenReturn(list);
+        when(orderCountRepository.findAll()).thenReturn(list);
 
-        assertArrayEquals(list.toArray(), orderService.getOrder());
+        assertArrayEquals(list.toArray(), orderCountService.getOrder());
     }
 
 

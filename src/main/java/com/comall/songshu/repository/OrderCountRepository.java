@@ -10,7 +10,7 @@ import java.sql.Timestamp;
  * Created by liugaoyu on 2017/4/20.
  * 订单量
  */
-public interface OrderRepository extends JpaRepository<Author,Long> {
+public interface OrderCountRepository extends JpaRepository<Author,Long> {
 
 // SQL
 

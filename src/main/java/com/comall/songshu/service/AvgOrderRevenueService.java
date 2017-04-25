@@ -8,7 +8,6 @@ import com.comall.songshu.web.rest.vm.TopStat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.Optional;
 
@@ -38,13 +37,8 @@ public class AvgOrderRevenueService {
             chainAvgOrderRevenueResult = avgOrderRevenueRepository.getAvgRevenueWithSinglePlatform(platform,beginTime,endTime);
         }
 
-        Double avgOrderRevenue = Optional.ofNullable(avgOrderRevenueResult)
-            .map( d -> new BigDecimal(d).setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue())
-            .orElse(0.00);
-        Double chainAvgOrderRevenue = Optional.ofNullable(chainAvgOrderRevenueResult)
-            .map( d -> new BigDecimal(d).setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue())
-            .orElse(0.00);
-
+        Double avgOrderRevenue = Optional.ofNullable(avgOrderRevenueResult).orElse(0.00);
+        Double chainAvgOrderRevenue = Optional.ofNullable(chainAvgOrderRevenueResult).orElse(0.00);
         //TopStat
         TopStat result= AssembleUtil.assemblerTopStat(avgOrderRevenue,chainAvgOrderRevenue);
 
