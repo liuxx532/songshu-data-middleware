@@ -13,15 +13,14 @@ import java.sql.Timestamp;
 public interface GrossMarginRepository extends JpaRepository<Author,Long> {
 
     // 获取商品成本
+//SQL:
+//SELECT SUM(item."ActualRefundMoney")
+// FROM songshu_cs_order oo INNER JOIN songshu_cs_order_payable op ON op."OrderId" = oo."Id"
+// INNER JOIN songshu_cs_payment_record r ON op."MergePaymentId" = r."MergePaymentNo"
+// INNER JOIN songshu_cs_refund_item item ON item."PaymentRecordId" = r."Id"
+// WHERE r."PaymentModeType" = 2 AND item. "Status" = 5 AND item."MoneyType" = 1 AND item."RefundType" = 1 AND oo."orderType" IN(0, 1)
+// AND item."LastModifyTime" BETWEEN ? AND ? AND oo."Channel" IN(0, 1, 2, 3, 5)
 
-//    SELECT sum(g."CostPrice") as cp
-//    FROM songshu_cs_order o JOIN songshu_cs_order_payable p ON o."Id" = p."OrderId"
-//    JOIN songshu_cs_order_item i ON o."Id" = i."OrderId"
-//    JOIN songshu_cs_goods g ON i."ProductId" = g."ProductId"
-//    WHERE o."Channel" IN (0, 1, 2, 3, 5)
-//    AND o."OrderStatus" NOT IN (7, 8)
-//    AND p."PaymentStatus" = 1
-//    AND o."OrderCreateTime" BETWEEN '2015-01-06 18:22:50' AND '2017-01-06 18:22:50'
 
 // 获取商品成本
 
