@@ -25,25 +25,25 @@ public interface GrossMarginRepository extends JpaRepository<Author,Long> {
 
 // 获取商品成本
 
-    @Query(value = "SELECT sum(g.\"CostPrice\") as cp\n" +
-        "FROM songshu_cs_order o JOIN songshu_cs_order_payable p ON o.\"Id\" = p.\"OrderId\"\n" +
-        "  JOIN songshu_cs_order_item i ON o.\"Id\" = i.\"OrderId\"\n" +
-        "  JOIN songshu_cs_goods g ON i.\"ProductId\" = g.\"ProductId\"\n" +
-        "WHERE o.\"Channel\" IN (0, 1, 2, 3, 5)\n" +
-        "      AND o.\"OrderStatus\" NOT IN (7, 8)\n" +
-        "      AND p.\"PaymentStatus\" = 1\n" +
-        "      AND o.\"OrderCreateTime\" BETWEEN ?1 AND ?2", nativeQuery = true)
+    @Query(value = "SELECT SUM(cg.\"CostPrice\" * coi.\"Quantity\") " +
+        "FROM( SELECT DISTINCT co.\"Id\" FROM( SELECT * FROM songshu_cs_payment_record " +
+        "WHERE \"PaymentModeType\"= 2 AND \"PaidTime\" BETWEEN ?1 AND ?2)cpr " +
+        "LEFT JOIN songshu_cs_order co ON cpr.\"MergePaymentNo\" = co.\"OrderNumber\" " +
+        "INNER JOIN songshu_cs_order_payable cop ON co.\"Id\" = cop.\"OrderId\" WHERE cop.\"PaymentStatus\" = 1 " +
+        "AND co.\"orderType\" IN(0, 1) AND co.\"OrderStatus\" NOT IN (6,7) AND co.\"Channel\" IN (0, 1, 2, 3, 5) )coo " +
+        "INNER JOIN songshu_cs_order_item coi ON coo.\"Id\" = coi.\"OrderId\" " +
+        "INNER JOIN songshu_cs_goods cg ON cg.\"Id\" = coi.\"GoodsId\"", nativeQuery = true)
     Double getProductCostWithAllPlatform(Timestamp beginTime, Timestamp endTime);
 
 
-    @Query(value = "SELECT sum(g.\"CostPrice\") as cp\n" +
-        "FROM songshu_cs_order o JOIN songshu_cs_order_payable p ON o.\"Id\" = p.\"OrderId\"\n" +
-        "  JOIN songshu_cs_order_item i ON o.\"Id\" = i.\"OrderId\"\n" +
-        "  JOIN songshu_cs_goods g ON i.\"ProductId\" = g.\"ProductId\"\n" +
-        "WHERE o.\"Channel\" = ?1\n" +
-        "      AND o.\"OrderStatus\" NOT IN (7, 8)\n" +
-        "      AND p.\"PaymentStatus\" = 1\n" +
-        "      AND o.\"OrderCreateTime\" BETWEEN ?2 AND ?3", nativeQuery = true)
+    @Query(value = "SELECT SUM(cg.\"CostPrice\" * coi.\"Quantity\") " +
+        "FROM( SELECT DISTINCT co.\"Id\" FROM( SELECT * FROM songshu_cs_payment_record " +
+        "WHERE \"PaymentModeType\"= 2 AND \"PaidTime\" BETWEEN ?2 AND ?3)cpr " +
+        "LEFT JOIN songshu_cs_order co ON cpr.\"MergePaymentNo\" = co.\"OrderNumber\" " +
+        "INNER JOIN songshu_cs_order_payable cop ON co.\"Id\" = cop.\"OrderId\" WHERE cop.\"PaymentStatus\" = 1 " +
+        "AND co.\"orderType\" IN(0, 1) AND co.\"OrderStatus\" NOT IN (6,7) AND co.\"Channel\" =?1 )coo " +
+        "INNER JOIN songshu_cs_order_item coi ON coo.\"Id\" = coi.\"OrderId\" " +
+        "INNER JOIN songshu_cs_goods cg ON cg.\"Id\" = coi.\"GoodsId\"", nativeQuery = true)
     Double getProductCostWithSinglePlatform(Integer platform, Timestamp beginTime, Timestamp endTime);
 
     // TODO add trend
