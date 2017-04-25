@@ -204,7 +204,7 @@ public class IndexResource {
                         case "UniqueVisitors":
                             //   return visitorsService.getVisitors();
                         case "Refund":
-                            //   return refundService.getRefund();
+                            return refundService.getRefund(target,platform,beginTime,endTime,chainBeginTime,chainEndTime);
                         case "GrossMarginRate":
                             //  return grossMarginService.getGrossMargin();
                         default:
