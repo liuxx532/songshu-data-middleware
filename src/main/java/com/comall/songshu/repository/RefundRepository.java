@@ -60,7 +60,7 @@ public interface RefundRepository extends JpaRepository<Author,Long> {
         "FROM songshu_cs_order oo INNER JOIN songshu_cs_order_payable op ON op.\"OrderId\" = oo.\"Id\" " +
         "INNER JOIN songshu_cs_payment_record r ON op.\"MergePaymentId\" = r.\"MergePaymentNo\" " +
         "INNER JOIN songshu_cs_refund_item item ON item.\"PaymentRecordId\" = r.\"Id\" " +
-        "RIGHT JOIN( SELECT ts.generate_series AS stime, ts.generate_series + '86400 second' AS etime " +
+        "RIGHT JOIN( SELECT ts.generate_series AS stime, ts.generate_series + ?3 * INTERVAL '1 second' AS etime " +
         "FROM( SELECT generate_series( ?1, ?2, ?3 * INTERVAL '1 second') )ts )tss " +
         "ON( item.\"LastModifyTime\" < tss.etime AND item.\"LastModifyTime\" >= tss.stime ) " +
         "WHERE r.\"PaymentModeType\" = 2 AND item. \"Status\" = 5 AND item.\"MoneyType\" = 1 AND item.\"RefundType\" = 1 " +
@@ -72,7 +72,7 @@ public interface RefundRepository extends JpaRepository<Author,Long> {
         "FROM songshu_cs_order oo INNER JOIN songshu_cs_order_payable op ON op.\"OrderId\" = oo.\"Id\" " +
         "INNER JOIN songshu_cs_payment_record r ON op.\"MergePaymentId\" = r.\"MergePaymentNo\" " +
         "INNER JOIN songshu_cs_refund_item item ON item.\"PaymentRecordId\" = r.\"Id\" " +
-        "RIGHT JOIN( SELECT ts.generate_series AS stime, ts.generate_series + '86400 second' AS etime " +
+        "RIGHT JOIN( SELECT ts.generate_series AS stime, ts.generate_series + ?3 * INTERVAL '1 second' AS etime " +
         "FROM( SELECT generate_series( ?1, ?2, ?3 * INTERVAL '1 second') )ts )tss " +
         "ON( item.\"LastModifyTime\" < tss.etime AND item.\"LastModifyTime\" >= tss.stime ) " +
         "WHERE r.\"PaymentModeType\" = 2 AND item. \"Status\" = 5 AND item.\"MoneyType\" = 1 AND item.\"RefundType\" = 1 " +
