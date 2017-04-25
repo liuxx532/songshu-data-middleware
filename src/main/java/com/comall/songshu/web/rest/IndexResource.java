@@ -1,7 +1,6 @@
 package com.comall.songshu.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
-import com.comall.songshu.repository.AuthorRepository;
 import com.comall.songshu.service.*;
 import com.comall.songshu.web.rest.util.ServiceUtil;
 import com.comall.songshu.web.rest.util.TargetsMap;
@@ -33,7 +32,7 @@ public class IndexResource {
     private RevenueService revenueService; //销售额
 
     @Autowired
-    private OrderService orderService;
+    private OrderCountService orderCountService;
 
     @Autowired
     private AvgOrderRevenueService avgOrderRevenueService;
@@ -199,13 +198,13 @@ public class IndexResource {
                         case "Revenue":
                             return revenueService.getRevenue(target,platform,beginTime,endTime,chainBeginTime,chainEndTime);
                         case "OrderCount":
-                            // return orderService.getOrder();
+                            return orderCountService.getOrderCount(target,platform,beginTime,endTime,chainBeginTime,chainEndTime);
                         case "AvgOrderRevenue":
                             return avgOrderRevenueService.getAvgOrderRevenue(target,platform,beginTime,endTime,chainBeginTime,chainEndTime);
                         case "UniqueVisitors":
                             //   return visitorsService.getVisitors();
                         case "Refund":
-                            //   return refundService.getRefund();
+                            return refundService.getRefund(target,platform,beginTime,endTime,chainBeginTime,chainEndTime);
                         case "GrossMarginRate":
                             //  return grossMarginService.getGrossMargin();
                         default:

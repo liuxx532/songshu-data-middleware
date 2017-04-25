@@ -38,7 +38,7 @@ public class RefundServiceTest {
         list.add(new Author());
 
         when(refundRepository.findAll()).thenReturn(list);
-        assertArrayEquals(list.toArray(),refundService.getRefund());
+        assertArrayEquals(list.toArray(),refundService.findRefund());
 
     }
 
