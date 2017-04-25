@@ -3,13 +3,12 @@ package com.comall.songshu.web.rest;
 import com.codahale.metrics.annotation.Timed;
 import com.comall.songshu.repository.AuthorRepository;
 import com.comall.songshu.service.*;
+import com.comall.songshu.web.rest.util.ServiceUtil;
 import com.comall.songshu.web.rest.util.TargetsMap;
-import jdk.nashorn.internal.runtime.options.Option;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -107,6 +106,7 @@ public class IndexResource {
                                     @RequestBody String requestBody) throws Exception{
 
         log.debug("[RequestBody] {}", requestBody);
+
         DateTimeFormatter dateTimeFormat = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
 
 
@@ -115,20 +115,56 @@ public class IndexResource {
             JSONObject obj = new JSONObject(requestBody);
 
             JSONObject range = (JSONObject)obj.get("range");
-            //开始时间
-            String fromTime = null;
-            //结束时间
-            String toTime = null;
+            //开始时间str
+            String fromTimeStr = null;
+            //结束时间str
+            String toTimeStr = null;
             if(Optional.ofNullable(range).isPresent()){
                 Object fromObj = range.get("from");
                 Object toObj = range.get("to");
-                fromTime = Optional.ofNullable(fromObj)
+                fromTimeStr = Optional.ofNullable(fromObj)
                     .map( o -> (String)fromObj)
                     .orElse(null);
-                toTime = Optional.ofNullable(toObj)
+                toTimeStr = Optional.ofNullable(toObj)
                     .map( o -> (String)toObj)
                     .orElse(null);
             }
+
+
+            //开始时间
+            Timestamp beginTime = null;
+            //结束时间
+            Timestamp endTime = null;
+            //环比时间
+            Timestamp chainBeginTime = null;
+            Timestamp chainEndTime = null;
+
+            if(Optional.ofNullable(fromTimeStr).isPresent()
+                && Optional.ofNullable(toTimeStr).isPresent()){
+                beginTime = Optional.of(fromTimeStr)
+                    .map( s -> ServiceUtil.getInstance().parseTimestamp(s))
+                    .orElse(null);
+                endTime = Optional.of(toTimeStr)
+                    .map( s -> ServiceUtil.getInstance().parseTimestamp(s))
+                    .orElse(null);
+                //环比时间
+                String[] chainCreateTime = ServiceUtil.getInstance().getChainIndexDateTime(fromTimeStr,toTimeStr);
+                if(Optional.ofNullable(chainCreateTime).isPresent()){
+                    chainBeginTime = Optional.of(chainCreateTime)
+                        .map( a -> a[0])
+                        .map( s -> DateTime.parse(s))
+                        .map( d -> d.toString(dateTimeFormat))
+                        .map( t -> Timestamp.valueOf(t))
+                        .orElse(null);
+                    chainEndTime = Optional.of(chainCreateTime)
+                        .map( a -> a[1])
+                        .map( s -> DateTime.parse(s))
+                        .map( d -> d.toString(dateTimeFormat))
+                        .map( t -> Timestamp.valueOf(t))
+                        .orElse(null);
+                }
+            }
+
 
             //指标中文名称
             JSONArray targets = (JSONArray)obj.get("targets");
@@ -153,17 +189,19 @@ public class IndexResource {
                 .orElse(null);
 
 
-            if (Optional.ofNullable(fromTime).isPresent()
-                && Optional.ofNullable(toTime).isPresent()
+            if (Optional.ofNullable(beginTime).isPresent()
+                && Optional.ofNullable(endTime).isPresent()
+                && Optional.ofNullable(chainBeginTime).isPresent()
+                && Optional.ofNullable(chainEndTime).isPresent()
                 && Optional.ofNullable(target).isPresent()
                 && Optional.ofNullable(platform).isPresent()){
                 switch (target) {
                         case "Revenue":
-                            return revenueService.getRevenue(target,platform,fromTime,toTime);
+                            return revenueService.getRevenue(target,platform,beginTime,endTime,chainBeginTime,chainEndTime);
                         case "OrderCount":
                             // return orderService.getOrder();
                         case "AvgOrderRevenue":
-                            return avgOrderRevenueService.getAvgOrderRevenue(platform,range.getString("from"),range.getString("to"));
+                            return avgOrderRevenueService.getAvgOrderRevenue(target,platform,beginTime,endTime,chainBeginTime,chainEndTime);
                         case "UniqueVisitors":
                             //   return visitorsService.getVisitors();
                         case "Refund":
