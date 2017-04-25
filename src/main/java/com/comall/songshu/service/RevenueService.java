@@ -8,7 +8,6 @@ import com.comall.songshu.web.rest.vm.TopStat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.Optional;
 
@@ -34,12 +33,8 @@ public class RevenueService {
             chainRevenueResult = revenueRepository.getRevenueWithSinglePlatform(platform,chainBeginTime,chainEndTime);
         }
 
-        Double revenue = Optional.ofNullable(revenueResult)
-            .map( d -> new BigDecimal(d).setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue())
-            .orElse(0.00);
-        Double chainRevenue = Optional.ofNullable(chainRevenueResult)
-            .map( d -> new BigDecimal(d).setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue())
-            .orElse(0.00);
+        Double revenue = Optional.ofNullable(revenueResult).orElse(0.00);
+        Double chainRevenue = Optional.ofNullable(chainRevenueResult).orElse(0.00);
 
         //TopStat
         TopStat result= AssembleUtil.assemblerTopStat(revenue,chainRevenue);
