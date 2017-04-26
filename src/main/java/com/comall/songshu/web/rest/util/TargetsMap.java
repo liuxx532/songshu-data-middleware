@@ -21,6 +21,12 @@ public class TargetsMap {
         targets.put("注册用户数","NewRegisterCount");
         targets.put("首单用户数","FirstOrderedConsumerCount");
         targets.put("非首单用户数","NotFirstOrderConsumerCount");
+        targets.put("销售额趋势图","RevenueTrend");
+        targets.put("订单量趋势图","OrderCountTrend");
+        targets.put("客单价趋势图","AvgOrderRevenueTrend");
+        targets.put("访客数趋势图","UniqueVisitorsTrend");
+        targets.put("退款金额趋势图","RefundTrend");
+        targets.put("毛利率趋势图","GrossMarginRateTrend");
         return targets;
     }
 
@@ -33,6 +39,12 @@ public class TargetsMap {
         targetNames.put("UniqueVisitors", "访客数");
         targetNames.put("Refund", "退款金额");
         targetNames.put("GrossMarginRate", "毛利率");
+        targetNames.put("RevenueTrend", "销售额趋势图");
+        targetNames.put("OrderCountTrend","订单量趋势图");
+        targetNames.put("AvgOrderRevenueTrend", "客单价趋势图");
+        targetNames.put("UniqueVisitorsTrend", "访客数趋势图");
+        targetNames.put("RefundTrend", "退款金额趋势图");
+        targetNames.put("GrossMarginRateTrend", "毛利率趋势图");
         targetNames.put("NewRegisterCount", "注册用户数");
         targetNames.put("FirstOrderedConsumerCount", "首单用户数");
         targetNames.put("NotFirstOrderConsumerCount", "非首单用户数");
