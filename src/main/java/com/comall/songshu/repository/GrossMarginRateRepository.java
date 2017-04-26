@@ -87,7 +87,7 @@ public interface GrossMarginRateRepository extends JpaRepository<Author,Long> {
     // FROM ( SELECT generate_series( '2016-01-01 00:00:00' :: TIMESTAMP, '2016-01-09 00:00:00' :: TIMESTAMP, 86400 * INTERVAL '1 second' ) )ts )tss
     // ON( coo.MPaidTime < tss.etime AND coo.MPaidTime >= tss.stime ) GROUP BY tss.stime, tss.etime ORDER BY tss.stime )grossmargin
 
-    @Query(value = "SELECT( grossmargin.AfterFoldingPrice - grossmargin.referCost)/ grossmargin.AfterFoldingPrice " +
+    @Query(value = "SELECT COALESCE(((grossmargin.AfterFoldingPrice - grossmargin.referCost)/ (grossmargin.AfterFoldingPrice)),0) " +
         "AS goodsGrossMargin, grossmargin.stime, grossmargin.etime " +
         "FROM ( SELECT SUM(coi.\"Quantity\" * coi.\"ReferCost\")AS referCost, SUM(coi.\"AfterFoldingPrice\")AS AfterFoldingPrice, tss.stime, tss.etime FROM songshu_cs_order co " +
         "RIGHT JOIN( SELECT oo.\"Id\", MAX(cpr.\"PaidTime\")AS MPaidTime FROM songshu_cs_order oo " +
@@ -101,7 +101,7 @@ public interface GrossMarginRateRepository extends JpaRepository<Author,Long> {
         "GROUP BY tss.stime, tss.etime ORDER BY tss.stime )grossmargin", nativeQuery = true)
     List<Object[]> getCrossMarginTrendWithAllPlatform(Timestamp beginTime, Timestamp endTime, Long interval);
 
-    @Query(value = "SELECT( grossmargin.AfterFoldingPrice - grossmargin.referCost)/ grossmargin.AfterFoldingPrice " +
+    @Query(value = "SELECT COALESCE(((grossmargin.AfterFoldingPrice - grossmargin.referCost)/ (grossmargin.AfterFoldingPrice)),0) " +
         "AS goodsGrossMargin, grossmargin.stime, grossmargin.etime " +
         "FROM ( SELECT SUM(coi.\"Quantity\" * coi.\"ReferCost\")AS referCost, SUM(coi.\"AfterFoldingPrice\")AS AfterFoldingPrice, tss.stime, tss.etime FROM songshu_cs_order co " +
         "RIGHT JOIN( SELECT oo.\"Id\", MAX(cpr.\"PaidTime\")AS MPaidTime FROM songshu_cs_order oo " +
