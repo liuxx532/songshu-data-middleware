@@ -52,7 +52,7 @@ public class JsonStringBuilder {
             }
             //出去最后一个 ',';
             sb.deleteCharAt(sb.length() - 1);
-            sb.append("]").append(',').append("\"columnName\":\"").append("}").append(',');
+            sb.append("]").append(',').append("\"columnName\":\"\"").append("}").append(',');
 
 
             sb.append("{\"target\":\"当前\",\"datapoints\":[");

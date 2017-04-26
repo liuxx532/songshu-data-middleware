@@ -161,26 +161,6 @@ public class IndexResource {
                 && Optional.ofNullable(target).isPresent()
                 && Optional.ofNullable(platform).isPresent()){
 
-                if (target.endsWith("Trend")){
-                    switch (target){
-                        case "RevenueTrend" :
-                            return revenueService.getRevenueTrend(target,platform,beginTime,endTime,chainBeginTime,chainEndTime);
-                        case "OrderCountTrend" :
-                            return null;
-                        case "AvgOrderRevenueTrend" :
-                            return null;
-                        case "UniqueVisitorsTrend" :
-                            return null;
-                        case "RefundTrend" :
-                            return null;
-                        case "GrossMarginRateTrend" :
-                            return null;
-
-                    }
-
-
-                }
-
                 switch (target) {
                         case "Revenue":
                             return revenueService.getRevenue(target,platform,beginTime,endTime,chainBeginTime,chainEndTime);
@@ -194,6 +174,20 @@ public class IndexResource {
                             return refundService.getRefund(target,platform,beginTime,endTime,chainBeginTime,chainEndTime);
                         case "GrossMarginRate":
                             return grossMarginRateService.getGrossMarginRate(target,platform,beginTime,endTime,chainBeginTime,chainEndTime);
+
+                        case "RevenueTrend" :
+                            return revenueService.getRevenueTrend(target,platform,beginTime,endTime,chainBeginTime,chainEndTime);
+                        case "OrderCountTrend" :
+                            return null;
+                        case "AvgOrderRevenueTrend" :
+                            return null;
+                        case "UniqueVisitorsTrend" :
+                            return null;
+                        case "RefundTrend" :
+                            return null;
+                        case "GrossMarginRateTrend" :
+                            return null;
+
                         default:
                             throw new IllegalArgumentException("target=" + target);
 
