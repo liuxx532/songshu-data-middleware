@@ -66,6 +66,7 @@ public interface RevenueRepository extends JpaRepository<Author, Long> {
         "      AND (o.\"Channel\" IN (0, 1, 2, 3, 5))\n" +
         "GROUP BY tss.stime, tss.etime\n" +
         "ORDER BY tss.stime", nativeQuery = true)
+
     List<Object[]> getRevenueTrendWithAllPlatform(Timestamp beginTime, Timestamp endTime, Integer interval);
 
 
