@@ -38,48 +38,16 @@ public class IndexResource {
     private AvgOrderRevenueService avgOrderRevenueService;
 
     @Autowired
-    private VisitorsService visitorsService;
-
-    @Autowired
     private RefundService refundService;
 
     @Autowired
     private GrossMarginRateService grossMarginRateService;
 
-
+    @Autowired
+    private UniqueVisitorsService uniqueVisitorsService;
 
     private final Logger log = LoggerFactory.getLogger(AuthorResource.class);
 
-//    public IndexResource(RevenueService revenueService){
-//        this.revenueService = revenueService;
-//    }
-
-    /**
-    public IndexResource(OrderService orderService){
-        this.orderService = orderService;
-    }
-
-
-
-    public IndexResource(AvgOrderRevenueService avgOrderRevenueService){
-        this.avgOrderRevenueService = avgOrderRevenueService;
-    }
-
-
-    public IndexResource(VisitorsService visitorsService){
-        this.visitorsService = visitorsService;
-    }
-
-
-    public IndexResource(RefundService refundService){
-        this.refundService = refundService;
-    }
-
-    public IndexResource(GrossMarginService grossMarginService){
-        this.grossMarginService = grossMarginService;
-    }
-
-     */
 
     public IndexResource(GrossMarginRateService grossMarginRateService){
         this.grossMarginRateService = grossMarginRateService;
@@ -94,9 +62,8 @@ public class IndexResource {
     @PostMapping("/search")
     @Timed
     public Collection<String> getKeys() {
-        return TargetsMap.getTargets().values();
+        return TargetsMap.getTargets().keySet();
     }
-
 
     @PostMapping("/query")
     @Timed
@@ -107,7 +74,6 @@ public class IndexResource {
         log.debug("[RequestBody] {}", requestBody);
 
         DateTimeFormatter dateTimeFormat = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
-
 
         if(Optional.ofNullable(requestBody).isPresent()){
 
@@ -202,7 +168,7 @@ public class IndexResource {
                         case "AvgOrderRevenue":
                             return avgOrderRevenueService.getAvgOrderRevenue(target,platform,beginTime,endTime,chainBeginTime,chainEndTime);
                         case "UniqueVisitors":
-                            //   return visitorsService.getVisitors();
+                            return uniqueVisitorsService.getUniqueVisitors(target,platform,beginTime,endTime,chainBeginTime,chainEndTime);
                         case "Refund":
                             return refundService.getRefund(target,platform,beginTime,endTime,chainBeginTime,chainEndTime);
                         case "GrossMarginRate":
@@ -212,7 +178,6 @@ public class IndexResource {
 
                 }
             }
-
         }
         return null;
     }

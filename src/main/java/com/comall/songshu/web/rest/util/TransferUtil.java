@@ -17,15 +17,15 @@ public  class TransferUtil {
      */
   public static Integer getPlatform(String platName){
         switch (platName){
-            case "andriod":
+            case "android":
                 return 1;
             case "ios":
                 return 2;
-            case "wechat":
+            case "weixin":
                 return 3;
             case "wap":
                 return 5;
-            case "others":
+            case "-":
                 return 0 ;
             default:
                 return -1;
