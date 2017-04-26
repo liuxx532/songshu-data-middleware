@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 /**
  * Created by liugaoyu on 2017/4/20.
@@ -75,7 +76,45 @@ public interface GrossMarginRateRepository extends JpaRepository<Author,Long> {
         "INNER JOIN songshu_cs_order_item coi ON co.\"Id\" = coi.\"OrderId\" )grossmargin", nativeQuery = true)
     Double getCrossMarginWithSinglePlatform(Timestamp beginTime, Timestamp endTime,Integer platform);
 
-    // TODO add trend
+//SQL:
+    // SELECT( grossmargin.AfterFoldingPrice - grossmargin.referCost)/ grossmargin.AfterFoldingPrice AS goodsGrossMargin, grossmargin.stime, grossmargin.etime
+    // FROM ( SELECT SUM(coi."Quantity" * coi."ReferCost")AS referCost, SUM(coi."AfterFoldingPrice")AS AfterFoldingPrice, tss.stime, tss.etime
+    // FROM songshu_cs_order co RIGHT JOIN( SELECT oo."Id", MAX(cpr."PaidTime")AS MPaidTime FROM songshu_cs_order oo
+    // INNER JOIN songshu_cs_order_payable cop ON oo."Id" = cop."OrderId" INNER JOIN songshu_cs_payment_record cpr ON cpr."MergePaymentNo" = cop."MergePaymentId" WHERE cop."PaymentStatus" = 1
+    // AND cpr."PaymentModeType" = 2 AND cpr."PaidTime" BETWEEN '2016-01-01 00:00:00' AND '2016-01-09 00:00:00' AND oo."OrderStatus" NOT IN(6, 7)
+    // AND oo."orderType" IN(0, 1) AND oo."Channel" IN(0, 1, 2, 3, 5) GROUP BY oo."Id" )coo ON co."Id" = coo."Id"
+    // INNER JOIN songshu_cs_order_item coi ON co."Id" = coi."OrderId" RIGHT JOIN( SELECT ts.generate_series AS stime, ts.generate_series + '86400 second' AS etime
+    // FROM ( SELECT generate_series( '2016-01-01 00:00:00' :: TIMESTAMP, '2016-01-09 00:00:00' :: TIMESTAMP, 86400 * INTERVAL '1 second' ) )ts )tss
+    // ON( coo.MPaidTime < tss.etime AND coo.MPaidTime >= tss.stime ) GROUP BY tss.stime, tss.etime ORDER BY tss.stime )grossmargin
+
+    @Query(value = "SELECT( grossmargin.AfterFoldingPrice - grossmargin.referCost)/ grossmargin.AfterFoldingPrice " +
+        "AS goodsGrossMargin, grossmargin.stime, grossmargin.etime " +
+        "FROM ( SELECT SUM(coi.\"Quantity\" * coi.\"ReferCost\")AS referCost, SUM(coi.\"AfterFoldingPrice\")AS AfterFoldingPrice, tss.stime, tss.etime FROM songshu_cs_order co " +
+        "RIGHT JOIN( SELECT oo.\"Id\", MAX(cpr.\"PaidTime\")AS MPaidTime FROM songshu_cs_order oo " +
+        "INNER JOIN songshu_cs_order_payable cop ON oo.\"Id\" = cop.\"OrderId\" " +
+        "INNER JOIN songshu_cs_payment_record cpr ON cpr.\"MergePaymentNo\" = cop.\"MergePaymentId\" " +
+        "WHERE cop.\"PaymentStatus\" = 1 AND cpr.\"PaymentModeType\" = 2 AND cpr.\"PaidTime\" " +
+        "BETWEEN ?1 AND ?2 AND oo.\"OrderStatus\" NOT IN(6, 7) AND oo.\"orderType\" IN(0, 1) AND oo.\"Channel\" IN(0, 1, 2, 3, 5) " +
+        "GROUP BY oo.\"Id\" )coo ON co.\"Id\" = coo.\"Id\" INNER JOIN songshu_cs_order_item coi ON co.\"Id\" = coi.\"OrderId\" " +
+        "RIGHT JOIN( SELECT ts.generate_series AS stime, ts.generate_series + ?3 * INTERVAL '1 second' AS etime " +
+        "FROM ( SELECT generate_series( ?1, ?2, ?3 * INTERVAL '1 second' ) )ts )tss ON( coo.MPaidTime < tss.etime AND coo.MPaidTime >= tss.stime ) " +
+        "GROUP BY tss.stime, tss.etime ORDER BY tss.stime )grossmargin", nativeQuery = true)
+    List<Object[]> getCrossMarginTrendWithAllPlatform(Timestamp beginTime, Timestamp endTime, Long interval);
+
+    @Query(value = "SELECT( grossmargin.AfterFoldingPrice - grossmargin.referCost)/ grossmargin.AfterFoldingPrice " +
+        "AS goodsGrossMargin, grossmargin.stime, grossmargin.etime " +
+        "FROM ( SELECT SUM(coi.\"Quantity\" * coi.\"ReferCost\")AS referCost, SUM(coi.\"AfterFoldingPrice\")AS AfterFoldingPrice, tss.stime, tss.etime FROM songshu_cs_order co " +
+        "RIGHT JOIN( SELECT oo.\"Id\", MAX(cpr.\"PaidTime\")AS MPaidTime FROM songshu_cs_order oo " +
+        "INNER JOIN songshu_cs_order_payable cop ON oo.\"Id\" = cop.\"OrderId\" " +
+        "INNER JOIN songshu_cs_payment_record cpr ON cpr.\"MergePaymentNo\" = cop.\"MergePaymentId\" " +
+        "WHERE cop.\"PaymentStatus\" = 1 AND cpr.\"PaymentModeType\" = 2 AND cpr.\"PaidTime\" " +
+        "BETWEEN ?1 AND ?2 AND oo.\"OrderStatus\" NOT IN(6, 7) AND oo.\"orderType\" IN(0, 1) AND oo.\"Channel\" = ?4 " +
+        "GROUP BY oo.\"Id\" )coo ON co.\"Id\" = coo.\"Id\" INNER JOIN songshu_cs_order_item coi ON co.\"Id\" = coi.\"OrderId\" " +
+        "RIGHT JOIN( SELECT ts.generate_series AS stime, ts.generate_series + ?3 * INTERVAL '1 second' AS etime " +
+        "FROM ( SELECT generate_series( ?1, ?2, ?3 * INTERVAL '1 second' ) )ts )tss ON( coo.MPaidTime < tss.etime AND coo.MPaidTime >= tss.stime ) " +
+        "GROUP BY tss.stime, tss.etime ORDER BY tss.stime )grossmargin", nativeQuery = true)
+    List<Object[]> getCrossMarginTrendWithSinglePlatform(Timestamp beginTime, Timestamp endTime,Long interval,Integer platform);
+
     // TODO fix slow sql query
 
 }
