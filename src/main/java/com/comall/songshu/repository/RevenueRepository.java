@@ -58,7 +58,7 @@ public interface RevenueRepository extends JpaRepository<Author, Long> {
         "  JOIN\n" +
         "  (SELECT ts.generate_series as stime, ts.generate_series + ?3 * interval '1 second' as etime\n" +
         "   FROM (select generate_series(?1, ?2, ?3 * interval '1 second')) ts) tss\n" +
-        "    on (o.\"OrderCreateTime\" < tss.etime AND o.\"OrderCreateTime\" >= tss.stime)\n" +
+        "    on (r.\"PaidTime\" < tss.etime AND r.\"PaidTime\" >= tss.stime)\n" +
         "WHERE (o.\"OrderStatus\" not IN (6, 7))\n" +
         "      AND (r.\"PaymentModeType\" = 2)\n" +
         "      AND (r.\"PaidTime\" BETWEEN ?1 AND ?2)\n" +
@@ -76,7 +76,7 @@ public interface RevenueRepository extends JpaRepository<Author, Long> {
         "  JOIN\n" +
         "  (SELECT ts.generate_series as stime, ts.generate_series + ?4 * interval '1 second' as etime\n" +
         "   FROM (select generate_series(?2, ?3, ?4 * interval '1 second')) ts) tss\n" +
-        "    on (o.\"OrderCreateTime\" < tss.etime AND o.\"OrderCreateTime\" >= tss.stime)\n" +
+        "    on (r.\"PaidTime\" < tss.etime AND r.\"PaidTime\" >= tss.stime)\n" +
         "WHERE (o.\"OrderStatus\" not IN (6, 7))\n" +
         "      AND (r.\"PaymentModeType\" = 2)\n" +
         "      AND (r.\"PaidTime\" BETWEEN ?2 AND ?3)\n" +
