@@ -44,7 +44,7 @@ public class IndexResource {
     private RefundService refundService;
 
     @Autowired
-    private GrossMarginService grossMarginService;
+    private GrossMarginRateService grossMarginRateService;
 
 
 
@@ -81,8 +81,8 @@ public class IndexResource {
 
      */
 
-    public IndexResource(GrossMarginService grossMarginService){
-        this.grossMarginService = grossMarginService;
+    public IndexResource(GrossMarginRateService grossMarginRateService){
+        this.grossMarginRateService = grossMarginRateService;
     }
 
     @GetMapping("")
@@ -206,7 +206,7 @@ public class IndexResource {
                         case "Refund":
                             return refundService.getRefund(target,platform,beginTime,endTime,chainBeginTime,chainEndTime);
                         case "GrossMarginRate":
-                            //  return grossMarginService.getGrossMargin();
+                            return grossMarginRateService.getGrossMarginRate(target,platform,beginTime,endTime,chainBeginTime,chainEndTime);
                         default:
                             throw new IllegalArgumentException("target=" + target);
 

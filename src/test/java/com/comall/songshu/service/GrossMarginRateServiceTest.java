@@ -2,8 +2,7 @@ package com.comall.songshu.service;
 
 import com.comall.songshu.SongshuDataMiddlewareApp;
 import com.comall.songshu.domain.Author;
-import com.comall.songshu.repository.GrossMarginRepository;
-import com.comall.songshu.repository.RevenueRepository;
+import com.comall.songshu.repository.GrossMarginRateRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -23,13 +22,13 @@ import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = SongshuDataMiddlewareApp.class)
-public class GrossMarginServiceTest {
+public class GrossMarginRateServiceTest {
 
     @InjectMocks
-    private GrossMarginService grossMarginService;
+    private GrossMarginRateService grossMarginRateService;
 
     @Mock
-    private GrossMarginRepository grossMarginRepository;
+    private GrossMarginRateRepository grossMarginRateRepository;
 
     @Test
     public void getRevenue() throws Exception {
@@ -37,8 +36,8 @@ public class GrossMarginServiceTest {
         list.add(new Author());
         list.add(new Author());
 
-        when(grossMarginRepository.findAll()).thenReturn(list);
+        when(grossMarginRateRepository.findAll()).thenReturn(list);
 
-        assertArrayEquals(list.toArray(), grossMarginService.getGrossMargin());
+        assertArrayEquals(list.toArray(), grossMarginRateService.findGrossMarginRate());
     }
 }
