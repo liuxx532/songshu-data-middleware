@@ -36,42 +36,37 @@ public class GrossMarginRateService {
 
         int platform = TransferUtil.getPlatform(platformName);
 
-        //商品成本
-        Double productCostResult;
-        Double chainProductCostResult;
-        //销售额
-        Double revenueResult;
-        Double chainRevenueResult;
-
-        if (platform<0){//
-            productCostResult = grossMarginRateRepository.getProductCostWithAllPlatform(beginTime,endTime);
-            chainProductCostResult = grossMarginRateRepository.getProductCostWithAllPlatform(beginTime,endTime);
-            revenueResult = revenueRepository.getRevenueWithAllPlatform(beginTime,endTime);
-            chainRevenueResult = revenueRepository.getRevenueWithAllPlatform(chainBeginTime,chainEndTime);
-        }else {
-            productCostResult = grossMarginRateRepository.getProductCostWithSinglePlatform(platform,beginTime,endTime);
-            chainProductCostResult = grossMarginRateRepository.getProductCostWithSinglePlatform(platform,beginTime,endTime);
-            revenueResult = revenueRepository.getRevenueWithSinglePlatform(platform,beginTime,endTime);
-            chainRevenueResult = revenueRepository.getRevenueWithSinglePlatform(platform,chainBeginTime,chainEndTime);
-        }
-
-        Double productCost = Optional.ofNullable(productCostResult).orElse(0.00);
-        Double chainProductCost = Optional.ofNullable(chainProductCostResult).orElse(0.00);
-        Double revenue = Optional.ofNullable(revenueResult).orElse(0.00);
-        Double chainRevenue = Optional.ofNullable(chainRevenueResult).orElse(0.00);
-
-
         //毛利率 = （销售额 - 商品成本）／ 销售额 * 100%
         //注：这里毛利率先不用乘以100%
-        Double grossMarginRate = Optional.of(revenue)
-            .filter((value) -> value > 0)
-            .map( r -> (r-productCost)/r)
-            .orElse(0.00);
+        Double grossMarginRateResult;
+        Double chainGrossMarginRateResult;
 
-        Double chainGrossMarginRate = Optional.of(chainRevenue)
-            .filter((value) -> value > 0)
-            .map( r -> (r-chainProductCost)/r)
-            .orElse(0.00);
+        //商品成本
+//        Double productCostResult;
+//        Double chainProductCostResult;
+        //销售额
+//        Double revenueResult;
+//        Double chainRevenueResult;
+
+        if (platform<0){//
+              grossMarginRateResult = grossMarginRateRepository.getCrossMarginWithAllPlatform(beginTime,endTime);
+              chainGrossMarginRateResult  = grossMarginRateRepository.getCrossMarginWithAllPlatform(chainBeginTime,chainEndTime);
+//            productCostResult = grossMarginRateRepository.getProductCostWithAllPlatform(beginTime,endTime);
+//            chainProductCostResult = grossMarginRateRepository.getProductCostWithAllPlatform(beginTime,endTime);
+//            revenueResult = revenueRepository.getRevenueWithAllPlatform(beginTime,endTime);
+//            chainRevenueResult = revenueRepository.getRevenueWithAllPlatform(chainBeginTime,chainEndTime);
+        }else {
+              grossMarginRateResult = grossMarginRateRepository.getCrossMarginWithSinglePlatform(beginTime,endTime,platform);
+              chainGrossMarginRateResult  = grossMarginRateRepository.getCrossMarginWithSinglePlatform(chainBeginTime,chainEndTime,platform);
+//            productCostResult = grossMarginRateRepository.getProductCostWithSinglePlatform(platform,beginTime,endTime);
+//            chainProductCostResult = grossMarginRateRepository.getProductCostWithSinglePlatform(platform,beginTime,endTime);
+//            revenueResult = revenueRepository.getRevenueWithSinglePlatform(platform,beginTime,endTime);
+//            chainRevenueResult = revenueRepository.getRevenueWithSinglePlatform(platform,chainBeginTime,chainEndTime);
+        }
+
+        Double grossMarginRate = Optional.ofNullable(grossMarginRateResult).orElse(0.00);
+        Double chainGrossMarginRate = Optional.ofNullable(chainGrossMarginRateResult).orElse(0.00);
+
 
         //TopStat
         TopStat result= AssembleUtil.assemblerTopStat(grossMarginRate,chainGrossMarginRate);
