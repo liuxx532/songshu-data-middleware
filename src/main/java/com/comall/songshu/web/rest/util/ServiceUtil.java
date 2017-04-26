@@ -6,6 +6,7 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
 import java.sql.Timestamp;
+import java.util.Optional;
 
 /**
  * Created by liugaoyu on 2017/4/24.
@@ -105,11 +106,22 @@ public class ServiceUtil {
     }
 
     //聚合的时间范围
-    public long getAggTimeValue(String beginTime, String endTime) {
+    public Long getAggTimeValue(String beginTime, String endTime) {
         long bTime = new DateTime(beginTime).getMillis();
         long eTime = new DateTime(endTime).getMillis();
 
         return (eTime - bTime) / 30;
+    }
+    //聚合的时间范围
+    public Integer getAggTimeValue(Timestamp beginTime, Timestamp endTime) {
+        long bTime = beginTime.getTime();
+        long eTime = endTime.getTime();
+        Long result =(eTime - bTime)/90;
+
+        Integer intervalResult =result.intValue();
+        Integer interval= Optional.ofNullable(intervalResult).orElse(0);
+
+        return interval;
     }
 
     public int getChainIndexFlag(double current, double chainIndex) {
