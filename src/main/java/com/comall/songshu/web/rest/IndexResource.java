@@ -38,13 +38,13 @@ public class IndexResource {
     private AvgOrderRevenueService avgOrderRevenueService;
 
     @Autowired
-    private VisitorsService visitorsService;
-
-    @Autowired
     private RefundService refundService;
 
     @Autowired
     private GrossMarginRateService grossMarginRateService;
+
+    @Autowired
+    private UniqueVisitorsService uniqueVisitorsService;
 
     private final Logger log = LoggerFactory.getLogger(AuthorResource.class);
 
@@ -168,7 +168,7 @@ public class IndexResource {
                         case "AvgOrderRevenue":
                             return avgOrderRevenueService.getAvgOrderRevenue(target,platform,beginTime,endTime,chainBeginTime,chainEndTime);
                         case "UniqueVisitors":
-                            //   return visitorsService.getVisitors();
+                            return uniqueVisitorsService.getUniqueVisitors(target,platform,beginTime,endTime,chainBeginTime,chainEndTime);
                         case "Refund":
                             return refundService.getRefund(target,platform,beginTime,endTime,chainBeginTime,chainEndTime);
                         case "GrossMarginRate":
