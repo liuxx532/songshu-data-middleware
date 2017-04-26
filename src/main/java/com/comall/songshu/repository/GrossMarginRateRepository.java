@@ -10,7 +10,7 @@ import java.sql.Timestamp;
  * Created by liugaoyu on 2017/4/20.
  */
 // 毛利率 = (销售额 - 商品成本） / 销售额 * 100%
-public interface GrossMarginRepository extends JpaRepository<Author,Long> {
+public interface GrossMarginRateRepository extends JpaRepository<Author,Long> {
 
     // 获取商品成本
 //SQL:

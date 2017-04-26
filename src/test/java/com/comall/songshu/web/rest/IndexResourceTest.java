@@ -50,7 +50,7 @@ public class IndexResourceTest {
     private RefundService refundService;
 
     @Mock
-    private GrossMarginService grossMarginService;
+    private GrossMarginRateService grossMarginRateService;
 
 
     @Autowired
@@ -68,7 +68,7 @@ public class IndexResourceTest {
     public void setup() {
         MockitoAnnotations.initMocks(this);
         //IndexResource ir = new IndexResource(revenueService);
-        IndexResource ir = new IndexResource(grossMarginService);
+        IndexResource ir = new IndexResource(grossMarginRateService);
 
 
 
@@ -107,7 +107,7 @@ public class IndexResourceTest {
         s[1] = "2222";
 
         //when(revenueService.getRevenue()).thenReturn(s);
-        when(grossMarginService.getGrossMargin()).thenReturn(s);
+        //when(grossMarginRateService.findGrossMarginRate().thenReturn(s));
 
         restAuthorMockMvc.perform(post("/index/query")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
