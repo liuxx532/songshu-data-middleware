@@ -1,6 +1,7 @@
 package com.comall.songshu.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
+import com.comall.songshu.repository.OrderCountRepository;
 import com.comall.songshu.service.*;
 import com.comall.songshu.web.rest.util.ServiceUtil;
 import com.comall.songshu.web.rest.util.TargetsMap;
@@ -17,9 +18,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.sql.Timestamp;
-import java.util.Collection;
-import java.util.Map;
-import java.util.Optional;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * Controller for view and managing Log Level at runtime.
@@ -29,7 +29,7 @@ import java.util.Optional;
 public class IndexResource {
 
     @Autowired
-    private RevenueService revenueService; //销售额
+    private RevenueService revenueService;
 
     @Autowired
     private OrderCountService orderCountService;
@@ -68,8 +68,8 @@ public class IndexResource {
     @PostMapping("/query")
     @Timed
     public String query(HttpServletRequest request,
-                                    HttpServletResponse response,
-                                    @RequestBody String requestBody) throws Exception{
+                        HttpServletResponse response,
+                        @RequestBody String requestBody) throws Exception{
 
         log.debug("[RequestBody] {}", requestBody);
 
@@ -160,6 +160,27 @@ public class IndexResource {
                 && Optional.ofNullable(chainEndTime).isPresent()
                 && Optional.ofNullable(target).isPresent()
                 && Optional.ofNullable(platform).isPresent()){
+
+                if (target.endsWith("Trend")){
+                    switch (target){
+                        case "RevenueTrend" :
+                            return revenueService.getRevenueTrend(target,platform,beginTime,endTime,chainBeginTime,chainEndTime);
+                        case "OrderCountTrend" :
+                            return null;
+                        case "AvgOrderRevenueTrend" :
+                            return null;
+                        case "UniqueVisitorsTrend" :
+                            return null;
+                        case "RefundTrend" :
+                            return null;
+                        case "GrossMarginRateTrend" :
+                            return null;
+
+                    }
+
+
+                }
+
                 switch (target) {
                         case "Revenue":
                             return revenueService.getRevenue(target,platform,beginTime,endTime,chainBeginTime,chainEndTime);

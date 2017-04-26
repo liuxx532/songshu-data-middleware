@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -41,7 +42,7 @@ public class OrderCountService {
         Double chainOrderCount = Optional.ofNullable(chainOrderCountResult).orElse(0.00);
 
         //TopStat
-        TopStat result= AssembleUtil.assemblerTopStat(orderCount,chainOrderCount);
+        TopStat result = AssembleUtil.assemblerTopStat(orderCount,chainOrderCount);
 
         return JsonStringBuilder.buildTargetJsonString(target,result,"");
 

@@ -14,6 +14,8 @@ import java.util.List;
 // 客单价
 public interface AvgOrderRevenueRepository extends JpaRepository<Author, Long> {
 
+
+
 // SQL 说明
 //    @Query(value = "SELECT sum(r.\"Amount\") / count(DISTINCT o.\"Id\") as result \n" +
 //        "FROM songshu_cs_order o JOIN songshu_cs_payment_record r ON (o.\"OrderNumber\" = r.\"MergePaymentNo\")\n" +
@@ -55,7 +57,6 @@ public interface AvgOrderRevenueRepository extends JpaRepository<Author, Long> {
         "  JOIN\n" +
         "  (SELECT ts.generate_series as stime, ts.generate_series + ?4 * interval '1 second' as etime\n" +
         "   FROM (select generate_series(?2, ?3, ?4 * interval '1 second')) ts) tss\n" +
-        "    on (r.\"PaidTime\" < tss.etime AND r.\"PaidTime\" >= tss.stime)\n" +
         "WHERE\n" +
         "  (o.\"OrderStatus\" not IN (6, 7))\n" +
         "  AND (r.\"PaymentModeType\" = 2)\n" +
@@ -74,7 +75,7 @@ public interface AvgOrderRevenueRepository extends JpaRepository<Author, Long> {
         "  JOIN\n" +
         "  (SELECT ts.generate_series as stime, ts.generate_series + ?3 * interval '1 second' as etime\n" +
         "   FROM (select generate_series(?1, ?2, ?3 * interval '1 second')) ts) tss\n" +
-        "    on (r.\"PaidTime\" < tss.etime AND r.\"PaidTime\" >= tss.stime)\n" +
+        "    on (o.\"OrderCreateTime\" < tss.etime AND o.\"OrderCreateTime\" >= tss.stime)\n" +
         "WHERE\n" +
         "  (o.\"OrderStatus\" not IN (6, 7))\n" +
         "  AND (r.\"PaymentModeType\" = 2)\n" +

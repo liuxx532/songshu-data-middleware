@@ -6,6 +6,7 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
 import java.sql.Timestamp;
+import java.util.Optional;
 
 /**
  * Created by liugaoyu on 2017/4/24.
@@ -25,7 +26,7 @@ public class ServiceUtil {
 
     // 使用本地时区
     public String formatDateTime(String dateTime) {
-        return new DateTime(new DateTime(dateTime).getMillis()).withZone(DateTimeZone.forID("+08")).toString();
+        return new DateTime(new DateTime(dateTime).getMillis()).withZone(DateTimeZone.forID("+00")).toString();
     }
 
     //根据时间区间，获取环比的开始时间
@@ -48,7 +49,7 @@ public class ServiceUtil {
 
         if ("23:59:59" == eEndWith) {
             eTime += 1000;
-            endTime2 = new DateTime(eTime).withZone(DateTimeZone.forID("+08")).toString();
+            endTime2 = new DateTime(eTime).withZone(DateTimeZone.forID("+00")).toString();
             eEndWith2 = endTime2.substring(8, 19);
         }
 
@@ -80,15 +81,14 @@ public class ServiceUtil {
             }
             if (mon < 10) {
                 // 根据数据库中的日期格式做调整
-                // TODO
-                chainIndexStartTime = year + "-0" + mon + "-01T00:00:00.000+08:00";
+                chainIndexStartTime = year + "-0" + mon + "-01T00:00:00";
             } else {
-                chainIndexStartTime = year + "-" + mon + "-01T00:00:00.000+08:00";
+                chainIndexStartTime = year + "-" + mon + "-01T00:00:00";
             }
-            chainIndexEndTime = new DateTime(bTime - 1000).withZone(DateTimeZone.forID("+08")).toString();
+            chainIndexEndTime = new DateTime(bTime - 1000).withZone(DateTimeZone.forID("+00")).toString();
         } else {
             //如果不超过27天,直接按时间做减法
-            chainIndexStartTime = new DateTime(bwTimes).withZone(DateTimeZone.forID("+08")).toString();
+            chainIndexStartTime = new DateTime(bwTimes).withZone(DateTimeZone.forID("+00")).toString();
         }
         if (null == chainIndexEndTime)
             chainIndexEndTime = beginTime;
@@ -106,11 +106,22 @@ public class ServiceUtil {
     }
 
     //聚合的时间范围
-    public long getAggTimeValue(String beginTime, String endTime) {
+    public Long getAggTimeValue(String beginTime, String endTime) {
         long bTime = new DateTime(beginTime).getMillis();
         long eTime = new DateTime(endTime).getMillis();
 
-        return (eTime - bTime) / 90;
+        return (eTime - bTime) / 30;
+    }
+    //聚合的时间范围
+    public Integer getAggTimeValue(Timestamp beginTime, Timestamp endTime) {
+        long bTime = beginTime.getTime();
+        long eTime = endTime.getTime();
+        Long result =(eTime - bTime)/90;
+
+        Integer intervalResult =result.intValue();
+        Integer interval= Optional.ofNullable(intervalResult).orElse(0);
+
+        return interval;
     }
 
     public int getChainIndexFlag(double current, double chainIndex) {
