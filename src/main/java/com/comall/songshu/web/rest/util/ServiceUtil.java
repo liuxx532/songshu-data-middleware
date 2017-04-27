@@ -116,7 +116,7 @@ public class ServiceUtil {
     public Integer getAggTimeValue(Timestamp beginTime, Timestamp endTime) {
         long bTime = beginTime.getTime();
         long eTime = endTime.getTime();
-        Long result =(eTime - bTime)/90;
+        Long result = (eTime - bTime) / 90 / 1000;
 
         Integer intervalResult =result.intValue();
         Integer interval= Optional.ofNullable(intervalResult).orElse(0);

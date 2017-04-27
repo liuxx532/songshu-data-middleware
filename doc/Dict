@@ -8,9 +8,10 @@
 5. 退款金额    Refund
 6. 毛利率     GrossMarginRate
 7. 注册用户数  NewRegisterCount
-8. 首单用户数   FirstOrderdConsumerCount
+8. 首单用户数   FirstOrderedConsumerCount
 9. 非首单用户数  NotFirstOrderConsumerCount
-
+10. 注册用户占比 NewRegisterRate
+11. 是否首次消费占比 FirstOrderedRate
 
 
 ### 主要指标

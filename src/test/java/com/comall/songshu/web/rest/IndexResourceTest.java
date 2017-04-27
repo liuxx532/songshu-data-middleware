@@ -44,9 +44,6 @@ public class IndexResourceTest {
     private AvgOrderRevenueService avgOrderRevenueService;
 
     @Mock
-    private VisitorsService visitorsService;
-
-    @Mock
     private RefundService refundService;
 
     @Mock
