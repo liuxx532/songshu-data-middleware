@@ -21,11 +21,11 @@ public interface NewRegisterCountRepository extends JpaRepository<Author, Long> 
         "FROM songshu_cs_member\n" +
         "WHERE \"regTime\" BETWEEN ?2 AND ?3\n" +
         "      AND \"multipleChannelsId\" = ?1", nativeQuery = true)
-    Double getNewRegisterCountWithSinglePlatform(Integer platform, Timestamp startTime, Timestamp endTime);
+    Integer getNewRegisterCountWithSinglePlatform(Integer platform, Timestamp startTime, Timestamp endTime);
 
     @Query(value = "SELECT count(id) as tc\n" +
         "FROM songshu_cs_member\n" +
         "WHERE \"regTime\" BETWEEN ?1 AND ?2\n" +
         "      AND \"multipleChannelsId\" NOT IN (1, 2, 3, 5)", nativeQuery = true)
-    Double getNewRegisterCountWithOthersPlatform(Timestamp startTime, Timestamp endTime);
+    Integer getNewRegisterCountWithOthersPlatform(Timestamp startTime, Timestamp endTime);
 }
