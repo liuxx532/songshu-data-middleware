@@ -1,6 +1,10 @@
 package com.comall.songshu.service;
 
 import com.comall.songshu.repository.CategoryRevenueRankingRepository;
+import com.comall.songshu.web.rest.util.JsonStringBuilder;
+import com.comall.songshu.web.rest.util.ServiceUtil;
+import com.comall.songshu.web.rest.util.TransferUtil;
+import org.json.JSONString;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,7 +33,25 @@ public class CategoryRevenueRankingService {
         return categoryRevenueRankingRepository.getCategoryRevenueRankingWithAllPlatform(startTime, endTime);
     }
 
-    // TODO add  interface for controller
 
-    // TODO add trend
+    public String getCategoryRevenueRanking(String platformName, Timestamp beginTime, Timestamp endTime) {
+
+        // 平台
+        int platform = TransferUtil.getPlatform(platformName);
+
+        // 当前
+        List<Object[] > current = null;
+
+        // 所有平台
+        if (platform < 0){
+            current = categoryRevenueRankingRepository.getCategoryRevenueRankingWithAllPlatform(beginTime, endTime);
+        } else {
+            //单个平台
+            current = categoryRevenueRankingRepository.getCategoryRevenueRankingWithSinglePlatform(platform, beginTime, endTime);
+        }
+
+        return JsonStringBuilder.buildRankJsonString(current);
+    }
+
+
 }
