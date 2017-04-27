@@ -29,7 +29,7 @@ public class TargetsMap {
         targets.put("毛利率趋势图","GrossMarginRateTrend");
         targets.put("注册用户占比", "NewRegisterRate");
         targets.put("是否首次消费占比", "FirstOrderedRate");
-        targets.put("销售额品类排行帮", "CategoryRevenueRanking");
+        targets.put("销售额品类排行榜", "CategoryRevenueRanking");
         return targets;
     }
 
@@ -53,7 +53,7 @@ public class TargetsMap {
 //        targetNames.put("NotFirstOrderConsumerCount", "非首单用户数");
         targetNames.put("NewRegisterRate", "注册用户占比");
         targetNames.put("FirstOrderedRate", "是否首次消费占比");
-        targetNames.put("CategoryRevenueRanking", "销售额品类排行帮");
+        targetNames.put("CategoryRevenueRanking", "销售额品类排行榜");
         return targetNames;
     }
 }
