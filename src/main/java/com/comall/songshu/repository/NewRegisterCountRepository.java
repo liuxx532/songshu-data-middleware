@@ -26,6 +26,6 @@ public interface NewRegisterCountRepository extends JpaRepository<Author, Long> 
     @Query(value = "SELECT count(id) as tc\n" +
         "FROM songshu_cs_member\n" +
         "WHERE \"regTime\" BETWEEN ?1 AND ?2\n" +
-        "      AND \"multipleChannelsId\" NOT IN (1, 2)", nativeQuery = true)
+        "      AND \"multipleChannelsId\" NOT IN (1, 2, 3, 5)", nativeQuery = true)
     Double getNewRegisterCountWithOthersPlatform(Timestamp startTime, Timestamp endTime);
 }
