@@ -118,7 +118,7 @@ public class JsonStringBuilder {
     // [{"target": "坚果", "datapoints": [[25, 1492484041446]],"columnName": ""},{"target": "坚果", "datapoints": [[25, 1492484041446]],"columnName": ""},]
     public static  String buildRankJsonString(List<Object[]> rank) {
 
-        if (rank != null) {
+        if (rank != null && rank.size() > 0) {
 
             StringBuilder sb = new StringBuilder(1024);
 
@@ -134,9 +134,12 @@ public class JsonStringBuilder {
             sb.append("]");
 
             return sb.toString();
+        } else {
+            // return empty json array
+            return "[]";
         }
 
-        return null;
+//        return null;
     }
 
     // 首单，非首单占比
