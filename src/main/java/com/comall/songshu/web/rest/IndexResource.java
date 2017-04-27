@@ -50,6 +50,13 @@ public class IndexResource {
     @Autowired
     private OrderedConsumerCountService orderedConsumerCountService;
 
+
+    @Autowired
+    private  NewRegisterCountService newRegisterCountService;
+
+    @Autowired
+    private  NotFirstOrderedConsumerCountService notFirstOrderedConsumerCountService;
+
     @Autowired
     private CategoryRevenueRankingService categoryRevenueRankingService;
 
@@ -196,16 +203,6 @@ public class IndexResource {
                             return refundService.getRefundTrend(platform, beginTime, endTime, chainBeginTime, chainEndTime);
                         case "GrossMarginRateTrend" :
                             return grossMarginRateService.getGrossMarginRateTrend(platform, beginTime, endTime, chainBeginTime, chainEndTime);
-
-                        // 饼图
-                        case "NewRegisterRate":
-                            return null;
-                        case "FirstOrderedRate":
-                            return  orderedConsumerCountService.getOrderedConsumerCount(platform, beginTime, endTime);
-
-                            // 品类销售排行榜
-                        case "CategoryRevenueRanking":
-                            return categoryRevenueRankingService.getCategoryRevenueRanking(platform, beginTime, endTime);
 
                         default:
                             throw new IllegalArgumentException("target=" + target);
