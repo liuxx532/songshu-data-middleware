@@ -1,8 +1,11 @@
 package com.comall.songshu.service;
 
 import com.comall.songshu.repository.NewRegisterCountRepository;
+import com.comall.songshu.web.rest.AuthorResource;
 import com.comall.songshu.web.rest.util.JsonStringBuilder;
 import com.comall.songshu.web.rest.util.TransferUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +21,8 @@ import java.util.Optional;
 // 新注册用户数
 @Service
 public class NewRegisterCountService {
+
+    private final Logger log = LoggerFactory.getLogger(AuthorResource.class);
 
     @Autowired
     NewRegisterCountRepository newRegisterCountRepository;
@@ -56,13 +61,11 @@ public class NewRegisterCountService {
         }else {
             platformResult=getNewRegisterCountWithSinglePlatform(platform,startTime,endTime);
             Optional.ofNullable(platform).orElse(0);
+
+            log.info("platformResult",platformResult);
             list.add(platformResult);
         }
-
+        log.info("list",list);
         return JsonStringBuilder.buildPieJsonString(platformName,list);
-
     }
-
-
-
 }

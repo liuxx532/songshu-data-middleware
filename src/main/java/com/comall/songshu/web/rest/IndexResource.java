@@ -46,10 +46,8 @@ public class IndexResource {
     @Autowired
     private UniqueVisitorsService uniqueVisitorsService;
 
-
     @Autowired
     private OrderedConsumerCountService orderedConsumerCountService;
-
 
     @Autowired
     private  NewRegisterCountService newRegisterCountService;
@@ -176,40 +174,47 @@ public class IndexResource {
                 && Optional.ofNullable(platform).isPresent()){
 
                 switch (target) {
-                        // 单个指标
-                        case "Revenue":
-                            return revenueService.getRevenue(target,platform,beginTime,endTime,chainBeginTime,chainEndTime);
-                        case "OrderCount":
-                            return orderCountService.getOrderCount(target,platform,beginTime,endTime,chainBeginTime,chainEndTime);
-                        case "AvgOrderRevenue":
-                            return avgOrderRevenueService.getAvgOrderRevenue(target,platform,beginTime,endTime,chainBeginTime,chainEndTime);
-                        case "UniqueVisitors":
-                            return uniqueVisitorsService.getUniqueVisitors(target,platform,beginTime,endTime,chainBeginTime,chainEndTime);
-                        case "Refund":
-                            return refundService.getRefund(target,platform,beginTime,endTime,chainBeginTime,chainEndTime);
-                        case "GrossMarginRate":
-                            return grossMarginRateService.getGrossMarginRate(target,platform,beginTime,endTime,chainBeginTime,chainEndTime);
+                    // 单个指标
+                    case "Revenue":
+                        return revenueService.getRevenue(target,platform,beginTime,endTime,chainBeginTime,chainEndTime);
+                    case "OrderCount":
+                        return orderCountService.getOrderCount(target,platform,beginTime,endTime,chainBeginTime,chainEndTime);
+                    case "AvgOrderRevenue":
+                        return avgOrderRevenueService.getAvgOrderRevenue(target,platform,beginTime,endTime,chainBeginTime,chainEndTime);
+                    case "UniqueVisitors":
+                        return uniqueVisitorsService.getUniqueVisitors(target,platform,beginTime,endTime,chainBeginTime,chainEndTime);
+                    case "Refund":
+                        return refundService.getRefund(target,platform,beginTime,endTime,chainBeginTime,chainEndTime);
+                    case "GrossMarginRate":
+                        return grossMarginRateService.getGrossMarginRate(target,platform,beginTime,endTime,chainBeginTime,chainEndTime);
 
-                        // 趋势
-                        case "RevenueTrend" :
-                            return revenueService.getRevenueTrend(target,platform,beginTime,endTime,chainBeginTime,chainEndTime);
-                        case "OrderCountTrend" :
-                            return orderCountService.getOrderCountTrend(platform, beginTime, endTime, chainBeginTime, chainEndTime);
-                        case "AvgOrderRevenueTrend" :
-                            return avgOrderRevenueService.getAvgOrderRevenueTrend(platform, beginTime, endTime, chainBeginTime, chainEndTime);
-                        case "UniqueVisitorsTrend" :
-                            return uniqueVisitorsService.getUniqueVisitorsTrend(platform, beginTime, endTime, chainBeginTime, chainEndTime);
-                        case "RefundTrend" :
-                            return refundService.getRefundTrend(platform, beginTime, endTime, chainBeginTime, chainEndTime);
-                        case "GrossMarginRateTrend" :
-                            return grossMarginRateService.getGrossMarginRateTrend(platform, beginTime, endTime, chainBeginTime, chainEndTime);
+                    // 趋势
+                    case "RevenueTrend" :
+                        return revenueService.getRevenueTrend(target,platform,beginTime,endTime,chainBeginTime,chainEndTime);
+                    case "OrderCountTrend" :
+                        return orderCountService.getOrderCountTrend(platform, beginTime, endTime, chainBeginTime, chainEndTime);
+                    case "AvgOrderRevenueTrend" :
+                        return avgOrderRevenueService.getAvgOrderRevenueTrend(platform, beginTime, endTime, chainBeginTime, chainEndTime);
+                    case "UniqueVisitorsTrend" :
+                        return uniqueVisitorsService.getUniqueVisitorsTrend(platform, beginTime, endTime, chainBeginTime, chainEndTime);
+                    case "RefundTrend" :
+                        return refundService.getRefundTrend(platform, beginTime, endTime, chainBeginTime, chainEndTime);
+                    case "GrossMarginRateTrend" :
+                        return grossMarginRateService.getGrossMarginRateTrend(platform, beginTime, endTime, chainBeginTime, chainEndTime);
+                    // 饼图
+                    case "NewRegisterRate":
+                        return newRegisterCountService.getNewRegisterCount(platform,beginTime,endTime);
+                    case "FirstOrderedRate":
+                        return  orderedConsumerCountService.getOrderedConsumerCount(platform, beginTime, endTime);
+                    // 品类销售排行榜
+                    case "CategoryRevenueRanking":
+                        return categoryRevenueRankingService.getCategoryRevenueRanking(platform, beginTime, endTime);
 
-                        default:
-                            throw new IllegalArgumentException("target=" + target);
+                    default:
+                        throw new IllegalArgumentException("target=" + target);
                 }
             }
         }
         return null;
     }
-
 }

@@ -52,6 +52,4 @@ public class CategoryRevenueRankingService {
 
         return JsonStringBuilder.buildRankJsonString(current);
     }
-
-
 }

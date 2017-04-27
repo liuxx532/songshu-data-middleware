@@ -66,7 +66,6 @@ public class JsonStringBuilder {
                 Timestamp endTime = (Timestamp) currentTrend.get(i)[1];
                 sb.append("[").append(chainTrend.get(i)[2]).append(',').append(endTime.getTime()).append("]").append(',');
             }
-
             sb.deleteCharAt(sb.length() - 1);
             sb.append("]").append(',').append("\"columnName\":\"").append("\"").append("}]");
 
@@ -155,17 +154,16 @@ public class JsonStringBuilder {
 
     public static  String buildPieJsonString(String platform,List<Integer> list){
         StringBuilder sb = new StringBuilder(1024);
-        if (list.size() >0 ) {
+        if (list.size() >1 ) {
             String[] names = {"android", "ios", "wechar", "wap", "others"};
             sb.append("[");
-
-
             for (int i = 0; i < names.length; i++) {
                 sb.append("{\"target\":").append(names[i]).append(",\"datapoints\":[[").append((list.get(i))).append(',').append(System.currentTimeMillis()).append("]],\"columnName\":\"\"}").append(',');
             }
             sb.deleteCharAt(sb.length() - 1);
             sb.append("]");
-
+        } else {
+            sb.append("[").append("{\"target\":").append(platform).append(",\"datapoints\":[[").append((list.get(0))).append(',').append(System.currentTimeMillis()).append("]],\"columnName\":\"\"}").append(',');
         }
         return sb.toString();
     }
