@@ -50,6 +50,16 @@ public class IndexResource {
     @Autowired
     private OrderedConsumerCountService orderedConsumerCountService;
 
+
+    @Autowired
+    private  NewRegisterCountService newRegisterCountService;
+
+    @Autowired
+    private  NotFirstOrderedConsumerCountService notFirstOrderedConsumerCountService;
+
+    @Autowired
+    private CategoryRevenueRankingService categoryRevenueRankingService;
+
     private final Logger log = LoggerFactory.getLogger(AuthorResource.class);
 
 

@@ -1,12 +1,16 @@
 package com.comall.songshu.service;
 
 import com.comall.songshu.repository.NewRegisterCountRepository;
+import com.comall.songshu.web.rest.util.JsonStringBuilder;
+import com.comall.songshu.web.rest.util.TransferUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by wdc on 2017/4/24.
@@ -18,31 +22,47 @@ public class NewRegisterCountService {
     @Autowired
     NewRegisterCountRepository newRegisterCountRepository;
 
-    public Double getNewRegisterCountWithSinglePlatform(Integer platform, Timestamp startTime, Timestamp endTime) {
+    public Integer getNewRegisterCountWithSinglePlatform(Integer platform, Timestamp startTime, Timestamp endTime) {
         return newRegisterCountRepository.getNewRegisterCountWithSinglePlatform(platform, startTime, endTime);
     }
 
-    public Double getNewRegisterCountWithOthersPlatform(Timestamp startTime, Timestamp endTime) {
+    public Integer getNewRegisterCountWithOthersPlatform(Timestamp startTime, Timestamp endTime) {
         return newRegisterCountRepository.getNewRegisterCountWithOthersPlatform(startTime, endTime);
     }
 
 
-    // 返回的值是 anroid, ios, others 占百分比
-    public List<Double> getNewRegisterCount(Timestamp startTime, Timestamp endTime) {
-        // 渠道取值
-        // 1. android, 2. ios, 3. wechat, 4. app, 5. wap, 0. others (不能确定)
+    public String getNewRegisterCount( String platformName, Timestamp startTime, Timestamp endTime) {
 
+        Integer platform = TransferUtil.getPlatform(platformName);
+        List<Integer> list = new ArrayList();
+        Integer platformResult = null;
 
-        Double android = getNewRegisterCountWithSinglePlatform(1, startTime, endTime);
-        Double ios = getNewRegisterCountWithSinglePlatform(2, startTime, endTime);
-        Double others = getNewRegisterCountWithOthersPlatform(startTime, endTime);
-
-        Double sum = android + ios + others;
-        if (sum <= 0) {
-            return Arrays.asList(0.333, 0.333, 0.334);
+        if (platform < 0){ //所有
+            Integer android = getNewRegisterCountWithSinglePlatform(1,startTime,endTime);
+            Optional.ofNullable(android).orElse(0);
+            Integer ios = getNewRegisterCountWithSinglePlatform(2,startTime,endTime);
+            Optional.ofNullable(ios).orElse(0);
+            Integer wechat = getNewRegisterCountWithSinglePlatform(3,startTime,endTime);
+            Optional.ofNullable(wechat).orElse(0);
+            Integer wap = getNewRegisterCountWithSinglePlatform(5,startTime,endTime);
+            Optional.ofNullable(wap).orElse(0);
+            Integer others = getNewRegisterCountWithOthersPlatform(startTime,endTime);
+            Optional.ofNullable(others).orElse(0);
+            list.add(android);
+            list.add(ios);
+            list.add(wechat);
+            list.add(wap);
+            list.add(others);
+        }else {
+            platformResult=getNewRegisterCountWithSinglePlatform(platform,startTime,endTime);
+            Optional.ofNullable(platform).orElse(0);
+            list.add(platformResult);
         }
 
-        // 返回计算值
-        return Arrays.asList(android / sum, ios / sum, others / sum);
+        return JsonStringBuilder.buildPieJsonString(platformName,list);
+
     }
+
+
+
 }
