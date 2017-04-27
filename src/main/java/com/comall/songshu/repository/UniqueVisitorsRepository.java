@@ -24,43 +24,31 @@ public interface UniqueVisitorsRepository extends JpaRepository<Author,Long> {
 
 
     // 趋势
-//    SELECT tss.stime, tss.etime,
-//    count(distinct case when ss.log ->> 'userid' <> '' and ss.log ->> 'userid' <> '-' then  ss.log ->> 'userid' end ) +
-//    count(distinct case when ss.log ->> 'userid' = '' or ss.log ->> 'userid'='-' then ss.log ->> 'unique' end) as uv
-//    FROM songshu_log ss
-//    JOIN (SELECT ts.generate_series as stime, ts.generate_series + '12 hour' as etime
-//            FROM (select generate_series('2017-01-23 09:22:41', '2017-09-23 09:22:41', interval '12 hour')) ts) tss
-//    ON (to_timestamp(ss.log ->> 'logTime', 'DD/Mon/YYYY:HH24:mi:ss') < tss.etime AND to_timestamp(ss.log ->> 'logTime', 'DD/Mon/YYYY:HH24:mi:ss') >= tss.stime)
-//    where ss.log ->> 'os' = 'weixin'
-//    AND to_timestamp(ss.log ->> 'logTime', 'DD/Mon/YYYY:HH24:mi:ss') BETWEEN '2017-01-23 09:22:41' and '2017-09-23 09:22:41'
-//    GROUP BY tss.stime, tss.etime
-//    ORDER BY tss.stime;
+//SELECT tss.stime, tss.etime, count(DISTINCT CASE WHEN comt.log ->> 'userid' <> '' AND comt.log ->> 'userid' <> '-' THEN comt.log ->> 'userid' END),
+// count(DISTINCT CASE WHEN comt.log ->> 'userid' = '' OR comt.log ->> 'userid' = '-' THEN comt.log ->> 'unique' END) AS uv
+// FROM(select * from songshu_log ss WHERE to_timestamp(ss.log ->> 'logTime', 'DD/Mon/YYYY:HH24:mi:ss')
+// BETWEEN '2017-04-23 00:00:00' AND '2017-04-30 00:00:00') comt
+// RIGHT JOIN (SELECT ts.generate_series AS stime, ts.generate_series + 86400 * INTERVAL '1 second' AS etime
+// FROM (SELECT generate_series('2017-04-23 00:00:00', '2017-04-30 00:00:00', 86400 * INTERVAL '1 second')) ts) tss ON (to_timestamp(comt.log ->> 'logTime', 'DD/Mon/YYYY:HH24:mi:ss') < tss.etime AND to_timestamp(comt.log ->> 'logTime', 'DD/Mon/YYYY:HH24:mi:ss') >= tss.stime) GROUP BY tss.stime, tss.etime ORDER BY tss.stime
 
     // 单个平台
-    @Query(value = "SELECT tss.stime, tss.etime,\n" +
-        "count(distinct case when ss.log ->> 'userid' <> '' and ss.log ->> 'userid' <> '-' then  ss.log ->> 'userid' end ) + \n" +
-        "count(distinct case when ss.log ->> 'userid' = '' or ss.log ->> 'userid'='-' then ss.log ->> 'unique' end) as uv\n" +
-        "FROM songshu_log ss\n" +
-        "JOIN (SELECT ts.generate_series as stime, ts.generate_series + ?4 * interval '1 second' as etime\n" +
-        "FROM (select generate_series(?2, ?3, ?4 * interval '1 second')) ts) tss\n" +
-        "ON (to_timestamp(ss.log ->> 'logTime', 'DD/Mon/YYYY:HH24:mi:ss') < tss.etime AND to_timestamp(ss.log ->> 'logTime', 'DD/Mon/YYYY:HH24:mi:ss') >= tss.stime)\n" +
-        "where ss.log ->> 'os' = ?1\n" +
-        "AND to_timestamp(ss.log ->> 'logTime', 'DD/Mon/YYYY:HH24:mi:ss') BETWEEN ?2 and ?3\n" +
-        "GROUP BY tss.stime, tss.etime\n" +
-        "ORDER BY tss.stime", nativeQuery = true)
+    @Query(value = "SELECT tss.stime, tss.etime, count(DISTINCT CASE WHEN comt.log ->> 'userid' <> '' AND comt.log ->> 'userid' <> '-' THEN comt.log ->> 'userid' END), " +
+        "count(DISTINCT CASE WHEN comt.log ->> 'userid' = '' OR comt.log ->> 'userid' = '-' THEN comt.log ->> 'unique' END) AS uv " +
+        "FROM(SELECT * FROM songshu_log ss WHERE ss.log ->> 'os' = ?1 AND to_timestamp(ss.log ->> 'logTime', 'DD/Mon/YYYY:HH24:mi:ss') BETWEEN ?2 AND ?3) comt " +
+        "RIGHT JOIN (SELECT ts.generate_series AS stime, ts.generate_series + ?4 * INTERVAL '1 second' AS etime " +
+        "FROM (SELECT generate_series(?2, ?3, ?4 * INTERVAL '1 second')) ts) tss " +
+        "ON (to_timestamp(comt.log ->> 'logTime', 'DD/Mon/YYYY:HH24:mi:ss') < tss.etime AND to_timestamp(comt.log ->> 'logTime', 'DD/Mon/YYYY:HH24:mi:ss') >= tss.stime) " +
+        "GROUP BY tss.stime, tss.etime ORDER BY tss.stime", nativeQuery = true)
     List<Object[]> getUniqueVisitorsTrendSinglePlatform(String platform, Timestamp beginTime, Timestamp endTime, Integer intervals);
 
     // 所有平台
-    @Query(value = "SELECT tss.stime, tss.etime,\n" +
-        "count(distinct case when ss.log ->> 'userid' <> '' and ss.log ->> 'userid' <> '-' then  ss.log ->> 'userid' end ) + \n" +
-        "count(distinct case when ss.log ->> 'userid' = '' or ss.log ->> 'userid'='-' then ss.log ->> 'unique' end) as uv\n" +
-        "FROM songshu_log ss\n" +
-        "JOIN (SELECT ts.generate_series as stime, ts.generate_series + ?3 * interval '1 second' as etime\n" +
-        "FROM (select generate_series(?1, ?2, ?3 * interval '1 second')) ts) tss\n" +
-        "ON (to_timestamp(ss.log ->> 'logTime', 'DD/Mon/YYYY:HH24:mi:ss') < tss.etime AND to_timestamp(ss.log ->> 'logTime', 'DD/Mon/YYYY:HH24:mi:ss') >= tss.stime)\n" +
-        "WHERE to_timestamp(ss.log ->> 'logTime', 'DD/Mon/YYYY:HH24:mi:ss') BETWEEN ?1 and ?2\n" +
-        "GROUP BY tss.stime, tss.etime\n" +
-        "ORDER BY tss.stime", nativeQuery = true)
+    @Query(value = "SELECT tss.stime, tss.etime, count(DISTINCT CASE WHEN comt.log ->> 'userid' <> '' AND comt.log ->> 'userid' <> '-' THEN comt.log ->> 'userid' END), " +
+        "count(DISTINCT CASE WHEN comt.log ->> 'userid' = '' OR comt.log ->> 'userid' = '-' THEN comt.log ->> 'unique' END) AS uv " +
+        "FROM(select * from songshu_log ss WHERE to_timestamp(ss.log ->> 'logTime', 'DD/Mon/YYYY:HH24:mi:ss') BETWEEN ?1 AND ?2) comt " +
+        "RIGHT JOIN (SELECT ts.generate_series AS stime, ts.generate_series + ?3 * INTERVAL '1 second' AS etime " +
+        "FROM (SELECT generate_series(?1, ?2, ?3 * INTERVAL '1 second')) ts) tss " +
+        "ON (to_timestamp(comt.log ->> 'logTime', 'DD/Mon/YYYY:HH24:mi:ss') < tss.etime AND to_timestamp(comt.log ->> 'logTime', 'DD/Mon/YYYY:HH24:mi:ss') >= tss.stime) " +
+        "GROUP BY tss.stime, tss.etime ORDER BY tss.stime", nativeQuery = true)
     List<Object[]> getUniqueVisitorsTrendAllPlatform(Timestamp beginTime, Timestamp endTime, Integer intervals);
 
 
