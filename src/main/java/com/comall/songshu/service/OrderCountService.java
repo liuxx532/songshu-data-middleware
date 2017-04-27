@@ -85,7 +85,7 @@ public class OrderCountService {
                 chainAllPlatform= chainAllPlatformResult;
             }
 
-            return JsonStringBuilder.buildTrendJsonString(currentAllPlatform, chainAllPlatform);
+            return JsonStringBuilder.buildTrendJsonStringForLongType(currentAllPlatform, chainAllPlatform);
         }else {//单个平台
             currentSinglePlatformResult = orderCountRepository.getOrderCounTrendtWithSinglePlatform(platform, beginTime, endTime, interValue);
             chainSinglePlatformResult = orderCountRepository.getOrderCounTrendtWithSinglePlatform(platform, chainBeginTime, chainEndTime, interValue);
@@ -100,7 +100,7 @@ public class OrderCountService {
             if (null != chainSinglePlatformResult){
                 chainSinglePlatform = chainSinglePlatformResult;
             }
-            return JsonStringBuilder.buildTrendJsonString(currentSinglePlatform, chainSinglePlatform);
+            return JsonStringBuilder.buildTrendJsonStringForLongType(currentSinglePlatform, chainSinglePlatform);
         }
 
     }

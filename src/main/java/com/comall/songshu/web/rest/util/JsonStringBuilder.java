@@ -3,6 +3,7 @@ package com.comall.songshu.web.rest.util;
 import com.comall.songshu.web.rest.vm.TopStat;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
@@ -62,7 +63,48 @@ public class JsonStringBuilder {
 
             for (Object[] objects : chainTrend) {
                 Timestamp endTime = (Timestamp) objects[1];
-                BigDecimal result = (BigDecimal) objects[2];
+
+                // If result is null, return ZERO
+                BigDecimal result = Optional.ofNullable((BigDecimal) objects[2]).orElse(BigDecimal.ZERO);
+                sb.append("[").append(result).append(',').append(endTime.getTime()).append("]").append(',');
+            }
+            sb.deleteCharAt(sb.length() - 1);
+            sb.append("]").append(',').append("\"columnName\":\"").append("\"").append("}]");
+
+            return sb.toString();
+        }
+
+        return null;
+    }
+
+    public static  String buildTrendJsonStringForLongType(List<Object[]> currentTrend,List<Object[]> chainTrend) {
+
+        if (currentTrend != null && chainTrend != null) {
+
+            StringBuilder sb = new StringBuilder(1024);
+            sb.append("[{\"target\":\"当前\",\"datapoints\":[");
+            for (Object[] objects : currentTrend) {
+                Timestamp endTime = (Timestamp) objects[1];
+
+                // If result is null, return ZERO
+                BigInteger result = Optional.ofNullable((BigInteger) objects[2]).orElse(BigInteger.ZERO);
+
+                sb.append("[").append(result).append(',').append(endTime.getTime()).append("]").append(',');
+            }
+            //出去最后一个 ',';
+            sb.deleteCharAt(sb.length() - 1);
+            sb.append("]").append(',').append("\"columnName\":\"\"").append("}").append(',');
+
+
+            sb.append("{\"target\":\"当前\",\"datapoints\":[");
+
+            for (Object[] objects : chainTrend) {
+                Timestamp endTime = (Timestamp) objects[1];
+
+                // If result is null, return ZERO
+                BigInteger result = Optional.ofNullable((BigInteger) objects[2]).orElse(BigInteger.ZERO);
+
+                sb.append("[").append(result).append(',').append(endTime.getTime()).append("]").append(',');
                 sb.append("[").append(result).append(',').append(endTime.getTime()).append("]").append(',');
             }
             sb.deleteCharAt(sb.length() - 1);

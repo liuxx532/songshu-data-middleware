@@ -70,7 +70,7 @@ public class UniqueVisitorsService {
                 chainAllPlatform= chainAllPlatformResult;
             }
 
-            return JsonStringBuilder.buildTrendJsonString(currentAllPlatform,chainAllPlatform);
+            return JsonStringBuilder.buildTrendJsonStringForLongType(currentAllPlatform,chainAllPlatform);
         }else {//单个平台
             currentSinglePlatformResult = uniqueVisitorsRepository.getUniqueVisitorsTrendSinglePlatform(platformName, beginTime, endTime, interValue);
             chainSinglePlatformResult = uniqueVisitorsRepository.getUniqueVisitorsTrendSinglePlatform(platformName, chainBeginTime, chainEndTime, interValue);
@@ -85,7 +85,7 @@ public class UniqueVisitorsService {
             if (null != chainSinglePlatformResult){
                 chainSinglePlatform = chainSinglePlatformResult;
             }
-            return JsonStringBuilder.buildTrendJsonString(currentSinglePlatform,chainSinglePlatform);
+            return JsonStringBuilder.buildTrendJsonStringForLongType(currentSinglePlatform,chainSinglePlatform);
         }
 
     }
