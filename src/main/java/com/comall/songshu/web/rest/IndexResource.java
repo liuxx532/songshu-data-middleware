@@ -161,27 +161,8 @@ public class IndexResource {
                 && Optional.ofNullable(target).isPresent()
                 && Optional.ofNullable(platform).isPresent()){
 
-                if (target.endsWith("Trend")){
-                    switch (target){
-                        case "RevenueTrend" :
-                            return revenueService.getRevenueTrend(target,platform,beginTime,endTime,chainBeginTime,chainEndTime);
-                        case "OrderCountTrend" :
-                            return null;
-                        case "AvgOrderRevenueTrend" :
-                            return null;
-                        case "UniqueVisitorsTrend" :
-                            return null;
-                        case "RefundTrend" :
-                            return null;
-                        case "GrossMarginRateTrend" :
-                            return null;
-
-                    }
-
-
-                }
-
                 switch (target) {
+                        // 单个指标
                         case "Revenue":
                             return revenueService.getRevenue(target,platform,beginTime,endTime,chainBeginTime,chainEndTime);
                         case "OrderCount":
@@ -194,9 +175,23 @@ public class IndexResource {
                             return refundService.getRefund(target,platform,beginTime,endTime,chainBeginTime,chainEndTime);
                         case "GrossMarginRate":
                             return grossMarginRateService.getGrossMarginRate(target,platform,beginTime,endTime,chainBeginTime,chainEndTime);
+
+                        // 趋势
+                        case "RevenueTrend" :
+                            return revenueService.getRevenueTrend(target,platform,beginTime,endTime,chainBeginTime,chainEndTime);
+                        case "OrderCountTrend" :
+                            return orderCountService.getOrderCountTrend(platform, beginTime, endTime, chainBeginTime, chainEndTime);
+                        case "AvgOrderRevenueTrend" :
+                            return avgOrderRevenueService.getAvgOrderRevenueTrend(platform, beginTime, endTime, chainBeginTime, chainEndTime);
+                        case "UniqueVisitorsTrend" :
+                            return uniqueVisitorsService.getUniqueVisitorsTrend(platform, beginTime, endTime, chainBeginTime, chainEndTime);
+                        case "RefundTrend" :
+                            return refundService.getRefundTrend(platform, beginTime, endTime, chainBeginTime, chainEndTime);
+                        case "GrossMarginRateTrend" :
+                            return grossMarginRateService.getGrossMarginRateTrend(platform, beginTime, endTime, chainBeginTime, chainEndTime);
+
                         default:
                             throw new IllegalArgumentException("target=" + target);
-
                 }
             }
         }

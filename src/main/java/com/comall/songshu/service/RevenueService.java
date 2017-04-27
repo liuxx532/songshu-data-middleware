@@ -45,8 +45,6 @@ public class RevenueService {
         TopStat result= AssembleUtil.assemblerTopStat(revenue,chainRevenue);
 
         return JsonStringBuilder.buildTargetJsonString(target,result,"");
-
-
     }
 
     public String getRevenueTrend(String target,String platformName,Timestamp beginTime,Timestamp endTime ,Timestamp chainBeginTime,Timestamp chainEndTime){

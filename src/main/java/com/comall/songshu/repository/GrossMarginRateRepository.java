@@ -99,7 +99,7 @@ public interface GrossMarginRateRepository extends JpaRepository<Author,Long> {
         "RIGHT JOIN( SELECT ts.generate_series AS stime, ts.generate_series + ?3 * INTERVAL '1 second' AS etime " +
         "FROM ( SELECT generate_series( ?1, ?2, ?3 * INTERVAL '1 second' ) )ts )tss ON( coo.MPaidTime < tss.etime AND coo.MPaidTime >= tss.stime ) " +
         "GROUP BY tss.stime, tss.etime ORDER BY tss.stime )grossmargin", nativeQuery = true)
-    List<Object[]> getCrossMarginTrendWithAllPlatform(Timestamp beginTime, Timestamp endTime, Long interval);
+    List<Object[]> getCrossMarginTrendWithAllPlatform(Timestamp beginTime, Timestamp endTime, Integer interval);
 
     @Query(value = "SELECT COALESCE(((grossmargin.AfterFoldingPrice - grossmargin.referCost)/ (grossmargin.AfterFoldingPrice)),0) " +
         "AS goodsGrossMargin, grossmargin.stime, grossmargin.etime " +
@@ -113,7 +113,7 @@ public interface GrossMarginRateRepository extends JpaRepository<Author,Long> {
         "RIGHT JOIN( SELECT ts.generate_series AS stime, ts.generate_series + ?3 * INTERVAL '1 second' AS etime " +
         "FROM ( SELECT generate_series( ?1, ?2, ?3 * INTERVAL '1 second' ) )ts )tss ON( coo.MPaidTime < tss.etime AND coo.MPaidTime >= tss.stime ) " +
         "GROUP BY tss.stime, tss.etime ORDER BY tss.stime )grossmargin", nativeQuery = true)
-    List<Object[]> getCrossMarginTrendWithSinglePlatform(Timestamp beginTime, Timestamp endTime,Long interval,Integer platform);
+    List<Object[]> getCrossMarginTrendWithSinglePlatform(Timestamp beginTime, Timestamp endTime,Integer interval,Integer platform);
 
     // TODO fix slow sql query
 

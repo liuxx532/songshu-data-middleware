@@ -3,6 +3,7 @@ package com.comall.songshu.service;
 import com.comall.songshu.repository.OrderCountRepository;
 import com.comall.songshu.web.rest.util.AssembleUtil;
 import com.comall.songshu.web.rest.util.JsonStringBuilder;
+import com.comall.songshu.web.rest.util.ServiceUtil;
 import com.comall.songshu.web.rest.util.TransferUtil;
 import com.comall.songshu.web.rest.vm.TopStat;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,5 +51,58 @@ public class OrderCountService {
     }
 
     // TODO add trend
+
+    public String getOrderCountTrend(String platformName, Timestamp beginTime, Timestamp endTime, Timestamp chainBeginTime, Timestamp chainEndTime){
+
+        int platform = TransferUtil.getPlatform(platformName);
+
+        Integer interValue= ServiceUtil.getInstance().getAggTimeValue(beginTime,endTime);
+
+
+        //所有平台
+        List<Object[] > currentAllPlatformResult = null;
+        List<Object[] > chainAllPlatformResult = null;
+
+        //单个平台
+        List<Object[] > currentSinglePlatformResult = null;
+        List<Object[] > chainSinglePlatformResult = null;
+
+
+        //所有平台
+        if (platform < 0){ //所有平台
+            //当前
+            currentAllPlatformResult = orderCountRepository.getOrderCountTrendWithAllPlatform(beginTime, endTime, interValue);
+            //环比
+            chainAllPlatformResult = orderCountRepository.getOrderCountTrendWithAllPlatform(chainBeginTime, chainEndTime, interValue);
+
+            List<Object[]> currentAllPlatform =null ;
+            List<Object[]> chainAllPlatform =null ;
+
+            if (null != currentAllPlatformResult){
+                currentAllPlatform= currentAllPlatformResult;
+            }
+            if(null != chainAllPlatformResult){
+                chainAllPlatform= chainAllPlatformResult;
+            }
+
+            return JsonStringBuilder.buildTrendJsonStringForLongType(currentAllPlatform, chainAllPlatform);
+        }else {//单个平台
+            currentSinglePlatformResult = orderCountRepository.getOrderCounTrendtWithSinglePlatform(platform, beginTime, endTime, interValue);
+            chainSinglePlatformResult = orderCountRepository.getOrderCounTrendtWithSinglePlatform(platform, chainBeginTime, chainEndTime, interValue);
+
+            List<Object[]> currentSinglePlatform =null;
+            List<Object[]> chainSinglePlatform =null;
+
+            if(null != currentSinglePlatformResult){
+                currentSinglePlatform = currentSinglePlatformResult;
+
+            }
+            if (null != chainSinglePlatformResult){
+                chainSinglePlatform = chainSinglePlatformResult;
+            }
+            return JsonStringBuilder.buildTrendJsonStringForLongType(currentSinglePlatform, chainSinglePlatform);
+        }
+
+    }
 
 }
