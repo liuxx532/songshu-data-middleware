@@ -162,6 +162,7 @@ public class IndexResource {
                 && Optional.ofNullable(platform).isPresent()){
 
                 switch (target) {
+                        // 单个指标
                         case "Revenue":
                             return revenueService.getRevenue(target,platform,beginTime,endTime,chainBeginTime,chainEndTime);
                         case "OrderCount":
@@ -175,22 +176,22 @@ public class IndexResource {
                         case "GrossMarginRate":
                             return grossMarginRateService.getGrossMarginRate(target,platform,beginTime,endTime,chainBeginTime,chainEndTime);
 
+                        // 趋势
                         case "RevenueTrend" :
                             return revenueService.getRevenueTrend(target,platform,beginTime,endTime,chainBeginTime,chainEndTime);
                         case "OrderCountTrend" :
-                            return null;
+                            return orderCountService.getOrderCountTrend(platform, beginTime, endTime, chainBeginTime, chainEndTime);
                         case "AvgOrderRevenueTrend" :
-                            return null;
+                            return avgOrderRevenueService.getAvgOrderRevenueTrend(platform, beginTime, endTime, chainBeginTime, chainEndTime);
                         case "UniqueVisitorsTrend" :
-                            return null;
+                            return uniqueVisitorsService.getUniqueVisitorsTrend(platform, beginTime, endTime, chainBeginTime, chainEndTime);
                         case "RefundTrend" :
-                            return null;
+                            return refundService.getRefundTrend(platform, beginTime, endTime, chainBeginTime, chainEndTime);
                         case "GrossMarginRateTrend" :
-                            return null;
+                            return grossMarginRateService.getGrossMarginRateTrend(platform, beginTime, endTime, chainBeginTime, chainEndTime);
 
                         default:
                             throw new IllegalArgumentException("target=" + target);
-
                 }
             }
         }

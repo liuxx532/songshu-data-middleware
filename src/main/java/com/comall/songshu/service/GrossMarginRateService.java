@@ -4,6 +4,7 @@ import com.comall.songshu.repository.GrossMarginRateRepository;
 import com.comall.songshu.repository.RevenueRepository;
 import com.comall.songshu.web.rest.util.AssembleUtil;
 import com.comall.songshu.web.rest.util.JsonStringBuilder;
+import com.comall.songshu.web.rest.util.ServiceUtil;
 import com.comall.songshu.web.rest.util.TransferUtil;
 import com.comall.songshu.web.rest.vm.TopStat;
 import org.slf4j.Logger;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -73,6 +75,59 @@ public class GrossMarginRateService {
 
         return JsonStringBuilder.buildTargetJsonString(target,result,"");
 
+
+    }
+
+    public String getGrossMarginRateTrend(String platformName, Timestamp beginTime, Timestamp endTime, Timestamp chainBeginTime, Timestamp chainEndTime){
+
+        int platform = TransferUtil.getPlatform(platformName);
+
+        Integer interValue = ServiceUtil.getInstance().getAggTimeValue(beginTime,endTime);
+
+
+        //所有平台
+        List<Object[] > currentAllPlatformResult = null;
+        List<Object[] > chainAllPlatformResult = null;
+
+        //单个平台
+        List<Object[] > currentSinglePlatformResult = null;
+        List<Object[] > chainSinglePlatformResult = null;
+
+
+        //所有平台
+        if (platform < 0){ //所有平台
+            //当前
+            currentAllPlatformResult = grossMarginRateRepository.getCrossMarginTrendWithAllPlatform(beginTime, endTime, interValue);
+            //环比
+            chainAllPlatformResult = grossMarginRateRepository.getCrossMarginTrendWithAllPlatform(chainBeginTime, chainEndTime, interValue);
+
+            List<Object[]> currentAllPlatform =null ;
+            List<Object[]> chainAllPlatform =null ;
+
+            if (null != currentAllPlatformResult){
+                currentAllPlatform= currentAllPlatformResult;
+            }
+            if(null != chainAllPlatformResult){
+                chainAllPlatform= chainAllPlatformResult;
+            }
+
+            return JsonStringBuilder.buildTrendJsonString(currentAllPlatform, chainAllPlatform);
+        }else {//单个平台
+            currentSinglePlatformResult = grossMarginRateRepository.getCrossMarginTrendWithSinglePlatform(beginTime, endTime, interValue, platform);
+            chainSinglePlatformResult = grossMarginRateRepository.getCrossMarginTrendWithSinglePlatform(chainBeginTime, chainEndTime, interValue, platform);
+
+            List<Object[]> currentSinglePlatform =null;
+            List<Object[]> chainSinglePlatform =null;
+
+            if(null != currentSinglePlatformResult){
+                currentSinglePlatform = currentSinglePlatformResult;
+
+            }
+            if (null != chainSinglePlatformResult){
+                chainSinglePlatform = chainSinglePlatformResult;
+            }
+            return JsonStringBuilder.buildTrendJsonString(currentSinglePlatform, chainSinglePlatform);
+        }
 
     }
 

@@ -52,7 +52,60 @@ public class AvgOrderRevenueService {
         return JsonStringBuilder.buildTargetJsonString(target,result,"");
     }
 
-    // TODO add trend
+    // 趋势
+
+    public String getAvgOrderRevenueTrend(String platformName, Timestamp beginTime, Timestamp endTime, Timestamp chainBeginTime, Timestamp chainEndTime){
+
+        int platform = TransferUtil.getPlatform(platformName);
+
+        Integer interValue=ServiceUtil.getInstance().getAggTimeValue(beginTime,endTime);
+
+
+        //所有平台
+        List<Object[] > currentAllPlatformResult = null;
+        List<Object[] > chainAllPlatformResult = null;
+
+        //单个平台
+        List<Object[] > currentSinglePlatformResult = null;
+        List<Object[] > chainSinglePlatformResult = null;
+
+
+        //所有平台
+        if (platform < 0){ //所有平台
+            //当前
+            currentAllPlatformResult = avgOrderRevenueRepository.getAvgRevenueTrendWithAllPlatform(beginTime,endTime,interValue);
+            //环比
+            chainAllPlatformResult = avgOrderRevenueRepository.getAvgRevenueTrendWithAllPlatform(chainBeginTime,chainEndTime,interValue);
+
+            List<Object[]> currentAllPlatform =null ;
+            List<Object[]> chainAllPlatform =null ;
+
+            if (null != currentAllPlatformResult){
+                currentAllPlatform= currentAllPlatformResult;
+            }
+            if(null != chainAllPlatformResult){
+                chainAllPlatform= chainAllPlatformResult;
+            }
+
+            return JsonStringBuilder.buildTrendJsonString(currentAllPlatform,chainAllPlatform);
+        }else {//单个平台
+            currentSinglePlatformResult = avgOrderRevenueRepository.getAvgRevenueTrendWithSinglePlatform(platform,beginTime,endTime,interValue);
+            chainSinglePlatformResult = avgOrderRevenueRepository.getAvgRevenueTrendWithSinglePlatform(platform,chainBeginTime,chainEndTime,interValue);
+
+            List<Object[]> currentSinglePlatform =null;
+            List<Object[]> chainSinglePlatform =null;
+
+            if(null != currentSinglePlatformResult){
+                currentSinglePlatform = currentSinglePlatformResult;
+
+            }
+            if (null != chainSinglePlatformResult){
+                chainSinglePlatform = chainSinglePlatformResult;
+            }
+            return JsonStringBuilder.buildTrendJsonString(currentSinglePlatform,chainSinglePlatform);
+        }
+
+    }
 
 
 }

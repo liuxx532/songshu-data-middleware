@@ -5,6 +5,7 @@ import com.comall.songshu.web.rest.vm.TopStat;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Optional;
 
 
 /**
@@ -47,7 +48,9 @@ public class JsonStringBuilder {
             sb.append("[{\"target\":\"当前\",\"datapoints\":[");
             for (Object[] objects : currentTrend) {
                 Timestamp endTime = (Timestamp) objects[1];
-                BigDecimal result = (BigDecimal) objects[2];
+
+                // If result is null, return ZERO
+                BigDecimal result = Optional.ofNullable((BigDecimal) objects[2]).orElse(BigDecimal.ZERO);
                 sb.append("[").append(result).append(',').append(endTime.getTime()).append("]").append(',');
             }
             //出去最后一个 ',';

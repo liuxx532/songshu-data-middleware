@@ -69,7 +69,7 @@ public interface RefundRepository extends JpaRepository<Author,Long> {
         "FROM (SELECT generate_series(?1, ?2, ?3 * INTERVAL '1 second')) ts) tss " +
         "ON (comt.LastModifyTime < tss.etime AND comt.LastModifyTime >= tss.stime) GROUP BY tss.stime, tss.etime " +
         "ORDER BY tss.stime", nativeQuery = true)
-    List<Object[]> getRefundTrendWithAllPlatform(Timestamp beginTime, Timestamp endTime,Long interval);
+    List<Object[]> getRefundTrendWithAllPlatform(Timestamp beginTime, Timestamp endTime, Integer interval);
 
     @Query(value = "SELECT tss.stime, tss.etime, SUM(COALESCE(comt.ActualRefundMoney,0)) " +
         "FROM(SELECT item.\"ActualRefundMoney\" AS ActualRefundMoney, item.\"LastModifyTime\" AS LastModifyTime " +
@@ -83,5 +83,5 @@ public interface RefundRepository extends JpaRepository<Author,Long> {
         "FROM (SELECT generate_series(?1, ?2, ?3 * INTERVAL '1 second')) ts) tss " +
         "ON (comt.LastModifyTime < tss.etime AND comt.LastModifyTime >= tss.stime) GROUP BY tss.stime, tss.etime " +
         "ORDER BY tss.stime", nativeQuery = true)
-    List<Object[]> getRefundTrendWithSinglePlatform(Timestamp beginTime, Timestamp endTime,Long interval,Integer platform);
+    List<Object[]> getRefundTrendWithSinglePlatform(Timestamp beginTime, Timestamp endTime, Integer interval, Integer platform);
 }
