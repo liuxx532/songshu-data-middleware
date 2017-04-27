@@ -115,4 +115,29 @@ public class JsonStringBuilder {
 
         return null;
     }
+
+
+    // [{"target": "坚果", "datapoints": [[25, 1492484041446]],"columnName": ""},{"target": "坚果", "datapoints": [[25, 1492484041446]],"columnName": ""},]
+    public static  String buildRankJsonString(List<Object[]> rank) {
+
+        if (rank != null) {
+
+            StringBuilder sb = new StringBuilder(1024);
+
+            sb.append("[");
+
+            for (Object[] r : rank) {
+                String name = (String) r[0];
+                BigDecimal amount = Optional.ofNullable((BigDecimal) r[1]).orElse(BigDecimal.ZERO);
+                sb.append("{\"target\": \"").append(name).append("\", \"datapoints\": [[").append(amount).append(",")
+                    .append(System.currentTimeMillis()).append("]],\"columnName\": \"\"},");
+            }
+            sb.deleteCharAt(sb.length() - 1); // omit
+            sb.append("]");
+
+            return sb.toString();
+        }
+
+        return null;
+    }
 }
