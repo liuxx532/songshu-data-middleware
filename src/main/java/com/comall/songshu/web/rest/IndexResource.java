@@ -46,6 +46,10 @@ public class IndexResource {
     @Autowired
     private UniqueVisitorsService uniqueVisitorsService;
 
+
+    @Autowired
+    private OrderedConsumerCountService orderedConsumerCountService;
+
     private final Logger log = LoggerFactory.getLogger(AuthorResource.class);
 
 

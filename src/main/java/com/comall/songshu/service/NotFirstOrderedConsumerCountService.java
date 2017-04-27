@@ -1,10 +1,12 @@
 package com.comall.songshu.service;
 
 import com.comall.songshu.repository.NotFirstOrderedConsumerCountRepository;
+import com.comall.songshu.web.rest.util.TransferUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 /**
  * Created by wdc on 2017/4/24.

@@ -140,4 +140,14 @@ public class JsonStringBuilder {
 
         return null;
     }
+
+    // 首单，非首单占比
+    public static String buildOrderedConsumerCountJsonString(Double order, Double notOrder) {
+        StringBuilder sb = new StringBuilder(1024);
+        sb.append("[{\"target\":\"首单\",\"datapoints\":[[").append(order).append(',')
+            .append(System.currentTimeMillis()).append("]],\"columnName\":\"\"},{\"target\":\"非首单\",\"datapoints\":[[")
+            .append(notOrder).append(',').append(System.currentTimeMillis()).append("]],\"columnName\":\"\"}]");
+
+        return sb.toString();
+    }
 }
