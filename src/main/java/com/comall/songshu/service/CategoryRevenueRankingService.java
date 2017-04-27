@@ -58,8 +58,6 @@ public class CategoryRevenueRankingService {
         return JsonStringBuilder.buildRankJsonString(current);
     }
 
-
-
     // 当在某个时间区间查询数据库时，如果没有查到记录
     // 返回默认的排行榜
     private String defaultRanks() {
