@@ -42,17 +42,20 @@ public class OrderedConsumerCountService {
             notOrder = notFirstOrderedConsumerCountRepository.getNotFirstOrderedConsumerCountWithSinglePlatform(platform, startTime, endTime);
         }
 
-        Double total = Optional.ofNullable(order).orElse(0.0) + Optional.ofNullable(notOrder).orElse(0.0);
+        // return results directly
+        order = Optional.ofNullable(order).orElse(0.0);
+        notOrder = Optional.ofNullable(notOrder).orElse(0.0);
 
-        // 计算百分比
-        if (total <= 0.0) {
-            order = 0.5;
-            notOrder = 0.5;
-        } else {
-            order = order / total;
-            notOrder = notOrder / total;
-        }
+//        Double total = Optional.ofNullable(order).orElse(0.0) + Optional.ofNullable(notOrder).orElse(0.0);
 
+// 计算百分比
+//        if (total <= 0.0) {
+//            order = 0.5;
+//            notOrder = 0.5;
+//        } else {
+//            order = order / total;
+//            notOrder = notOrder / total;
+//        }
 
         return JsonStringBuilder.buildOrderedConsumerCountJsonString(order, notOrder);
     }
