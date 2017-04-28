@@ -29,7 +29,7 @@ public interface UniqueVisitorsRepository extends JpaRepository<Author,Long> {
 
     @Query(value = "SELECT count(distinct case when userid <> '' and userid <> '-' then userid end) + \n" +
     "count(distinct case when userid = '' or userid = '-' then ss.\"unique\" end) FROM songshu_log ss\n" +
-    "where os = ?1 AND logTime BETWEEN ?1 and ?2", nativeQuery = true)
+    "where os = ?1 AND logTime BETWEEN ?2 and ?3", nativeQuery = true)
     Double getUniqueVisitorsSinglePlatform(String platform, Timestamp beginTime, Timestamp endTime);
 
 
