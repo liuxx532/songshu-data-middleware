@@ -1,6 +1,7 @@
 package com.comall.songshu.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
+import com.comall.songshu.constants.TrendConstants;
 import com.comall.songshu.repository.OrderCountRepository;
 import com.comall.songshu.service.*;
 import com.comall.songshu.web.rest.util.ServiceUtil;
@@ -97,14 +98,8 @@ public class IndexResource {
             //结束时间str
             String toTimeStr = null;
             if(Optional.ofNullable(range).isPresent()){
-                Object fromObj = range.get("from");
-                Object toObj = range.get("to");
-                fromTimeStr = Optional.ofNullable(fromObj)
-                    .map( o -> (String)fromObj)
-                    .orElse(null);
-                toTimeStr = Optional.ofNullable(toObj)
-                    .map( o -> (String)toObj)
-                    .orElse(null);
+                 fromTimeStr = (String)range.get("from");
+                 toTimeStr = (String)range.get("to");
             }
 
 
@@ -116,28 +111,31 @@ public class IndexResource {
             Timestamp chainBeginTime = null;
             Timestamp chainEndTime = null;
 
-            if(Optional.ofNullable(fromTimeStr).isPresent()
-                && Optional.ofNullable(toTimeStr).isPresent()){
+            if(fromTimeStr != null && toTimeStr != null){
                 beginTime = Optional.of(fromTimeStr)
-                    .map( s -> ServiceUtil.getInstance().parseTimestamp(s))
+                    .map(String::trim)
+                    .filter(s -> s.length() >0)
+                    .map(v -> ServiceUtil.getInstance().parseTimestamp(v))
                     .orElse(null);
                 endTime = Optional.of(toTimeStr)
+                    .map(String::trim)
+                    .filter(s -> s.length() >0)
                     .map( s -> ServiceUtil.getInstance().parseTimestamp(s))
                     .orElse(null);
                 //环比时间
                 String[] chainCreateTime = ServiceUtil.getInstance().getChainIndexDateTime(fromTimeStr,toTimeStr);
-                if(Optional.ofNullable(chainCreateTime).isPresent()){
+                if(chainCreateTime != null){
                     chainBeginTime = Optional.of(chainCreateTime)
+                        .filter( array -> array.length >0)
                         .map( a -> a[0])
                         .map( s -> DateTime.parse(s))
-                        .map( d -> d.toString(dateTimeFormat))
-                        .map( t -> Timestamp.valueOf(t))
+                        .map( d-> Timestamp.valueOf(d.toString(dateTimeFormat)))
                         .orElse(null);
                     chainEndTime = Optional.of(chainCreateTime)
+                        .filter( array -> array.length >1)
                         .map( a -> a[1])
                         .map( s -> DateTime.parse(s))
-                        .map( d -> d.toString(dateTimeFormat))
-                        .map( t -> Timestamp.valueOf(t))
+                        .map( d-> Timestamp.valueOf(d.toString(dateTimeFormat)))
                         .orElse(null);
                 }
             }
@@ -151,7 +149,7 @@ public class IndexResource {
                 .isPresent()) {
                 JSONObject targetJsonObj = (JSONObject)targets.get(0);
                 if (Optional.ofNullable(targetJsonObj).isPresent()){
-                    Object targetObj =  targetJsonObj.get("target");
+                    String targetObj =  (String)targetJsonObj.get("target");
                     target = Optional.ofNullable(targetObj)
                         .map( o -> o.toString())
                         .map( s -> TargetsMap.getTargets().get(s))
@@ -166,12 +164,9 @@ public class IndexResource {
                 .orElse(null);
 
 
-            if (Optional.ofNullable(beginTime).isPresent()
-                && Optional.ofNullable(endTime).isPresent()
-                && Optional.ofNullable(chainBeginTime).isPresent()
-                && Optional.ofNullable(chainEndTime).isPresent()
-                && Optional.ofNullable(target).isPresent()
-                && Optional.ofNullable(platform).isPresent()){
+            if (beginTime != null && endTime!= null
+                && chainBeginTime != null && chainEndTime != null
+                && target != null && platform != null){
 
                 switch (target) {
                     // 单个指标
@@ -190,17 +185,17 @@ public class IndexResource {
 
                     // 趋势
                     case "RevenueTrend" :
-                        return revenueService.getRevenueTrend(target,platform,beginTime,endTime,chainBeginTime,chainEndTime);
+                        return revenueService.getRevenueTrend(target,platform,beginTime,endTime,chainBeginTime,chainEndTime,TrendConstants.aggCount);
                     case "OrderCountTrend" :
-                        return orderCountService.getOrderCountTrend(platform, beginTime, endTime, chainBeginTime, chainEndTime);
+                        return orderCountService.getOrderCountTrend(platform, beginTime, endTime, chainBeginTime, chainEndTime,TrendConstants.aggCount);
                     case "AvgOrderRevenueTrend" :
-                        return avgOrderRevenueService.getAvgOrderRevenueTrend(platform, beginTime, endTime, chainBeginTime, chainEndTime);
+                        return avgOrderRevenueService.getAvgOrderRevenueTrend(platform, beginTime, endTime, chainBeginTime, chainEndTime,TrendConstants.aggCount);
                     case "UniqueVisitorsTrend" :
-                        return uniqueVisitorsService.getUniqueVisitorsTrend(platform, beginTime, endTime, chainBeginTime, chainEndTime);
+                        return uniqueVisitorsService.getUniqueVisitorsTrend(platform, beginTime, endTime, chainBeginTime, chainEndTime,TrendConstants.aggCount);
                     case "RefundTrend" :
-                        return refundService.getRefundTrend(platform, beginTime, endTime, chainBeginTime, chainEndTime);
+                        return refundService.getRefundTrend(platform, beginTime, endTime, chainBeginTime, chainEndTime,TrendConstants.aggCount);
                     case "GrossMarginRateTrend" :
-                        return grossMarginRateService.getGrossMarginRateTrend(platform, beginTime, endTime, chainBeginTime, chainEndTime);
+                        return grossMarginRateService.getGrossMarginRateTrend(platform, beginTime, endTime, chainBeginTime, chainEndTime,TrendConstants.aggCount);
                     // 饼图
                     case "NewRegisterRate":
                         return newRegisterCountService.getNewRegisterCount(platform,beginTime,endTime);

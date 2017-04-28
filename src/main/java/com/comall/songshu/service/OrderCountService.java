@@ -52,11 +52,11 @@ public class OrderCountService {
 
     // TODO add trend
 
-    public String getOrderCountTrend(String platformName, Timestamp beginTime, Timestamp endTime, Timestamp chainBeginTime, Timestamp chainEndTime){
+    public String getOrderCountTrend(String platformName, Timestamp beginTime, Timestamp endTime, Timestamp chainBeginTime, Timestamp chainEndTime, int aggCount){
 
         int platform = TransferUtil.getPlatform(platformName);
 
-        Integer interValue= ServiceUtil.getInstance().getAggTimeValue(beginTime,endTime);
+        Integer interValue= ServiceUtil.getInstance().getAggTimeValue(beginTime,endTime,aggCount);
 
 
         //所有平台
