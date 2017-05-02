@@ -1,6 +1,6 @@
-package com.comall.songshu.service;
+package com.comall.songshu.service.index;
 
-import com.comall.songshu.repository.UniqueVisitorsRepository;
+import com.comall.songshu.repository.index.UniqueVisitorsRepository;
 import com.comall.songshu.web.rest.util.AssembleUtil;
 import com.comall.songshu.web.rest.util.JsonStringBuilder;
 import com.comall.songshu.web.rest.util.ServiceUtil;

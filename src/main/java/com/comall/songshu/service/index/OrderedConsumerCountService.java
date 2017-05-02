@@ -1,15 +1,13 @@
-package com.comall.songshu.service;
+package com.comall.songshu.service.index;
 
-import com.comall.songshu.repository.FirstOrderedConsumerCountRepository;
-import com.comall.songshu.repository.NotFirstOrderedConsumerCountRepository;
+import com.comall.songshu.repository.index.FirstOrderedConsumerCountRepository;
+import com.comall.songshu.repository.index.NotFirstOrderedConsumerCountRepository;
 import com.comall.songshu.web.rest.util.JsonStringBuilder;
 import com.comall.songshu.web.rest.util.TransferUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
 
 /**

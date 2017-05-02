@@ -1,6 +1,6 @@
-package com.comall.songshu.service;
+package com.comall.songshu.service.index;
 
-import com.comall.songshu.repository.NewRegisterCountRepository;
+import com.comall.songshu.repository.index.NewRegisterCountRepository;
 import com.comall.songshu.web.rest.AuthorResource;
 import com.comall.songshu.web.rest.util.JsonStringBuilder;
 import com.comall.songshu.web.rest.util.TransferUtil;
@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 

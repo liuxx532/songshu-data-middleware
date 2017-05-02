@@ -1,7 +1,7 @@
-package com.comall.songshu.service;
+package com.comall.songshu.service.index;
 
-import com.comall.songshu.repository.GrossMarginRateRepository;
-import com.comall.songshu.repository.RevenueRepository;
+import com.comall.songshu.repository.index.GrossMarginRateRepository;
+import com.comall.songshu.repository.index.RevenueRepository;
 import com.comall.songshu.web.rest.util.AssembleUtil;
 import com.comall.songshu.web.rest.util.JsonStringBuilder;
 import com.comall.songshu.web.rest.util.ServiceUtil;

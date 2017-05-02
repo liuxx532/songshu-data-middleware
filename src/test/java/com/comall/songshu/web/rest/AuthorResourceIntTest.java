@@ -3,7 +3,7 @@ package com.comall.songshu.web.rest;
 import com.comall.songshu.SongshuDataMiddlewareApp;
 
 import com.comall.songshu.domain.Author;
-import com.comall.songshu.repository.AuthorRepository;
+import com.comall.songshu.repository.index.AuthorRepository;
 import com.comall.songshu.web.rest.errors.ExceptionTranslator;
 
 import org.junit.Before;

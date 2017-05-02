@@ -1,6 +1,6 @@
-package com.comall.songshu.service;
+package com.comall.songshu.service.index;
 
-import com.comall.songshu.repository.OrderCountRepository;
+import com.comall.songshu.repository.index.OrderCountRepository;
 import com.comall.songshu.web.rest.util.AssembleUtil;
 import com.comall.songshu.web.rest.util.JsonStringBuilder;
 import com.comall.songshu.web.rest.util.ServiceUtil;

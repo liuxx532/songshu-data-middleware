@@ -1,4 +1,4 @@
-package com.comall.songshu.repository;
+package com.comall.songshu.repository.index;
 
 import com.comall.songshu.domain.Author;
 

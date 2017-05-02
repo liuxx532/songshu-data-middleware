@@ -3,7 +3,7 @@ package com.comall.songshu.web.rest;
 import com.codahale.metrics.annotation.Timed;
 import com.comall.songshu.domain.Author;
 
-import com.comall.songshu.repository.AuthorRepository;
+import com.comall.songshu.repository.index.AuthorRepository;
 import com.comall.songshu.web.rest.util.HeaderUtil;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
@@ -26,7 +26,7 @@ public class AuthorResource {
     private final Logger log = LoggerFactory.getLogger(AuthorResource.class);
 
     private static final String ENTITY_NAME = "author";
-        
+
     private final AuthorRepository authorRepository;
 
     public AuthorResource(AuthorRepository authorRepository) {

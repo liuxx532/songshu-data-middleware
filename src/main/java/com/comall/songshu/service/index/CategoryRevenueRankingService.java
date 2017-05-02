@@ -1,10 +1,8 @@
-package com.comall.songshu.service;
+package com.comall.songshu.service.index;
 
-import com.comall.songshu.repository.CategoryRevenueRankingRepository;
+import com.comall.songshu.repository.index.CategoryRevenueRankingRepository;
 import com.comall.songshu.web.rest.util.JsonStringBuilder;
-import com.comall.songshu.web.rest.util.ServiceUtil;
 import com.comall.songshu.web.rest.util.TransferUtil;
-import org.json.JSONString;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

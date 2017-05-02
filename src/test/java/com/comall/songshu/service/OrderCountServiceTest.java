@@ -2,7 +2,8 @@ package com.comall.songshu.service;
 
 import com.comall.songshu.SongshuDataMiddlewareApp;
 import com.comall.songshu.domain.Author;
-import com.comall.songshu.repository.OrderCountRepository;
+import com.comall.songshu.repository.index.OrderCountRepository;
+import com.comall.songshu.service.index.OrderCountService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;

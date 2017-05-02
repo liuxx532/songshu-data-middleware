@@ -2,8 +2,7 @@ package com.comall.songshu.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import com.comall.songshu.constants.TrendConstants;
-import com.comall.songshu.repository.OrderCountRepository;
-import com.comall.songshu.service.*;
+import com.comall.songshu.service.index.*;
 import com.comall.songshu.web.rest.util.ServiceUtil;
 import com.comall.songshu.web.rest.util.TargetsMap;
 import org.joda.time.DateTime;
@@ -19,7 +18,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**

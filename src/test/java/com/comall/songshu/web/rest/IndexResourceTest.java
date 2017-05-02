@@ -1,7 +1,7 @@
 package com.comall.songshu.web.rest;
 
 import com.comall.songshu.SongshuDataMiddlewareApp;
-import com.comall.songshu.service.*;
+import com.comall.songshu.service.index.*;
 import com.comall.songshu.web.rest.errors.ExceptionTranslator;
 import com.comall.songshu.web.rest.util.TargetsMap;
 import org.junit.Before;
@@ -19,7 +19,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;

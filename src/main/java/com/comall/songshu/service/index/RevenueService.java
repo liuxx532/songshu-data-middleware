@@ -1,6 +1,6 @@
-package com.comall.songshu.service;
+package com.comall.songshu.service.index;
 
-import com.comall.songshu.repository.RevenueRepository;
+import com.comall.songshu.repository.index.RevenueRepository;
 import com.comall.songshu.web.rest.AuthorResource;
 import com.comall.songshu.web.rest.util.*;
 import com.comall.songshu.web.rest.vm.TopStat;
