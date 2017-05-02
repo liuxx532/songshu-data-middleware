@@ -47,11 +47,11 @@ public class RevenueService {
         return JsonStringBuilder.buildTargetJsonString(target,result,"");
     }
 
-    public String getRevenueTrend(String target,String platformName,Timestamp beginTime,Timestamp endTime ,Timestamp chainBeginTime,Timestamp chainEndTime){
+    public String getRevenueTrend(String target,String platformName,Timestamp beginTime,Timestamp endTime ,Timestamp chainBeginTime,Timestamp chainEndTime, int aggCount){
 
         int platform = TransferUtil.getPlatform(platformName);
 
-        Integer interValue=ServiceUtil.getInstance().getAggTimeValue(beginTime,endTime);
+        Integer interValue=ServiceUtil.getInstance().getAggTimeValue(beginTime,endTime,aggCount);
 
         log.info("paltform",platform);
         log.info("interVlue",interValue);

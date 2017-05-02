@@ -52,12 +52,11 @@ public class RefundService {
 
     }
 
-    // TODO add trend
-    public String getRefundTrend(String platformName, Timestamp beginTime, Timestamp endTime, Timestamp chainBeginTime, Timestamp chainEndTime){
+    public String getRefundTrend(String platformName, Timestamp beginTime, Timestamp endTime, Timestamp chainBeginTime, Timestamp chainEndTime, int aggCount){
 
         int platform = TransferUtil.getPlatform(platformName);
 
-        Integer interValue= ServiceUtil.getInstance().getAggTimeValue(beginTime, endTime);
+        Integer interValue= ServiceUtil.getInstance().getAggTimeValue(beginTime, endTime,aggCount);
 
 
         //所有平台

@@ -37,11 +37,11 @@ public class UniqueVisitorsService {
         return  JsonStringBuilder.buildTargetJsonString(target,result,"");
     }
 
-    public String getUniqueVisitorsTrend(String platformName, Timestamp beginTime, Timestamp endTime, Timestamp chainBeginTime, Timestamp chainEndTime){
+    public String getUniqueVisitorsTrend(String platformName, Timestamp beginTime, Timestamp endTime, Timestamp chainBeginTime, Timestamp chainEndTime, int aggCount){
 
-        // int platform = TransferUtil.getPlatform(platformName);
+        int platform = TransferUtil.getPlatform(platformName);
 
-        Integer interValue= ServiceUtil.getInstance().getAggTimeValue(beginTime,endTime);
+        Integer interValue= ServiceUtil.getInstance().getAggTimeValue(beginTime,endTime,aggCount);
 
 
         //所有平台
@@ -54,7 +54,7 @@ public class UniqueVisitorsService {
 
 
         //所有平台
-        if ( platformName.equals("all") ){ //所有平台
+        if (platform < 0){ //所有平台
             //当前
             currentAllPlatformResult = uniqueVisitorsRepository.getUniqueVisitorsTrendAllPlatform(beginTime, endTime, interValue);
             //环比

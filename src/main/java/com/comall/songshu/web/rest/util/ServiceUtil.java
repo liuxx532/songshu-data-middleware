@@ -4,8 +4,10 @@ import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
+import org.relaxng.datatype.DatatypeException;
 
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.Optional;
 
 /**
@@ -24,20 +26,45 @@ public class ServiceUtil {
         return INSTANCE;
     }
 
-    // 使用本地时区
+
+    /**
+     * 获取本地时区
+     * @param dateTime 不能为null 不能为""
+     * @return
+     */
     public String formatDateTime(String dateTime) {
-        return new DateTime(new DateTime(dateTime).getMillis()).withZone(DateTimeZone.forID("+00")).toString();
+        return  Optional.ofNullable(dateTime)
+            .map(String::trim)
+            .filter( s -> s.length() > 0)
+            .map( t -> new DateTime(t))
+            .map( d -> d.getMillis())
+            .map( m -> new DateTime(m).withZone(DateTimeZone.forID("+00")).toString())
+            .orElse(null);
     }
 
-    //根据时间区间，获取环比的开始时间
+    /**
+     * 根据时间区间，获取环比的开始时间
+     * @param beginTime 2017-11-11 00:00:00 不能为空 null ""
+     * @param endTime 2017-11-11 00:00:00 不能为空 null ""
+     * @return
+     */
     public String[] getChainIndexDateTime(String beginTime, String endTime) {
-        if (null == beginTime || null == endTime || "" == beginTime || "" == endTime)
-            throw new IllegalArgumentException("Invalid datetime input string: " + beginTime + ", " + endTime);
 
-        final Long bTime = new DateTime(beginTime).getMillis();
-        Long eTime = new DateTime(endTime).getMillis();
+        Long bTime = Optional.ofNullable(beginTime)
+            .map(String::trim)
+            .filter( s -> s.length() >0)
+            .map( t -> new DateTime(t))
+            .map( d -> d.getMillis())
+            .orElseThrow(() ->  new IllegalArgumentException("Invalid datetime input string beginTime: " + beginTime ));
 
-        final Long bwTimes = 2 * bTime - eTime;
+        Long eTime = Optional.ofNullable(endTime)
+            .map(String::trim)
+            .filter( s -> s.length() >0)
+            .map( t -> new DateTime(t))
+            .map( d -> d.getMillis())
+            .orElseThrow(() ->  new IllegalArgumentException("Invalid datetime input string endTime: " + endTime ));
+
+        Long bwTimes = 2 * bTime - eTime;
         String endTime2 = endTime;
 
         String chainIndexStartTime = null;
@@ -53,7 +80,7 @@ public class ServiceUtil {
             eEndWith2 = endTime2.substring(8, 19);
         }
 
-        //如果时间差超过27天，并且时分秒是00:00:00 或 23:59:59
+        //如果时间差超过27天，并且时分秒是00:00:00 或 23:59:59   2017-11-11 00:00:00
         if ((eTime - bTime) > (27 * 24 * 3600 * 1000L) && "01T00:00:00" == bEndWith && "01T00:00:00" == eEndWith2) {
             final String bStartWith = beginTime.substring(0, 10);
             final String eStartWith = endTime2.substring(0, 10);
@@ -96,31 +123,53 @@ public class ServiceUtil {
         return new String[] {chainIndexStartTime, chainIndexEndTime};
     }
 
-    //计算环比的两个开始时间的差值
+    /**
+     * 计算环比的两个开始时间的差值
+     * @param beginTime
+     * @param endTime
+     * @return
+     */
     public long getChainIndexDateTimeMillis(String beginTime, String endTime) {
+
         String[] timeArr = getChainIndexDateTime(beginTime, endTime);
-        long bTime = new DateTime(beginTime).getMillis();
-        long chainIndexTime = new DateTime(timeArr[0]).getMillis();
+        Long chainIndexTime =  Optional.ofNullable(timeArr)
+            .filter( array -> array.length >0)
+            .map( a -> new DateTime(a).getMillis())
+            .orElse(null);
+        Long bTime = Optional.ofNullable(beginTime)
+            .map(String::trim)
+            .map( t -> new DateTime(t))
+            .map( d -> d.getMillis())
+            .orElse(null);
 
-        return bTime - chainIndexTime;
+        if(Optional.ofNullable(chainIndexTime).isPresent()
+            && Optional.ofNullable(chainIndexTime).isPresent()){
+            return bTime - chainIndexTime;
+        }
+        return 0;
     }
 
-    //聚合的时间范围
-    public Long getAggTimeValue(String beginTime, String endTime) {
-        long bTime = new DateTime(beginTime).getMillis();
-        long eTime = new DateTime(endTime).getMillis();
 
-        return (eTime - bTime) / 30;
-    }
-    //聚合的时间范围
-    public Integer getAggTimeValue(Timestamp beginTime, Timestamp endTime) {
-        long bTime = beginTime.getTime();
-        long eTime = endTime.getTime();
-        Long result = (eTime - bTime) / 90 / 1000;
-
-        Integer intervalResult =result.intValue();
-        Integer interval= Optional.ofNullable(intervalResult).orElse(0);
-
+    /**
+     * 聚合的时间范围（趋势图时间间隔，时间单位为秒）
+     * @param beginTime 不能为null
+     * @param endTime 不能为null
+     * @param aggCount 大于0
+     * @return 如果参数错误返回0
+     */
+    public  Integer getAggTimeValue(Timestamp beginTime, Timestamp endTime,Integer aggCount) {
+        Integer interval = 0;
+        if(Optional.ofNullable(beginTime).isPresent()
+            && Optional.ofNullable(endTime).isPresent() ){
+            long bTime = beginTime.getTime();
+            long eTime = endTime.getTime();
+            interval = Optional.ofNullable(aggCount)
+                .filter( agg -> agg >0)
+                .map( l -> (eTime - bTime) / aggCount / 1000)
+                .filter( i -> i > 0)
+                .map( v -> v.intValue())
+                .orElse(0);
+        }
         return interval;
     }
 
@@ -141,5 +190,20 @@ public class ServiceUtil {
         String parsedStrDatetime = DateTime.parse(strDatetime).toString(dateTimeFormatter);
         return Timestamp.valueOf(parsedStrDatetime);
     }
+
+
+//    public static void main(String[] a12){
+//        Date now = new Date();
+//        Timestamp beginTime = new Timestamp(now.getTime());
+//        Timestamp endTime = new Timestamp(now.getTime()+6000);
+//        Integer count = ServiceUtil.getInstance().getAggTimeValue(beginTime,endTime,2);
+//        System.out.println(count);
+//
+//        String zone = ServiceUtil.getInstance().formatDateTime("   ");
+//        System.out.println(zone);
+//
+//        long l = ServiceUtil.getInstance().getChainIndexDateTimeMillis("2017-01-31 00:00:00","");
+//        System.out.println(l);
+//    }
 
 }
