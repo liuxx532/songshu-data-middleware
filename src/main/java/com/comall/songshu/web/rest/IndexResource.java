@@ -128,12 +128,16 @@ public class IndexResource {
                     chainBeginTime = Optional.of(chainCreateTime)
                         .filter( array -> array.length >0)
                         .map( a -> a[0])
+                        .map(String::trim)
+                        .filter(s -> s.length() >0)
                         .map( s -> DateTime.parse(s))
                         .map( d-> Timestamp.valueOf(d.toString(dateTimeFormat)))
                         .orElse(null);
                     chainEndTime = Optional.of(chainCreateTime)
                         .filter( array -> array.length >1)
                         .map( a -> a[1])
+                        .map(String::trim)
+                        .filter(s -> s.length() >0)
                         .map( s -> DateTime.parse(s))
                         .map( d-> Timestamp.valueOf(d.toString(dateTimeFormat)))
                         .orElse(null);
@@ -151,8 +155,7 @@ public class IndexResource {
                 if (Optional.ofNullable(targetJsonObj).isPresent()){
                     String targetObj =  (String)targetJsonObj.get("target");
                     target = Optional.ofNullable(targetObj)
-                        .map( o -> o.toString())
-                        .map( s -> TargetsMap.getTargets().get(s))
+                        .map( o ->  TargetsMap.getTargets().get(o.toString()))
                         .orElse(null);
                 }
             }
