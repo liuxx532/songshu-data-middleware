@@ -13,11 +13,13 @@ import java.util.List;
 import java.util.Optional;
 
 /**
+ * 下单用户数
  * Created by wdc on 2017/4/27.
  */
 
 @Service
 public class OrderedConsumerCountService {
+
     @Autowired
     FirstOrderedConsumerCountRepository firstOrderedConsumerCountRepository;
 
@@ -29,8 +31,8 @@ public class OrderedConsumerCountService {
 
         int platform = TransferUtil.getPlatform(platformName);
 
-        Double order = null;
-        Double notOrder = null;
+        Double order;
+        Double notOrder;
 
         if (platform < 0) {
             // For all platform
@@ -42,20 +44,9 @@ public class OrderedConsumerCountService {
             notOrder = notFirstOrderedConsumerCountRepository.getNotFirstOrderedConsumerCountWithSinglePlatform(platform, startTime, endTime);
         }
 
-        // return results directly
         order = Optional.ofNullable(order).orElse(0.0);
         notOrder = Optional.ofNullable(notOrder).orElse(0.0);
 
-//        Double total = Optional.ofNullable(order).orElse(0.0) + Optional.ofNullable(notOrder).orElse(0.0);
-
-// 计算百分比
-//        if (total <= 0.0) {
-//            order = 0.5;
-//            notOrder = 0.5;
-//        } else {
-//            order = order / total;
-//            notOrder = notOrder / total;
-//        }
 
         return JsonStringBuilder.buildOrderedConsumerCountJsonString(order, notOrder);
     }

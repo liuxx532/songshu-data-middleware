@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
+ * 毛利率
  * Created by liugaoyu on 2017/4/20.
  */
 @Service
@@ -43,32 +44,16 @@ public class GrossMarginRateService {
         Double grossMarginRateResult;
         Double chainGrossMarginRateResult;
 
-        //商品成本
-//        Double productCostResult;
-//        Double chainProductCostResult;
-        //销售额
-//        Double revenueResult;
-//        Double chainRevenueResult;
-
-        if (platform<0){//
+        if (platform<0){
               grossMarginRateResult = grossMarginRateRepository.getCrossMarginWithAllPlatform(beginTime,endTime);
               chainGrossMarginRateResult  = grossMarginRateRepository.getCrossMarginWithAllPlatform(chainBeginTime,chainEndTime);
-//            productCostResult = grossMarginRateRepository.getProductCostWithAllPlatform(beginTime,endTime);
-//            chainProductCostResult = grossMarginRateRepository.getProductCostWithAllPlatform(beginTime,endTime);
-//            revenueResult = revenueRepository.getRevenueWithAllPlatform(beginTime,endTime);
-//            chainRevenueResult = revenueRepository.getRevenueWithAllPlatform(chainBeginTime,chainEndTime);
         }else {
               grossMarginRateResult = grossMarginRateRepository.getCrossMarginWithSinglePlatform(beginTime,endTime,platform);
               chainGrossMarginRateResult  = grossMarginRateRepository.getCrossMarginWithSinglePlatform(chainBeginTime,chainEndTime,platform);
-//            productCostResult = grossMarginRateRepository.getProductCostWithSinglePlatform(platform,beginTime,endTime);
-//            chainProductCostResult = grossMarginRateRepository.getProductCostWithSinglePlatform(platform,beginTime,endTime);
-//            revenueResult = revenueRepository.getRevenueWithSinglePlatform(platform,beginTime,endTime);
-//            chainRevenueResult = revenueRepository.getRevenueWithSinglePlatform(platform,chainBeginTime,chainEndTime);
         }
 
         Double grossMarginRate = Optional.ofNullable(grossMarginRateResult).orElse(0.00);
         Double chainGrossMarginRate = Optional.ofNullable(chainGrossMarginRateResult).orElse(0.00);
-
 
         //TopStat
         TopStat result= AssembleUtil.assemblerTopStat(grossMarginRate,chainGrossMarginRate);
@@ -84,51 +69,24 @@ public class GrossMarginRateService {
 
         Integer interValue = ServiceUtil.getInstance().getAggTimeValue(beginTime,endTime,aggCount);
 
-
-        //所有平台
-        List<Object[] > currentAllPlatformResult = null;
-        List<Object[] > chainAllPlatformResult = null;
-
-        //单个平台
-        List<Object[] > currentSinglePlatformResult = null;
-        List<Object[] > chainSinglePlatformResult = null;
+        //当前
+        List<Object[] > currentGrossMarginRateResult;
+        //环比
+        List<Object[] > chainGrossMarginRateResult;
 
 
-        //所有平台
         if (platform < 0){ //所有平台
-            //当前
-            currentAllPlatformResult = grossMarginRateRepository.getCrossMarginTrendWithAllPlatform(beginTime, endTime, interValue);
-            //环比
-            chainAllPlatformResult = grossMarginRateRepository.getCrossMarginTrendWithAllPlatform(chainBeginTime, chainEndTime, interValue);
-
-            List<Object[]> currentAllPlatform =null ;
-            List<Object[]> chainAllPlatform =null ;
-
-            if (null != currentAllPlatformResult){
-                currentAllPlatform= currentAllPlatformResult;
-            }
-            if(null != chainAllPlatformResult){
-                chainAllPlatform= chainAllPlatformResult;
-            }
-
-            return JsonStringBuilder.buildTrendJsonString(currentAllPlatform, chainAllPlatform);
+            currentGrossMarginRateResult = grossMarginRateRepository.getCrossMarginTrendWithAllPlatform(beginTime, endTime, interValue);
+            chainGrossMarginRateResult = grossMarginRateRepository.getCrossMarginTrendWithAllPlatform(chainBeginTime, chainEndTime, interValue);
         }else {//单个平台
-            currentSinglePlatformResult = grossMarginRateRepository.getCrossMarginTrendWithSinglePlatform(beginTime, endTime, interValue, platform);
-            chainSinglePlatformResult = grossMarginRateRepository.getCrossMarginTrendWithSinglePlatform(chainBeginTime, chainEndTime, interValue, platform);
-
-            List<Object[]> currentSinglePlatform =null;
-            List<Object[]> chainSinglePlatform =null;
-
-            if(null != currentSinglePlatformResult){
-                currentSinglePlatform = currentSinglePlatformResult;
-
-            }
-            if (null != chainSinglePlatformResult){
-                chainSinglePlatform = chainSinglePlatformResult;
-            }
-            return JsonStringBuilder.buildTrendJsonString(currentSinglePlatform, chainSinglePlatform);
+            currentGrossMarginRateResult = grossMarginRateRepository.getCrossMarginTrendWithSinglePlatform(beginTime, endTime, interValue, platform);
+            chainGrossMarginRateResult = grossMarginRateRepository.getCrossMarginTrendWithSinglePlatform(chainBeginTime, chainEndTime, interValue, platform);
         }
 
+        List<Object[]> currentGrossMarginRate = Optional.ofNullable(currentGrossMarginRateResult).orElse(null);
+        List<Object[]> chainRGrossMarginRate= Optional.ofNullable(chainGrossMarginRateResult).orElse(null);
+
+        return JsonStringBuilder.buildTrendJsonString(currentGrossMarginRate,chainRGrossMarginRate);
     }
 
 

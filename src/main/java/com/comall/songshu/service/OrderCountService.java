@@ -14,11 +14,12 @@ import java.util.List;
 import java.util.Optional;
 
 /**
+ * 订单量
  * Created by liugaoyu on 2017/4/20.
  */
-// 订单量
 @Service
 public class OrderCountService {
+
     @Autowired
     private OrderCountRepository orderCountRepository;
 
@@ -29,9 +30,11 @@ public class OrderCountService {
     public String  getOrderCount(String target,String platformName, Timestamp beginTime,Timestamp endTime,Timestamp chainBeginTime,Timestamp chainEndTime) {
 
         int platform = TransferUtil.getPlatform(platformName);
+
         Double orderCountResult;
         Double chainOrderCountResult;
-        if (platform<0){//
+
+        if (platform<0){
             orderCountResult = orderCountRepository.getOrderCountWithAllPlatform(beginTime,endTime);
             chainOrderCountResult = orderCountRepository.getOrderCountWithAllPlatform(chainBeginTime,chainEndTime);
         }else {
@@ -50,7 +53,6 @@ public class OrderCountService {
 
     }
 
-    // TODO add trend
 
     public String getOrderCountTrend(String platformName, Timestamp beginTime, Timestamp endTime, Timestamp chainBeginTime, Timestamp chainEndTime, int aggCount){
 
@@ -58,51 +60,25 @@ public class OrderCountService {
 
         Integer interValue= ServiceUtil.getInstance().getAggTimeValue(beginTime,endTime,aggCount);
 
-
-        //所有平台
-        List<Object[] > currentAllPlatformResult = null;
-        List<Object[] > chainAllPlatformResult = null;
-
-        //单个平台
-        List<Object[] > currentSinglePlatformResult = null;
-        List<Object[] > chainSinglePlatformResult = null;
+        //当前
+        List<Object[] > currentOrderCountResult;
+        //环比
+        List<Object[] > chainOrderCountResult;
 
 
         //所有平台
         if (platform < 0){ //所有平台
-            //当前
-            currentAllPlatformResult = orderCountRepository.getOrderCountTrendWithAllPlatform(beginTime, endTime, interValue);
-            //环比
-            chainAllPlatformResult = orderCountRepository.getOrderCountTrendWithAllPlatform(chainBeginTime, chainEndTime, interValue);
-
-            List<Object[]> currentAllPlatform =null ;
-            List<Object[]> chainAllPlatform =null ;
-
-            if (null != currentAllPlatformResult){
-                currentAllPlatform= currentAllPlatformResult;
-            }
-            if(null != chainAllPlatformResult){
-                chainAllPlatform= chainAllPlatformResult;
-            }
-
-            return JsonStringBuilder.buildTrendJsonString(currentAllPlatform, chainAllPlatform);
+            currentOrderCountResult = orderCountRepository.getOrderCountTrendWithAllPlatform(beginTime, endTime, interValue);
+            chainOrderCountResult = orderCountRepository.getOrderCountTrendWithAllPlatform(chainBeginTime, chainEndTime, interValue);
         }else {//单个平台
-            currentSinglePlatformResult = orderCountRepository.getOrderCounTrendtWithSinglePlatform(platform, beginTime, endTime, interValue);
-            chainSinglePlatformResult = orderCountRepository.getOrderCounTrendtWithSinglePlatform(platform, chainBeginTime, chainEndTime, interValue);
-
-            List<Object[]> currentSinglePlatform =null;
-            List<Object[]> chainSinglePlatform =null;
-
-            if(null != currentSinglePlatformResult){
-                currentSinglePlatform = currentSinglePlatformResult;
-
-            }
-            if (null != chainSinglePlatformResult){
-                chainSinglePlatform = chainSinglePlatformResult;
-            }
-            return JsonStringBuilder.buildTrendJsonString(currentSinglePlatform, chainSinglePlatform);
+            currentOrderCountResult = orderCountRepository.getOrderCounTrendtWithSinglePlatform(platform, beginTime, endTime, interValue);
+            chainOrderCountResult = orderCountRepository.getOrderCounTrendtWithSinglePlatform(platform, chainBeginTime, chainEndTime, interValue);
         }
 
+        List<Object[]> currentOrderCount = Optional.ofNullable(currentOrderCountResult).orElse(null);
+        List<Object[]> chainOrderCount = Optional.ofNullable(chainOrderCountResult).orElse(null);
+
+        return JsonStringBuilder.buildTrendJsonString(currentOrderCount, chainOrderCount);
     }
 
 }

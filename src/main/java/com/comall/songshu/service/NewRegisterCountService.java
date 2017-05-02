@@ -16,9 +16,9 @@ import java.util.List;
 import java.util.Optional;
 
 /**
+ * 新注册用户数
  * Created by wdc on 2017/4/24.
  */
-// 新注册用户数
 @Service
 public class NewRegisterCountService {
 
@@ -40,32 +40,26 @@ public class NewRegisterCountService {
 
         Integer platform = TransferUtil.getPlatform(platformName);
         List<Integer> list = new ArrayList();
-        Integer platformResult = null;
+
 
         if (platform < 0){ //所有
-            Integer android = getNewRegisterCountWithSinglePlatform(1,startTime,endTime);
-            Optional.ofNullable(android).orElse(0);
-            Integer ios = getNewRegisterCountWithSinglePlatform(2,startTime,endTime);
-            Optional.ofNullable(ios).orElse(0);
-            Integer wechat = getNewRegisterCountWithSinglePlatform(3,startTime,endTime);
-            Optional.ofNullable(wechat).orElse(0);
-            Integer wap = getNewRegisterCountWithSinglePlatform(5,startTime,endTime);
-            Optional.ofNullable(wap).orElse(0);
-            Integer others = getNewRegisterCountWithOthersPlatform(startTime,endTime);
-            Optional.ofNullable(others).orElse(0);
-            list.add(android);
-            list.add(ios);
-            list.add(wechat);
-            list.add(wap);
-            list.add(others);
+            Integer androidResult = Optional.ofNullable(getNewRegisterCountWithSinglePlatform(1,startTime,endTime)).orElse(0);
+            Integer iosResult = Optional.ofNullable(getNewRegisterCountWithSinglePlatform(2,startTime,endTime)).orElse(0);
+            Integer wechatResult = Optional.ofNullable(getNewRegisterCountWithSinglePlatform(3,startTime,endTime)).orElse(0);
+            Integer wapResult = Optional.ofNullable(getNewRegisterCountWithSinglePlatform(5,startTime,endTime)).orElse(0);
+            Integer othersResult = Optional.ofNullable(getNewRegisterCountWithOthersPlatform(startTime,endTime)).orElse(0);
+            list.add(androidResult);
+            list.add(iosResult);
+            list.add(wechatResult);
+            list.add(wapResult);
+            list.add(othersResult);
         }else {
-            platformResult=getNewRegisterCountWithSinglePlatform(platform,startTime,endTime);
-            Optional.ofNullable(platform).orElse(0);
-
+            Integer platformResult = Optional.ofNullable(getNewRegisterCountWithSinglePlatform(platform,startTime,endTime)).orElse(0);
             log.info("platformResult",platformResult);
             list.add(platformResult);
         }
         log.info("list",list);
         return JsonStringBuilder.buildPieJsonString(platformName,list);
     }
+
 }

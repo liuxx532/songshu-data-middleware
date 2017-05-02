@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
+ * 退款金额
  * Created by liugaoyu on 2017/4/20.
  */
 
@@ -59,49 +60,22 @@ public class RefundService {
         Integer interValue= ServiceUtil.getInstance().getAggTimeValue(beginTime, endTime,aggCount);
 
 
-        //所有平台
-        List<Object[] > currentAllPlatformResult = null;
-        List<Object[] > chainAllPlatformResult = null;
+        //当前
+        List<Object[] > currentRefundResult;
+        //环比
+        List<Object[] > chainRefundResult;
 
-        //单个平台
-        List<Object[] > currentSinglePlatformResult = null;
-        List<Object[] > chainSinglePlatformResult = null;
-
-
-        //所有平台
         if (platform < 0){ //所有平台
-            //当前
-            currentAllPlatformResult = refundRepository.getRefundTrendWithAllPlatform(beginTime, endTime, interValue);
-            //环比
-            chainAllPlatformResult = refundRepository.getRefundTrendWithAllPlatform(chainBeginTime, chainEndTime, interValue);
-
-            List<Object[]> currentAllPlatform =null ;
-            List<Object[]> chainAllPlatform =null ;
-
-            if (null != currentAllPlatformResult){
-                currentAllPlatform= currentAllPlatformResult;
-            }
-            if(null != chainAllPlatformResult){
-                chainAllPlatform= chainAllPlatformResult;
-            }
-
-            return JsonStringBuilder.buildTrendJsonString(currentAllPlatform, chainAllPlatform);
+            currentRefundResult = refundRepository.getRefundTrendWithAllPlatform(beginTime, endTime, interValue);
+            chainRefundResult = refundRepository.getRefundTrendWithAllPlatform(chainBeginTime, chainEndTime, interValue);
         }else {//单个平台
-            currentSinglePlatformResult = refundRepository.getRefundTrendWithSinglePlatform(beginTime, endTime, interValue, platform);
-            chainSinglePlatformResult = refundRepository.getRefundTrendWithSinglePlatform(chainBeginTime, chainEndTime, interValue, platform);
-
-            List<Object[]> currentSinglePlatform =null;
-            List<Object[]> chainSinglePlatform =null;
-
-            if(null != currentSinglePlatformResult){
-                currentSinglePlatform = currentSinglePlatformResult;
-
-            }
-            if (null != chainSinglePlatformResult){
-                chainSinglePlatform = chainSinglePlatformResult;
-            }
-            return JsonStringBuilder.buildTrendJsonString(currentSinglePlatform, chainSinglePlatform);
+            currentRefundResult = refundRepository.getRefundTrendWithSinglePlatform(beginTime, endTime, interValue, platform);
+            chainRefundResult = refundRepository.getRefundTrendWithSinglePlatform(chainBeginTime, chainEndTime, interValue, platform);
         }
 
+        List<Object[]> currentRefund = Optional.ofNullable(currentRefundResult).orElse(null);
+        List<Object[]> chainRefund = Optional.ofNullable(chainRefundResult).orElse(null);
+
+        return JsonStringBuilder.buildTrendJsonString(currentRefund,chainRefund);
     }
 }

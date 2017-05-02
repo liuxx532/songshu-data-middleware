@@ -12,6 +12,7 @@ import java.sql.Timestamp;
 import java.util.List;
 
 /**
+ * 分类排行
  * Created by wdc on 2017/4/25.
  */
 @Service
@@ -21,29 +22,14 @@ public class CategoryRevenueRankingService {
     private CategoryRevenueRankingRepository categoryRevenueRankingRepository;
 
 
-    // List<Object[]> 是排行榜数据
-    // Object[]： 第一个元素是 String name, 第二个元素是 BigDecimal amout
-    public List<Object[]> getCategoryRevenueRankingWithSinglePlatform(Integer platform, Timestamp startTime, Timestamp endTime) {
-        return categoryRevenueRankingRepository.getCategoryRevenueRankingWithSinglePlatform(platform, startTime, endTime);
-    }
-
-    // List<Object[]> 是排行榜数据
-    // Object[]： 第一个元素是 String name, 第二个元素是 BigDecimal amout
-    public List<Object[]> getCategoryRevenueRankingWithAllPlatform(Timestamp startTime, Timestamp endTime) {
-        return categoryRevenueRankingRepository.getCategoryRevenueRankingWithAllPlatform(startTime, endTime);
-    }
-
-
     public String getCategoryRevenueRanking(String platformName, Timestamp beginTime, Timestamp endTime) {
 
         // 平台
         int platform = TransferUtil.getPlatform(platformName);
-
         // 当前
-        List<Object[] > current = null;
+        List<Object[] > current;
 
-        // 所有平台
-        if (platform < 0){
+        if (platform < 0){// 所有平台
             current = categoryRevenueRankingRepository.getCategoryRevenueRankingWithAllPlatform(beginTime, endTime);
         } else {
             //单个平台

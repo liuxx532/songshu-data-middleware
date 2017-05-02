@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
+ * 客单价
  * Created by wdc on 2017/4/19.
  */
 @Service
@@ -53,44 +54,31 @@ public class AvgOrderRevenueService {
     }
 
     // 趋势
-
     public String getAvgOrderRevenueTrend(String platformName, Timestamp beginTime, Timestamp endTime, Timestamp chainBeginTime, Timestamp chainEndTime, int aggCount){
 
         int platform = TransferUtil.getPlatform(platformName);
 
         Integer interValue=ServiceUtil.getInstance().getAggTimeValue(beginTime,endTime,aggCount);
 
-
-        //所有平台
-        List<Object[] > currentAllPlatformResult;
-        List<Object[] > chainAllPlatformResult;
-
-        //单个平台
-        List<Object[] > currentSinglePlatformResult;
-        List<Object[] > chainSinglePlatformResult;
+        //当前
+        List<Object[] > currentAvgOrderRevenueResult;
+        //环比
+        List<Object[] > chainAvgOrderRevenueResult;
 
 
         //所有平台
         if (platform < 0){ //所有平台
-            //当前
-            currentAllPlatformResult = avgOrderRevenueRepository.getAvgRevenueTrendWithAllPlatform(beginTime,endTime,interValue);
-            //环比
-            chainAllPlatformResult = avgOrderRevenueRepository.getAvgRevenueTrendWithAllPlatform(chainBeginTime,chainEndTime,interValue);
-
-            List<Object[]> currentAllPlatform = Optional.ofNullable(currentAllPlatformResult).orElse(null);
-            List<Object[]> chainAllPlatform = Optional.ofNullable(chainAllPlatformResult).orElse(null);
-
-            return JsonStringBuilder.buildTrendJsonString(currentAllPlatform,chainAllPlatform);
+            currentAvgOrderRevenueResult = avgOrderRevenueRepository.getAvgRevenueTrendWithAllPlatform(beginTime,endTime,interValue);
+            chainAvgOrderRevenueResult = avgOrderRevenueRepository.getAvgRevenueTrendWithAllPlatform(chainBeginTime,chainEndTime,interValue);
         }else {//单个平台
-            currentSinglePlatformResult = avgOrderRevenueRepository.getAvgRevenueTrendWithSinglePlatform(platform,beginTime,endTime,interValue);
-            chainSinglePlatformResult = avgOrderRevenueRepository.getAvgRevenueTrendWithSinglePlatform(platform,chainBeginTime,chainEndTime,interValue);
-
-            List<Object[]> currentSinglePlatform = Optional.ofNullable(currentSinglePlatformResult).orElse(null);
-            List<Object[]> chainSinglePlatform = Optional.ofNullable(chainSinglePlatformResult).orElse(null);
-
-            return JsonStringBuilder.buildTrendJsonString(currentSinglePlatform,chainSinglePlatform);
+            currentAvgOrderRevenueResult = avgOrderRevenueRepository.getAvgRevenueTrendWithSinglePlatform(platform,beginTime,endTime,interValue);
+            chainAvgOrderRevenueResult = avgOrderRevenueRepository.getAvgRevenueTrendWithSinglePlatform(platform,chainBeginTime,chainEndTime,interValue);
         }
 
+        List<Object[]> currentAvgOrderRevenue = Optional.ofNullable(currentAvgOrderRevenueResult).orElse(null);
+        List<Object[]> chainAvgOrderRevenue = Optional.ofNullable(chainAvgOrderRevenueResult).orElse(null);
+
+        return JsonStringBuilder.buildTrendJsonString(currentAvgOrderRevenue,chainAvgOrderRevenue);
     }
 
 

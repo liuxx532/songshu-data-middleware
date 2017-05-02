@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
+ * 销售额
  * Created by lgx on 17/4/18.
  */
 @Component
@@ -56,52 +57,23 @@ public class RevenueService {
         log.info("paltform",platform);
         log.info("interVlue",interValue);
 
-        //所有平台
-        List<Object[] > currentAllPlatformResult = null;
-        List<Object[] > chainAllPlatformResult = null;
-
-        //单个平台
-        List<Object[] > currentSinglePlatformResult = null;
-        List<Object[] > chainSinglePlatformResult = null;
-
-
-        //所有平台
+        //当前
+        List<Object[] > currentRevenueResult ;
+        //环比
+        List<Object[] > chainRevenueResult ;
 
         if (platform < 0){ //所有平台
-            //当前
-            currentAllPlatformResult = revenueRepository.getRevenueTrendWithAllPlatform(beginTime,endTime,interValue);
-            //环比
-            chainAllPlatformResult = revenueRepository.getRevenueTrendWithAllPlatform(chainBeginTime,chainEndTime,interValue);
-
-            List<Object[]> currentAllPlatform =null ;
-            List<Object[]> chainAllPlatform =null ;
-
-            if (null != currentAllPlatformResult){
-                currentAllPlatform= currentAllPlatformResult;
-
-            }
-            if(null != chainAllPlatformResult){
-                chainAllPlatform= chainAllPlatformResult;
-            }
-
-            return JsonStringBuilder.buildTrendJsonString(currentAllPlatform,chainAllPlatform);
+            currentRevenueResult = revenueRepository.getRevenueTrendWithAllPlatform(beginTime,endTime,interValue);
+            chainRevenueResult = revenueRepository.getRevenueTrendWithAllPlatform(chainBeginTime,chainEndTime,interValue);
         }else {//单个平台
-            currentSinglePlatformResult = revenueRepository.getRevenueTrendWithSinglePlatform(platform,beginTime,endTime,interValue);
-            chainSinglePlatformResult = revenueRepository.getRevenueTrendWithSinglePlatform(platform,chainBeginTime,chainEndTime,interValue);
-
-            List<Object[]> currentSinglePlatform =null;
-            List<Object[]> chainSinglePlatform =null;
-
-            if(null != currentSinglePlatformResult){
-                currentSinglePlatform = currentSinglePlatformResult;
-
-            }
-            if (null != chainSinglePlatformResult){
-                chainSinglePlatform = chainSinglePlatformResult;
-            }
-            return JsonStringBuilder.buildTrendJsonString(currentSinglePlatform,chainSinglePlatform);
+            currentRevenueResult = revenueRepository.getRevenueTrendWithSinglePlatform(platform,beginTime,endTime,interValue);
+            chainRevenueResult = revenueRepository.getRevenueTrendWithSinglePlatform(platform,chainBeginTime,chainEndTime,interValue);
         }
 
+        List<Object[]> currentRevenue = Optional.ofNullable(currentRevenueResult).orElse(null);
+        List<Object[]> chainRevenue = Optional.ofNullable(chainRevenueResult).orElse(null);
+
+        return JsonStringBuilder.buildTrendJsonString(currentRevenue,chainRevenue);
     }
 
 }

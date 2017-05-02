@@ -11,12 +11,15 @@ import org.springframework.stereotype.Component;
 
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Optional;
 
 /**
+ * 访客数
  * Created by lgx on 17/4/25.
  */
 @Component
 public class UniqueVisitorsService {
+
     @Autowired
     private UniqueVisitorsRepository uniqueVisitorsRepository;
 
@@ -43,51 +46,24 @@ public class UniqueVisitorsService {
 
         Integer interValue= ServiceUtil.getInstance().getAggTimeValue(beginTime,endTime,aggCount);
 
+        //当前
+        List<Object[] > currentUniqueVisitorsResult ;
+        //环比
+        List<Object[] > chainUniqueVisitorsResult ;
 
-        //所有平台
-        List<Object[] > currentAllPlatformResult = null;
-        List<Object[] > chainAllPlatformResult = null;
-
-        //单个平台
-        List<Object[] > currentSinglePlatformResult = null;
-        List<Object[] > chainSinglePlatformResult = null;
-
-
-        //所有平台
         if (platform < 0){ //所有平台
-            //当前
-            currentAllPlatformResult = uniqueVisitorsRepository.getUniqueVisitorsTrendAllPlatform(beginTime, endTime, interValue);
-            //环比
-            chainAllPlatformResult = uniqueVisitorsRepository.getUniqueVisitorsTrendAllPlatform(chainBeginTime, chainEndTime, interValue);
-
-            List<Object[]> currentAllPlatform =null ;
-            List<Object[]> chainAllPlatform =null ;
-
-            if (null != currentAllPlatformResult){
-                currentAllPlatform= currentAllPlatformResult;
-            }
-            if(null != chainAllPlatformResult){
-                chainAllPlatform= chainAllPlatformResult;
-            }
-
-            return JsonStringBuilder.buildTrendJsonStringForLongType(currentAllPlatform,chainAllPlatform);
+            currentUniqueVisitorsResult = uniqueVisitorsRepository.getUniqueVisitorsTrendAllPlatform(beginTime, endTime, interValue);
+            chainUniqueVisitorsResult = uniqueVisitorsRepository.getUniqueVisitorsTrendAllPlatform(chainBeginTime, chainEndTime, interValue);
         }else {//单个平台
-            currentSinglePlatformResult = uniqueVisitorsRepository.getUniqueVisitorsTrendSinglePlatform(platformName, beginTime, endTime, interValue);
-            chainSinglePlatformResult = uniqueVisitorsRepository.getUniqueVisitorsTrendSinglePlatform(platformName, chainBeginTime, chainEndTime, interValue);
-
-            List<Object[]> currentSinglePlatform =null;
-            List<Object[]> chainSinglePlatform =null;
-
-            if(null != currentSinglePlatformResult){
-                currentSinglePlatform = currentSinglePlatformResult;
-
-            }
-            if (null != chainSinglePlatformResult){
-                chainSinglePlatform = chainSinglePlatformResult;
-            }
-            return JsonStringBuilder.buildTrendJsonStringForLongType(currentSinglePlatform,chainSinglePlatform);
+            currentUniqueVisitorsResult = uniqueVisitorsRepository.getUniqueVisitorsTrendSinglePlatform(platformName, beginTime, endTime, interValue);
+            chainUniqueVisitorsResult = uniqueVisitorsRepository.getUniqueVisitorsTrendSinglePlatform(platformName, chainBeginTime, chainEndTime, interValue);
         }
 
+        List<Object[]> currentUniqueVisitors = Optional.ofNullable(currentUniqueVisitorsResult).orElse(null);
+        List<Object[]> chainUniqueVisitors = Optional.ofNullable(chainUniqueVisitorsResult).orElse(null);
+
+        return JsonStringBuilder.buildTrendJsonStringForLongType(currentUniqueVisitors,chainUniqueVisitors);
     }
+
 
 }
