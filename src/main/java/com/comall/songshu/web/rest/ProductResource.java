@@ -1,6 +1,7 @@
 package com.comall.songshu.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
+import com.comall.songshu.service.product.ProductLinkedSalesService;
 import com.comall.songshu.service.product.ProductRadarService;
 import com.comall.songshu.service.product.ProductRevenueService;
 import com.comall.songshu.web.rest.util.ServiceUtil;
@@ -33,6 +34,11 @@ public class ProductResource {
 
     @Autowired
     private ProductRadarService productRadarService;
+
+    @Autowired
+    private ProductLinkedSalesService productLinkedSalesService;
+
+
 
     private final Logger log = LoggerFactory.getLogger(AuthorResource.class);
 
@@ -123,6 +129,8 @@ public class ProductResource {
                 switch (target) {
                     case "ProductRevenue":
                         return productRevenueService.getProductRevenue(target,platform,beginTime,endTime,chainBeginTime,chainEndTime,20);
+                    case "ProductLinkedSales":
+                        return productLinkedSalesService.getProductLinkedSales(target,platform,beginTime,endTime,chainBeginTime,chainEndTime,3);
 
                      //TODO 由于需要传入被过滤的品类ID，但是不知道前端字段具体怎么传，先待定
 //                    case "ProductRadar":

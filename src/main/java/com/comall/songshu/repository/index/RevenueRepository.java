@@ -61,7 +61,7 @@ public interface RevenueRepository extends JpaRepository<Author, Long> {
     // GROUP BY tss.stime, tss.etime ORDER BY tss.stime
 
     // 所有平台趋势
-    @Query(value = "SELECT tss.stime AS stime, tss.etime AS etime, sum(COALESCE(comt.Amount,0)) " +
+    @Query(value = "SELECT tss.stime AS stime, tss.etime AS etime, sum(COALESCE(comt.Amount,0)) AS  totalAmount " +
         "FROM(SELECT r.\"Amount\" AS Amount, r.\"PaidTime\" AS PaidTime " +
         "FROM songshu_cs_order o JOIN songshu_cs_payment_record r ON o.\"OrderNumber\" = r.\"MergePaymentNo\" " +
         "JOIN songshu_cs_order_payable p ON o.\"Id\" = p.\"OrderId\" " +
