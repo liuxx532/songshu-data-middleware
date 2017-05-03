@@ -22,7 +22,7 @@ public interface CategoryRevenueRankingRepository extends JpaRepository<Author,L
 // LEFT JOIN songshu_cs_order_item i ON oo."Id" = i."OrderId" LEFT JOIN songshu_cs_product p ON i."ProductId" = p."Id"
 // INNER JOIN songshu_cs_category c ON p."CategoryId" = c."Id" WHERE c."Id" != 1 GROUP BY c."Name" ORDER BY tmount DESC
 
-    @Query(value = "SELECT c.\"Name\",sum(i.\"AfterFoldingPrice\") AS tmount " +
+    @Query(value = "SELECT c.\"Name\",COALESCE(SUM(i.\"AfterFoldingPrice\"),0) AS tmount " +
         "FROM(SELECT o.* FROM songshu_cs_order o JOIN( SELECT DISTINCT \"MergePaymentNo\" FROM songshu_cs_payment_record " +
         "WHERE \"PaymentModeType\" = 2 AND \"PaidTime\" BETWEEN ?1 AND ?2)r " +
         "ON o.\"OrderNumber\" = r.\"MergePaymentNo\" JOIN songshu_cs_order_payable p ON o.\"Id\" = p.\"OrderId\" " +
@@ -33,7 +33,7 @@ public interface CategoryRevenueRankingRepository extends JpaRepository<Author,L
     List<Object[]> getCategoryRevenueRankingWithAllPlatform(Timestamp beginTime, Timestamp endTime);
 
 
-    @Query(value = "SELECT c.\"Name\",sum(i.\"AfterFoldingPrice\") AS tmount " +
+    @Query(value = "SELECT c.\"Name\",COALESCE(SUM(i.\"AfterFoldingPrice\"),0) AS tmount " +
         "FROM(SELECT o.* FROM songshu_cs_order o JOIN( SELECT DISTINCT \"MergePaymentNo\" FROM songshu_cs_payment_record " +
         "WHERE \"PaymentModeType\" = 2 AND \"PaidTime\" BETWEEN ?2 AND ?3)r " +
         "ON o.\"OrderNumber\" = r.\"MergePaymentNo\" JOIN songshu_cs_order_payable p ON o.\"Id\" = p.\"OrderId\" " +
