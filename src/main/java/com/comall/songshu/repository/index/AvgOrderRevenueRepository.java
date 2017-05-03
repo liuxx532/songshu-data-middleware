@@ -28,7 +28,7 @@ public interface AvgOrderRevenueRepository extends JpaRepository<Author, Long> {
 //        "      AND (o.\"Channel\" IN (1, 2, 3, 5)); -- 销售渠道（1:安卓 2:IOS 3:微信 5:WAP", nativeQuery = true)
 
     // 所有平台
-    @Query(value = "SELECT sum(r.\"Amount\") / count(DISTINCT o.\"Id\") as result \n" +
+    @Query(value = "SELECT COALESCE(SUM(r.\"Amount\") / count(DISTINCT o.\"Id\"),0) as result \n" +
         "FROM songshu_cs_order o JOIN songshu_cs_payment_record r ON (o.\"OrderNumber\" = r.\"MergePaymentNo\")\n" +
         "  JOIN songshu_cs_order_payable p ON (o.\"Id\" = p.\"OrderId\")\n" +
         "WHERE (o.\"OrderStatus\" NOT IN (6, 7))\n" +
@@ -40,7 +40,7 @@ public interface AvgOrderRevenueRepository extends JpaRepository<Author, Long> {
 
 
     // 单个平台
-    @Query(value = "SELECT sum(r.\"Amount\") / count(DISTINCT o.\"Id\") as result \n" +
+    @Query(value = "SELECT COALESCE(SUM(r.\"Amount\")/ count(DISTINCT o.\"Id\"),0)  as result \n" +
         "FROM songshu_cs_order o JOIN songshu_cs_payment_record r ON (o.\"OrderNumber\" = r.\"MergePaymentNo\")\n" +
         "  JOIN songshu_cs_order_payable p ON (o.\"Id\" = p.\"OrderId\")\n" +
         "WHERE (o.\"OrderStatus\" NOT IN (6, 7))\n" +
