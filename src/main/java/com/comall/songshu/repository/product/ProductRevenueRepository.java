@@ -27,7 +27,8 @@ public interface ProductRevenueRepository extends JpaRepository<Author,Long> {
 //    WHERE  op."PaymentStatus" = 1 AND  o."orderType" in(0,1) AND  o."OrderStatus" NOT IN (6,7)
 //    GROUP BY i."ProductId") base
 //    INNER JOIN songshu_cs_product p ON p."Id" = base.productId
-//    INNER JOIN songshu_cs_category c ON c."Id" = p."CategoryId";
+//    INNER JOIN songshu_cs_category c ON c."Id" = p."CategoryId "
+//    ORDER BY base.revenue DESC LIMIT 20;
     @Query(value = "SELECT c.\"Name\" as categoryName, p.\"Name\" AS  productName, base.* FROM " +
         "(SELECT i.\"ProductId\" AS productId, SUM(i.\"AfterFoldingPrice\") AS revenue,count(DISTINCT o.\"Id\") AS  salesCount ,SUM(i.\"ReferCost\" * i.\"Quantity\") AS cost, " +
         "(SUM(i.\"AfterFoldingPrice\")-SUM(i.\"ReferCost\" * i.\"Quantity\"))/SUM(i.\"AfterFoldingPrice\") as grossMaringRate FROM songshu_cs_order_item i " +
@@ -54,7 +55,8 @@ public interface ProductRevenueRepository extends JpaRepository<Author,Long> {
 //    WHERE  op."PaymentStatus" = 1 AND  o."orderType" in(0,1) AND  o."OrderStatus" NOT IN (6,7) AND o."Channel" = 4
 //    GROUP BY i."ProductId") base
 //    INNER JOIN songshu_cs_product p ON p."Id" = base.productId
-//    INNER JOIN songshu_cs_category c ON c."Id" = p."CategoryId";
+//    INNER JOIN songshu_cs_category c ON c."Id" = p."CategoryId"
+//    ORDER BY base.revenue DESC LIMIT 20;
     @Query(value = "SELECT c.\"Name\" as categoryName, p.\"Name\" AS  productName, base.* FROM " +
         "(SELECT i.\"ProductId\" AS productId, SUM(i.\"AfterFoldingPrice\") AS revenue,count(DISTINCT o.\"Id\") AS  salesCount ,SUM(i.\"ReferCost\" * i.\"Quantity\") AS cost, " +
         "(SUM(i.\"AfterFoldingPrice\")-SUM(i.\"ReferCost\" * i.\"Quantity\"))/SUM(i.\"AfterFoldingPrice\") as grossMaringRate FROM songshu_cs_order_item i " +
