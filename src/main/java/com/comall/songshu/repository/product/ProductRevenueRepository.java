@@ -44,7 +44,7 @@ public interface ProductRevenueRepository extends JpaRepository<Author,Long> {
         "GROUP BY i.\"ProductId\" ORDER BY revenue DESC LIMIT ?3 ) base) main " +
         "INNER JOIN songshu_cs_product p ON p.\"Id\" = main.productId " +
         "INNER JOIN songshu_cs_category c ON c.\"Id\" = p.\"CategoryId\" " +
-        "ORDER BY main.revenue DESC LIMIT ?3", nativeQuery = true)
+        "ORDER BY main.revenue DESC LIMIT ?3 ", nativeQuery = true)
     List<Object[]> getProductRevenueAllPlatform(Timestamp beginTime, Timestamp endTime,Integer topCount);
 
 
@@ -76,6 +76,6 @@ public interface ProductRevenueRepository extends JpaRepository<Author,Long> {
         "GROUP BY i.\"ProductId\" ORDER BY revenue DESC LIMIT ?4 ) base) main " +
         "INNER JOIN songshu_cs_product p ON p.\"Id\" = main.productId " +
         "INNER JOIN songshu_cs_category c ON c.\"Id\" = p.\"CategoryId\" " +
-        "ORDER BY main.revenue DESC LIMIT ?4;", nativeQuery = true)
+        "ORDER BY main.revenue DESC LIMIT ?4 ", nativeQuery = true)
     List<Object[]> getProductRevenueSinglePlatform(Timestamp beginTime, Timestamp endTime,Integer plateForm,Integer topCount);
 }
