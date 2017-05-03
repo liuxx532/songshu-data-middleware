@@ -24,7 +24,7 @@ public  class TransferUtil {
      */
     public static int CHANNEL_WAP = 5;
     /**
-     * 安卓
+     * 其他
      */
     public static int CHANNEL_OTHERS = 0;
 
