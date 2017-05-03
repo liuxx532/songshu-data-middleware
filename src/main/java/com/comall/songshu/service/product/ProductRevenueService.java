@@ -22,21 +22,20 @@ public class ProductRevenueService {
     @Autowired
     private ProductRevenueRepository productRevenueRepository;
 
-    public String getProductRevenue(String target, String platformName, Timestamp beginTime, Timestamp endTime, Timestamp chainBeginTime, Timestamp chainEndTime) {
+    public String getProductRevenue(String target, String platformName, Timestamp beginTime, Timestamp endTime, Timestamp chainBeginTime, Timestamp chainEndTime,Integer topCount) {
 
 
         int platform = TransferUtil.getPlatform(platformName);
         List<Object[] > productRevenueResult;
 
         if (platform<0){//全部
-            productRevenueResult = productRevenueRepository.getProductRevenueAllPlatform(beginTime,endTime);
+            productRevenueResult = productRevenueRepository.getProductRevenueAllPlatform(beginTime,endTime,topCount);
         }else {
-            productRevenueResult = productRevenueRepository.getProductRevenueSinglePlatform(beginTime,endTime,platform);
+            productRevenueResult = productRevenueRepository.getProductRevenueSinglePlatform(beginTime,endTime,platform,topCount);
         }
 
         List<Object[] > productRevenue = Optional.ofNullable(productRevenueResult).orElse(null);
-        //TopStat
 
-        return null;
+        return productRevenue.toString();
     }
 }

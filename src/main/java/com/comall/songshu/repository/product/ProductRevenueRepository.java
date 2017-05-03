@@ -38,8 +38,9 @@ public interface ProductRevenueRepository extends JpaRepository<Author,Long> {
         "WHERE  op.\"PaymentStatus\" = 1 AND  o.\"orderType\" in(0,1) AND  o.\"OrderStatus\" NOT IN (6,7) " +
         "GROUP BY i.\"ProductId\") base " +
         "INNER JOIN songshu_cs_product p ON p.\"Id\" = base.productId " +
-        "INNER JOIN songshu_cs_category c ON c.\"Id\" = p.\"CategoryId\" ", nativeQuery = true)
-    List<Object[]> getProductRevenueAllPlatform(Timestamp beginTime, Timestamp endTime);
+        "INNER JOIN songshu_cs_category c ON c.\"Id\" = p.\"CategoryId\" " +
+        "ORDER BY base.revenue DESC LIMIT ?3 ", nativeQuery = true)
+    List<Object[]> getProductRevenueAllPlatform(Timestamp beginTime, Timestamp endTime,Integer topCount);
 
 
 
@@ -64,6 +65,7 @@ public interface ProductRevenueRepository extends JpaRepository<Author,Long> {
         "WHERE  op.\"PaymentStatus\" = 1 AND  o.\"orderType\" in(0,1) AND  o.\"OrderStatus\" NOT IN (6,7) AND o.\"Channel\" = ?3 " +
         "GROUP BY i.\"ProductId\") base " +
         "INNER JOIN songshu_cs_product p ON p.\"Id\" = base.productId " +
-        "INNER JOIN songshu_cs_category c ON c.\"Id\" = p.\"CategoryId\" ", nativeQuery = true)
-    List<Object[]> getProductRevenueSinglePlatform(Timestamp beginTime, Timestamp endTime,Integer plateForm);
+        "INNER JOIN songshu_cs_category c ON c.\"Id\" = p.\"CategoryId\" " +
+        "ORDER BY base.revenue DESC LIMIT ?4 ", nativeQuery = true)
+    List<Object[]> getProductRevenueSinglePlatform(Timestamp beginTime, Timestamp endTime,Integer plateForm,Integer topCount);
 }
