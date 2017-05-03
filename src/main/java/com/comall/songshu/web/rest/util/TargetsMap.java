@@ -62,6 +62,7 @@ public class TargetsMap {
 
     public static Map<String,String> productTargets() {
         productTargets.put("商品销售额","ProductRevenue");
+        productTargets.put("商品页面雷达图","ProductRadar");
         return productTargets;
     }
 
@@ -69,6 +70,7 @@ public class TargetsMap {
 
     public static Map<String,String> productTargetNames() {
         productTargetNames.put("ProductRevenue", "商品销售额");
+        productTargetNames.put("ProductRadar", "商品页面雷达图");
         return productTargetNames;
     }
 }

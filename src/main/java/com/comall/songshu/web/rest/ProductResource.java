@@ -1,12 +1,10 @@
 package com.comall.songshu.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
-import com.comall.songshu.constants.TrendConstants;
-import com.comall.songshu.service.index.*;
+import com.comall.songshu.service.product.ProductRadarService;
 import com.comall.songshu.service.product.ProductRevenueService;
 import com.comall.songshu.web.rest.util.ServiceUtil;
 import com.comall.songshu.web.rest.util.TargetsMap;
-import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.json.JSONArray;
@@ -32,6 +30,9 @@ public class ProductResource {
 
     @Autowired
     private ProductRevenueService productRevenueService;
+
+    @Autowired
+    private ProductRadarService productRadarService;
 
     private final Logger log = LoggerFactory.getLogger(AuthorResource.class);
 
@@ -123,6 +124,9 @@ public class ProductResource {
                     case "ProductRevenue":
                         return productRevenueService.getProductRevenue(target,platform,beginTime,endTime,chainBeginTime,chainEndTime,20);
 
+                     //TODO 由于需要传入被过滤的品类ID，但是不知道前端字段具体怎么传，先待定
+//                    case "ProductRadar":
+//                        return
                     default:
                         throw new IllegalArgumentException("target=" + target);
                 }
