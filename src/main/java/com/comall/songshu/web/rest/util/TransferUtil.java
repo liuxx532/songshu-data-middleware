@@ -8,6 +8,27 @@ import java.sql.Timestamp;
 public  class TransferUtil {
 
     /**
+     * 安卓
+     */
+    public static int CHANNEL_ANDROID = 1;
+    /**
+     * IOS
+     */
+    public static int CHANNEL_IOS = 2;
+    /**
+     * 微信
+     */
+    public static int CHANNEL_WECHAT = 3;
+    /**
+     * 移动端
+     */
+    public static int CHANNEL_WAP = 5;
+    /**
+     * 安卓
+     */
+    public static int CHANNEL_OTHERS = 0;
+
+    /**
      *
      * @param platName
      * @return
@@ -18,15 +39,15 @@ public  class TransferUtil {
   public static Integer getPlatform(String platName){
         switch (platName){
             case "android":
-                return 1;
+                return CHANNEL_ANDROID;
             case "ios":
-                return 2;
+                return CHANNEL_IOS;
             case "weixin":
-                return 3;
+                return CHANNEL_WECHAT;
             case "wap":
-                return 5;
+                return CHANNEL_WAP;
             case "-":
-                return 0 ;
+                return CHANNEL_OTHERS ;
             default:
                 return -1;
 
@@ -42,23 +63,22 @@ public  class TransferUtil {
      * 前台：微信，安卓，IOS，其他，WAP，全部
      * 1:安卓 2:IOS 3:微信 5:WAP 0:其他 -1:全部
      */
-    public static String getPlatformName(Integer channelId){
-        switch (channelId){
-            case 1:
-                return "andriod";
-            case 2:
-                return "ios";
-            case 3:
-                return "wechat";
-            case 5:
-                return "wap";
-            case 0:
-                return "others";
-            default:
-                return "";
-
+    public static String getPlatFormName(Integer channelId){
+        String platFormName = "";
+        if(channelId != null){
+            if(channelId == CHANNEL_ANDROID){
+                platFormName = "安卓";
+            }else if(channelId == CHANNEL_IOS){
+                platFormName = "IOS";
+            }else if(channelId == CHANNEL_WECHAT){
+                platFormName = "微信";
+            }else if(channelId == CHANNEL_WAP){
+                platFormName = "WAP";
+            }else if(channelId == CHANNEL_OTHERS){
+                platFormName = "其他";
+            }
         }
-
+        return platFormName;
     }
 
 }

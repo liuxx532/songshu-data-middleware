@@ -38,27 +38,27 @@ public class NewRegisterCountService {
     public String getNewRegisterCount( String platformName, Timestamp startTime, Timestamp endTime) {
 
         Integer platform = TransferUtil.getPlatform(platformName);
-        List<Integer> list = new ArrayList();
+        List<Object[]> list = new ArrayList();
 
 
         if (platform < 0){ //所有
             Integer androidResult = Optional.ofNullable(getNewRegisterCountWithSinglePlatform(1,startTime,endTime)).orElse(0);
             Integer iosResult = Optional.ofNullable(getNewRegisterCountWithSinglePlatform(2,startTime,endTime)).orElse(0);
-            Integer wechatResult = Optional.ofNullable(getNewRegisterCountWithSinglePlatform(3,startTime,endTime)).orElse(0);
+            Integer weChatResult = Optional.ofNullable(getNewRegisterCountWithSinglePlatform(3,startTime,endTime)).orElse(0);
             Integer wapResult = Optional.ofNullable(getNewRegisterCountWithSinglePlatform(5,startTime,endTime)).orElse(0);
             Integer othersResult = Optional.ofNullable(getNewRegisterCountWithOthersPlatform(startTime,endTime)).orElse(0);
-            list.add(androidResult);
-            list.add(iosResult);
-            list.add(wechatResult);
-            list.add(wapResult);
-            list.add(othersResult);
+            list.add(new Object[]{TransferUtil.CHANNEL_ANDROID,androidResult});
+            list.add(new Object[]{TransferUtil.CHANNEL_IOS,iosResult});
+            list.add(new Object[]{TransferUtil.CHANNEL_WECHAT,weChatResult});
+            list.add(new Object[]{TransferUtil.CHANNEL_WAP,wapResult});
+            list.add(new Object[]{TransferUtil.CHANNEL_OTHERS,othersResult});
         }else {
             Integer platformResult = Optional.ofNullable(getNewRegisterCountWithSinglePlatform(platform,startTime,endTime)).orElse(0);
             log.info("platformResult",platformResult);
-            list.add(platformResult);
+            list.add(new Object[]{platform,platformResult});
         }
         log.info("list",list);
-        return JsonStringBuilder.buildPieJsonString(platformName,list);
+        return JsonStringBuilder.buildPieJsonString(list);
     }
 
 }

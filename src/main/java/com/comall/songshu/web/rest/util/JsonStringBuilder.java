@@ -1,6 +1,10 @@
 package com.comall.songshu.web.rest.util;
 
 import com.comall.songshu.web.rest.vm.TopStat;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import springfox.documentation.spring.web.json.Json;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -15,161 +19,267 @@ import java.util.Optional;
  */
 public class JsonStringBuilder {
 
+    /**
+     * 构建index首页头部指标
+     * @param target
+     * @param topStat
+     * @param columnName
+     * @return
+     * [{"dataPoints":[[{"firstValue":1,"flag":3,"ringsRation":2},1493775547197]],"target":"aaaa","columnName":""}]
+     */
     public static String buildTargetJsonString(String target, TopStat topStat, String columnName) {
-        StringBuilder sb = new StringBuilder(1024);
-        sb.append("[{\"target\":\"").append(target).append("\",\"datapoints\":[[{\"firstValue\":")
-            .append( topStat.getFirstValue())
-            .append(",\"ringsRation\": ").append(topStat.getRingsRation()).append(",\"flag\":")
-            .append(topStat.getFlag()).append("},").append(System.currentTimeMillis())
-            .append("]],\"columnName\":\"\"}]");
-        return sb.toString();
+        JSONArray resultArray = new JSONArray();
+        try {
+            JSONObject dataPoint = new JSONObject();
+            dataPoint.put("firstValue",topStat.getFirstValue());
+            dataPoint.put("ringsRation",topStat.getRingsRation());
+            dataPoint.put("flag",topStat.getFlag());
+
+            JSONArray dataPointArray = new JSONArray();
+            dataPointArray.put(dataPoint);
+            dataPointArray.put(System.currentTimeMillis());
+
+            JSONArray dataPointsArray = new JSONArray();
+            dataPointsArray.put(dataPointArray);
+
+            JSONObject result = new JSONObject();
+            result.put("target",target);
+            result.put("dataPoints",dataPointsArray);
+            result.put("columnName",columnName);
+            resultArray.put(result);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return resultArray.toString();
     }
 
 
-    public static String buildFinishedGroupJsonString(long completedGroupCount, long completedTimestamp, long cancelledGroupCount, long cancelledTimestamp) {
-        StringBuilder sb = new StringBuilder(1024);
-        sb.append("[{\"target\":\"成团\",\"datapoints\":[[").append(completedGroupCount).append(',')
-            .append(completedTimestamp).append("]],\"columnName\":\"\"},{\"target\":\"失效\",\"datapoints\":[[")
-            .append(cancelledGroupCount).append(',').append(cancelledTimestamp).append("]],\"columnName\":\"\"}]");
 
-        return sb.toString();
+    public static void main(String[] p){
+
     }
 
 
     /**
-     *
+     * 构建环比数据
+     * @param currentTrend
+     * @param chainTrend
      * @return
-     *
-     * [{"target":"当前","datapoints":[[5951,1488297549990],[12185,1488327309989],[9112,1488357069988],[5492,1488386829987],[10086,1488416589986],[7850,1488446349985],[4670,1488476109984],[9484,1488505869983],[7807,1488535629982],[6813,1488565389981],[8798,1488595149980],[7827,1488624909979],[5776,1488654669978],[6569,1488684429977],[5115,1488714189976],[7483,1488743949975],[9420,1488773709974],[6038,1488803469973],[6745,1488833229972],[15157,1488862989971],[11081,1488892749970],[24107,1488922509969],[9884,1488952269968],[3950,1488982029967],[6701,1489011789966],[7081,1489041549965],[5685,1489071309964],[21055,1489101069963],[40808,1489130829962],[8765,1489160589961],[18308,1489190349960],[18224,1489220109959],[8193,1489249869958],[19021,1489279629957],[16622,1489309389956],[9740,1489339149955],[26576,1489368909954],[17044,1489398669953],[11845,1489428429952],[23705,1489458189951],[19451,1489487949950],[14414,1489517709949],[53083,1489547469948],[21421,1489577229947],[19189,1489606989946],[25567,1489636749945],[16881,1489666509944],[16343,1489696269943],[20769,1489726029942],[11399,1489755789941],[13400,1489785549940],[17495,1489815309939],[10170,1489845069938],[13967,1489874829937],[18200,1489904589936],[7655,1489934349935],[19192,1489964109934],[19735,1489993869933],[8367,1490023629932],[30056,1490053389931],[37592,1490083149930],[9409,1490112909929],[25125,1490142669928],[23316,1490172429927],[9963,1490202189926],[26561,1490231949925],[15259,1490261709924],[10947,1490291469923],[30291,1490321229922],[27477,1490350989921],[21915,1490380749920],[27599,1490410509919],[27452,1490440269918],[23540,1490470029917],[24549,1490499789916],[15310,1490529549915],[43086,1490559309914],[25639,1490589069913],[12652,1490618829912],[16444,1490648589911],[55005,1490678349910],[0,1490708109909],[0,1490737869908],[0,1490767629907],[7829,1490797389906],[24565,1490827149905],[32455,1490856909904],[25524,1490886669903],[36455,1490916429902],[27077,1490946189901],[68,1490975949900]]
+     * [{"dataPoints":[[1,1483200000000],[2,1485878400000]],"target":"当前","columnName":""},{"dataPoints":[[3,1488297600000],[4,1490976000000]],"target":"环比","columnName":""}]
      */
     public static  String buildTrendJsonString(List<Object[]> currentTrend,List<Object[]> chainTrend) {
 
         if (currentTrend != null && chainTrend != null) {
+            JSONArray resultArray = new JSONArray();
+            try {
+                JSONArray dataPointsCurrentArray = convertTrendList2Array(currentTrend);
+                JSONArray dataPointsChainArray = convertTrendList2Array(chainTrend);
 
-            List<Timestamp> timeList = new ArrayList<>();
+                JSONObject currentResult = new JSONObject();
+                currentResult.put("target","当前");
+                currentResult.put("dataPoints",dataPointsCurrentArray);
+                currentResult.put("columnName","");
+                resultArray.put(currentResult);
 
-            StringBuilder sb = new StringBuilder(1024);
-            sb.append("[{\"target\":\"当前\",\"datapoints\":[");
-            for (Object[] objects : currentTrend) {
-                Timestamp endTime = (Timestamp) objects[1];
-                timeList.add(endTime);
-                sb.append("[").append(objects[2]).append(',').append(endTime.getTime()).append("]").append(',');
+                JSONObject chainResult = new JSONObject();
+                chainResult.put("target","环比");
+                chainResult.put("dataPoints",dataPointsChainArray);
+                chainResult.put("columnName","");
+                resultArray.put(chainResult);
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
-            //出去最后一个 ',';
-            sb.deleteCharAt(sb.length() - 1);
-            sb.append("]").append(',').append("\"columnName\":\"\"").append("}").append(',');
-
-
-            sb.append("{\"target\":\"环比\",\"datapoints\":[");
-
-            for (int i = 0; i < chainTrend.size(); i++) {
-                Timestamp endTime = (Timestamp) currentTrend.get(i)[1];
-                sb.append("[").append(chainTrend.get(i)[2]).append(',').append(endTime.getTime()).append("]").append(',');
-            }
-            sb.deleteCharAt(sb.length() - 1);
-            sb.append("]").append(',').append("\"columnName\":\"").append("\"").append("}]");
-
-            return sb.toString();
+            return resultArray.toString();
         }
 
         return null;
     }
 
+    /**
+     * 将趋势图list对象转换为array
+     * @param objList
+     * @return
+     */
+    public static JSONArray convertTrendList2Array(List<Object[]> objList){
+        JSONArray arrays = new JSONArray();
+        for (Object[] objects : objList) {
+            JSONArray array = new JSONArray();
+            Timestamp endTime = (Timestamp) objects[1];
+            array.put(objects[2]);
+            array.put(endTime.getTime());
+            arrays.put(array);
+        }
+        return arrays;
+    }
+
+    /**
+     * 构建环比数据(LongType)
+     * @param currentTrend
+     * @param chainTrend
+     * @return
+     * [{"dataPoints":[[1,1483200000000],[2,1485878400000]],"target":"当前","columnName":""},{"dataPoints":[[3,1488297600000],[4,1490976000000]],"target":"环比","columnName":""}]
+     */
     public static  String buildTrendJsonStringForLongType(List<Object[]> currentTrend,List<Object[]> chainTrend) {
 
         if (currentTrend != null && chainTrend != null) {
+            JSONArray resultArray = new JSONArray();
+            try {
+                JSONArray dataPointsCurrentArray = convertTrendList2ArrayForLongType(currentTrend);
+                JSONArray dataPointsChainArray = convertTrendList2ArrayForLongType(chainTrend);
 
-            StringBuilder sb = new StringBuilder(1024);
-            sb.append("[{\"target\":\"当前\",\"datapoints\":[");
-            for (Object[] objects : currentTrend) {
-                Timestamp endTime = (Timestamp) objects[1];
+                JSONObject currentResult = new JSONObject();
+                currentResult.put("target","当前");
+                currentResult.put("dataPoints",dataPointsCurrentArray);
+                currentResult.put("columnName","");
+                resultArray.put(currentResult);
 
-                // If result is null, return ZERO
-                BigInteger result = Optional.ofNullable((BigInteger) objects[2]).orElse(BigInteger.ZERO);
-
-                sb.append("[").append(result).append(',').append(endTime.getTime()).append("]").append(',');
+                JSONObject chainResult = new JSONObject();
+                chainResult.put("target","环比");
+                chainResult.put("dataPoints",dataPointsChainArray);
+                chainResult.put("columnName","");
+                resultArray.put(chainResult);
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
-            //出去最后一个 ',';
-            sb.deleteCharAt(sb.length() - 1);
-            sb.append("]").append(',').append("\"columnName\":\"\"").append("}").append(',');
-
-
-            sb.append("{\"target\":\"当前\",\"datapoints\":[");
-
-            for (Object[] objects : chainTrend) {
-                Timestamp endTime = (Timestamp) objects[1];
-
-                // If result is null, return ZERO
-                BigInteger result = Optional.ofNullable((BigInteger) objects[2]).orElse(BigInteger.ZERO);
-
-                sb.append("[").append(result).append(',').append(endTime.getTime()).append("]").append(',');
-                sb.append("[").append(result).append(',').append(endTime.getTime()).append("]").append(',');
-            }
-            sb.deleteCharAt(sb.length() - 1);
-            sb.append("]").append(',').append("\"columnName\":\"").append("\"").append("}]");
-
-            return sb.toString();
+            return resultArray.toString();
         }
 
         return null;
     }
 
+    /**
+     * 将趋势图list对象转换为array(Long)
+     * @param objList
+     * @return
+     */
+    public static JSONArray convertTrendList2ArrayForLongType(List<Object[]> objList){
+        JSONArray arrays = new JSONArray();
+        for (Object[] objects : objList) {
+            JSONArray array = new JSONArray();
+            Timestamp endTime = (Timestamp) objects[1];
+            BigInteger bigInteger = Optional.ofNullable((BigInteger) objects[2]).orElse(BigInteger.ZERO);
+            array.put(bigInteger);
+            array.put(endTime.getTime());
+            arrays.put(array);
+        }
+        return arrays;
+    }
 
-    // [{"target": "坚果", "datapoints": [[25, 1492484041446]],"columnName": ""},{"target": "坚果", "datapoints": [[25, 1492484041446]],"columnName": ""},]
+    /**
+     * 构建排行榜数据
+     * @param rank
+     * @return
+     * [{"dataPoints":[[333,1493780277417]],"columnName":""},{"dataPoints":[[444,1493780277417]],"columnName":""}]
+     */
     public static  String buildRankJsonString(List<Object[]> rank) {
-
+        JSONArray resultArray = new JSONArray();
         if (rank != null && rank.size() > 0) {
-
-            StringBuilder sb = new StringBuilder(1024);
-
-            sb.append("[");
-
             for (Object[] r : rank) {
-                String name = (String) r[0];
-                BigDecimal amount = Optional.ofNullable((BigDecimal) r[1]).orElse(BigDecimal.ZERO);
-                sb.append("{\"target\": \"").append(name).append("\", \"datapoints\": [[").append(amount).append(",")
-                    .append(System.currentTimeMillis()).append("]],\"columnName\": \"\"},");
+                try {
+                    String name = (String) r[0];
+                    BigDecimal amount = Optional.ofNullable((BigDecimal) r[1]).orElse(BigDecimal.ZERO);
+                    JSONArray dataPointArray = new JSONArray();
+                    dataPointArray.put(amount);
+                    dataPointArray.put(System.currentTimeMillis());
+                    JSONArray dataPointsArray = new JSONArray();
+                    dataPointsArray.put(dataPointArray);
+
+                    JSONObject result = new JSONObject();
+                    result.put("target",name);
+                    result.put("dataPoints",dataPointsArray);
+                    result.put("columnName","");
+                    resultArray.put(result);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
-            sb.deleteCharAt(sb.length() - 1); // omit
-            sb.append("]");
-
-            return sb.toString();
-        } else {
-            // return empty json array
-            return "[]";
         }
-
-//        return null;
+        return resultArray.toString();
     }
 
-    // 首单，非首单占比
+    /**
+     * 首单，非首单占比
+     * @param order
+     * @param notOrder
+     * @return
+     * [{"dataPoints":[[1.11,1493780788540]],"target":"首单","columnName":""},{"dataPoints":[[2.22,1493780788550]],"target":"非首单","columnName":""}]
+     */
     public static String buildOrderedConsumerCountJsonString(Double order, Double notOrder) {
-        StringBuilder sb = new StringBuilder(1024);
-        sb.append("[{\"target\":\"首单\",\"datapoints\":[[").append(order).append(',')
-            .append(System.currentTimeMillis()).append("]],\"columnName\":\"\"},{\"target\":\"非首单\",\"datapoints\":[[")
-            .append(notOrder).append(',').append(System.currentTimeMillis()).append("]],\"columnName\":\"\"}]");
+        JSONArray resultArray = new JSONArray();
+        try {
 
-        return sb.toString();
+            JSONArray firstDataPointArray = new JSONArray();
+            firstDataPointArray.put(order);
+            firstDataPointArray.put(System.currentTimeMillis());
+            JSONArray firstDataPointsArray = new JSONArray();
+            firstDataPointsArray.put(firstDataPointArray);
+
+            JSONObject firstResult = new JSONObject();
+            firstResult.put("target","首单");
+            firstResult.put("dataPoints",firstDataPointsArray);
+            firstResult.put("columnName","");
+            resultArray.put(firstResult);
+
+
+            JSONArray notFirstDataPointArray = new JSONArray();
+            notFirstDataPointArray.put(notOrder);
+            notFirstDataPointArray.put(System.currentTimeMillis());
+            JSONArray notFirstDataPointsArray = new JSONArray();
+            notFirstDataPointsArray.put(notFirstDataPointArray);
+
+            JSONObject notFirstResult = new JSONObject();
+            notFirstResult.put("target","非首单");
+            notFirstResult.put("dataPoints",notFirstDataPointsArray);
+            notFirstResult.put("columnName","");
+            resultArray.put(notFirstResult);
+            return resultArray.toString();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return "[]";
     }
 
 
-    // 注册用户占比
+    //
 
-    public static  String buildPieJsonString(String platform,List<Integer> list){
-        StringBuilder sb = new StringBuilder(1024);
-        if (list.size() >1 ) {
-            String[] names = {"安卓", "IOS", "微信", "WAP", "其它"};
-            sb.append("[");
-            for (int i = 0; i < names.length; i++) {
-                sb.append("{\"target\":\"").append(names[i]).append("\",\"datapoints\":[[")
-                    .append((list.get(i))).append(',').append(System.currentTimeMillis()).append("]],\"columnName\":\"\"}").append(',');
+    /**
+     * 各渠道注册用户占比
+     * @param list
+     * @return
+     * [{"dataPoints":[[1,1493783848008]],"target":"安卓","columnName":""},{"dataPoints":[[2,1493783848010]],"target":"IOS","columnName":""},{"dataPoints":[[3,1493783848010]],"target":"微信","columnName":""}]
+     */
+    public static  String buildPieJsonString(List<Object[]> list){
+        JSONArray resultArray = new JSONArray();
+        if(Optional.ofNullable(list)
+            .filter(l -> l.size() >0)
+            .isPresent()){
+
+            for (Object[] o : list ){
+
+                String platformName = Optional.ofNullable(o)
+                    .map(p -> p[0])
+                    .map(i -> (Integer)i)
+                    .map(s -> TransferUtil.getPlatFormName(s))
+                    .orElse(null);
+
+                if(platformName != null){
+                    try {
+                        JSONArray dataPointArray = new JSONArray();
+                        dataPointArray.put(o[1]);
+                        dataPointArray.put(System.currentTimeMillis());
+                        JSONArray dataPointsArray = new JSONArray();
+                        dataPointsArray.put(dataPointArray);
+                        JSONObject result = new JSONObject();
+                        result.put("target",platformName);
+                        result.put("dataPoints",dataPointsArray);
+                        result.put("columnName","");
+                        resultArray.put(result);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
-        } else {
-            sb.append("[").append("{\"target\":\"").append(platform).append("\",\"datapoints\":[[")
-                .append((list.get(0))).append(',').append(System.currentTimeMillis()).append("]],\"columnName\":\"\"}").append(',');
         }
-        sb.deleteCharAt(sb.length() - 1);
-        sb.append("]");
-        return sb.toString();
+        return  resultArray.toString();
     }
 }

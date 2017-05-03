@@ -56,4 +56,19 @@ public class TargetsMap {
         targetNames.put("CategoryRevenueRanking", "销售额品类排行榜");
         return targetNames;
     }
+
+
+    static Map<String,String> productTargets = new HashMap<>();
+
+    public static Map<String,String> productTargets() {
+        productTargets.put("商品销售额","ProductRevenue");
+        return productTargets;
+    }
+
+    static Map<String,String> productTargetNames = new HashMap<>();
+
+    public static Map<String,String> productTargetNames() {
+        productTargetNames.put("ProductRevenue", "商品销售额");
+        return productTargetNames;
+    }
 }

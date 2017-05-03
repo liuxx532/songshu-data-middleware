@@ -6,6 +6,7 @@ import com.comall.songshu.web.rest.util.JsonStringBuilder;
 import com.comall.songshu.web.rest.util.TransferUtil;
 import com.comall.songshu.web.rest.vm.TopStat;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.util.List;
@@ -17,6 +18,7 @@ import java.util.Optional;
  * @author liushengling
  * @create 2017-05-02-18:18
  **/
+@Service
 public class ProductRevenueService {
 
     @Autowired

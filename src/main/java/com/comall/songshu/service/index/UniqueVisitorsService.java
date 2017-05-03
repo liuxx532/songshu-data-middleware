@@ -7,7 +7,7 @@ import com.comall.songshu.web.rest.util.ServiceUtil;
 import com.comall.songshu.web.rest.util.TransferUtil;
 import com.comall.songshu.web.rest.vm.TopStat;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.util.List;
@@ -17,7 +17,7 @@ import java.util.Optional;
  * 访客数
  * Created by lgx on 17/4/25.
  */
-@Component
+@Service
 public class UniqueVisitorsService {
 
     @Autowired
@@ -62,7 +62,7 @@ public class UniqueVisitorsService {
         List<Object[]> currentUniqueVisitors = Optional.ofNullable(currentUniqueVisitorsResult).orElse(null);
         List<Object[]> chainUniqueVisitors = Optional.ofNullable(chainUniqueVisitorsResult).orElse(null);
 
-        return JsonStringBuilder.buildTrendJsonStringForLongType(currentUniqueVisitors,chainUniqueVisitors);
+        return JsonStringBuilder.buildTrendJsonString(currentUniqueVisitors,chainUniqueVisitors);
     }
 
 

@@ -7,7 +7,7 @@ import com.comall.songshu.web.rest.vm.TopStat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.util.List;
@@ -17,7 +17,7 @@ import java.util.Optional;
  * 销售额
  * Created by lgx on 17/4/18.
  */
-@Component
+@Service
 public class RevenueService {
 
     @Autowired
