@@ -75,4 +75,17 @@ public class TargetsMap {
         productTargetNames.put("ProductLinkedSales", "关联商品");
         return productTargetNames;
     }
+    static Map<String,String> memberTargets = new HashMap<>();
+
+    public static Map<String,String> memberTargets() {
+//        memberTargets.put("商品销售额","ProductRevenue");
+        return memberTargets;
+    }
+
+    static Map<String,String> memberTargetNames = new HashMap<>();
+
+    public static Map<String,String> memberTargetNames() {
+//        memberTargetNames.put("ProductRevenue", "商品销售额");
+        return memberTargetNames;
+    }
 }
