@@ -30,4 +30,26 @@ public interface MemberShareRepository  extends JpaRepository<Author,Long> {
      */
     @Query(value = "", nativeQuery = true)
     Integer getMemberShareWithSinglePlatformByName(String name,Timestamp beginTime, Timestamp endTime,Integer platform);
+
+    /**
+     * 获取用户分享趋势
+     * @param name
+     * @param beginTime
+     * @param endTime
+     * @param interval
+     * @return
+     */
+    @Query(value = "", nativeQuery = true)
+    Integer getMemberShareTrendWithAllPlatformByName(String name, Timestamp beginTime, Timestamp endTime, Integer interval);
+
+    /**
+     * 获取用户分享趋势
+     * @param name
+     * @param beginTime
+     * @param endTime
+     * @param interval
+     * @return
+     */
+    @Query(value = "", nativeQuery = true)
+    Integer getMemberShareTrendWithSinglePlatformByName(String name,Timestamp beginTime, Timestamp endTime,Integer platform, Integer interval);
 }

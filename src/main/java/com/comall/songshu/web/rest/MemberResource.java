@@ -1,6 +1,7 @@
 package com.comall.songshu.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
+import com.comall.songshu.constants.TrendConstants;
 import com.comall.songshu.service.member.ChannelRegisterMemberService;
 import com.comall.songshu.service.member.MemberShareService;
 import com.comall.songshu.web.rest.util.ServiceUtil;
@@ -120,12 +121,12 @@ public class MemberResource {
                 switch (target) {
                     // 单个指标
                    case "MemberShareDetail":
-//                       return revenueService.getRevenue(target,platform,beginTime,endTime,chainBeginTime,chainEndTime);
+                       return memberShareService.getMemberShareDetailByName(target,platform,beginTime,endTime);
                     case "ChannelRegisterMember":
                        return channelRegisterMemberService.getChannelMemberRegisterCount(target,platform,beginTime,endTime,10);
                     // 趋势
-//                    case "ChannelRegisterMember" :
-//                        return revenueService.getRevenueTrend(target,platform,beginTime,endTime,chainBeginTime,chainEndTime, TrendConstants.aggCount);
+                    case "MemberShareTrend" :
+                        return memberShareService.getMemberShareTrendByName(target,platform,beginTime,endTime, TrendConstants.aggCount);
 
                     default:
                         throw new IllegalArgumentException("target=" + target);
