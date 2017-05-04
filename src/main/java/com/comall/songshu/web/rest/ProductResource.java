@@ -83,9 +83,6 @@ public class ProductResource {
             Timestamp beginTime = null;
             //结束时间
             Timestamp endTime = null;
-            //环比时间
-            Timestamp chainBeginTime = null;
-            Timestamp chainEndTime = null;
 
             if(fromTimeStr != null && toTimeStr != null){
                 beginTime = Optional.of(fromTimeStr)
@@ -128,9 +125,9 @@ public class ProductResource {
 
                 switch (target) {
                     case "ProductRevenue":
-                        return productRevenueService.getProductRevenue(target,platform,beginTime,endTime,chainBeginTime,chainEndTime,20);
+                        return productRevenueService.getProductRevenue(target,platform,beginTime,endTime,20);
                     case "ProductLinkedSales":
-                        return productLinkedSalesService.getProductLinkedSales(target,platform,beginTime,endTime,chainBeginTime,chainEndTime,3);
+                        return productLinkedSalesService.getProductLinkedSales(target,platform,beginTime,endTime,3);
 
                      //TODO 由于需要传入被过滤的品类ID，但是不知道前端字段具体怎么传，先待定
 //                    case "ProductRadar":

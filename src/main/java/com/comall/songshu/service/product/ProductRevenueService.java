@@ -24,7 +24,7 @@ public class ProductRevenueService {
     @Autowired
     private ProductRevenueRepository productRevenueRepository;
 
-    public String getProductRevenue(String target, String platformName, Timestamp beginTime, Timestamp endTime, Timestamp chainBeginTime, Timestamp chainEndTime,Integer topCount) {
+    public String getProductRevenue(String target, String platformName, Timestamp beginTime, Timestamp endTime,Integer topCount) {
 
 
         int platform = TransferUtil.getPlatform(platformName);
