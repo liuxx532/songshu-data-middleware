@@ -53,13 +53,6 @@ public class JsonStringBuilder {
         return resultArray.toString();
     }
 
-
-
-    public static void main(String[] p){
-
-    }
-
-
     /**
      * 构建环比数据
      * @param currentTrend
