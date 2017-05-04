@@ -81,6 +81,7 @@ public class TargetsMap {
 
     public static Map<String,String> memberTargets() {
         memberTargets.put("分享详情","MemberShareDetail");
+        memberTargets.put("渠道注册用户","ChannelRegisterMember");
         return memberTargets;
     }
 
@@ -88,6 +89,7 @@ public class TargetsMap {
 
     public static Map<String,String> memberTargetNames() {
         memberTargetNames.put("MemberShareDetail", "分享详情");
+        memberTargetNames.put("ChannelRegisterMember", "渠道注册用户");
         return memberTargetNames;
     }
 }

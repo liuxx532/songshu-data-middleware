@@ -1,6 +1,7 @@
 package com.comall.songshu.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
+import com.comall.songshu.service.member.ChannelRegisterMemberService;
 import com.comall.songshu.service.member.MemberShareService;
 import com.comall.songshu.web.rest.util.ServiceUtil;
 import com.comall.songshu.web.rest.util.TargetsMap;
@@ -33,6 +34,9 @@ public class MemberResource {
     @Autowired
     private MemberShareService memberShareService;
 
+    @Autowired
+    private ChannelRegisterMemberService channelRegisterMemberService;
+
     @GetMapping("")
     @Timed
     public Map<String,String> getTargets() {
@@ -53,7 +57,6 @@ public class MemberResource {
 
         log.debug("[RequestBody] {}", requestBody);
 
-        DateTimeFormatter dateTimeFormat = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
 
         if(Optional.ofNullable(requestBody).isPresent()){
 
@@ -74,9 +77,6 @@ public class MemberResource {
             Timestamp beginTime = null;
             //结束时间
             Timestamp endTime = null;
-            //环比时间
-            Timestamp chainBeginTime = null;
-            Timestamp chainEndTime = null;
 
             if(fromTimeStr != null && toTimeStr != null){
                 beginTime = Optional.of(fromTimeStr)
@@ -89,40 +89,20 @@ public class MemberResource {
                     .filter(s -> s.length() >0)
                     .map( s -> ServiceUtil.getInstance().parseTimestamp(s))
                     .orElse(null);
-                //环比时间
-                String[] chainCreateTime = ServiceUtil.getInstance().getChainIndexDateTime(fromTimeStr,toTimeStr);
-                if(chainCreateTime != null){
-                    chainBeginTime = Optional.of(chainCreateTime)
-                        .filter( array -> array.length >0)
-                        .map( a -> a[0])
-                        .map(String::trim)
-                        .filter(s -> s.length() >0)
-                        .map( s -> DateTime.parse(s))
-                        .map( d-> Timestamp.valueOf(d.toString(dateTimeFormat)))
-                        .orElse(null);
-                    chainEndTime = Optional.of(chainCreateTime)
-                        .filter( array -> array.length >1)
-                        .map( a -> a[1])
-                        .map(String::trim)
-                        .filter(s -> s.length() >0)
-                        .map( s -> DateTime.parse(s))
-                        .map( d-> Timestamp.valueOf(d.toString(dateTimeFormat)))
-                        .orElse(null);
-                }
             }
 
 
             //指标中文名称
-            JSONArray targets = (JSONArray)obj.get("targets");
+            JSONArray memberTargets = (JSONArray)obj.get("targets");
             String target = null;
-            if (Optional.ofNullable(targets)
+            if (Optional.ofNullable(memberTargets)
                 .filter((value) -> value.length() >0)
                 .isPresent()) {
-                JSONObject targetJsonObj = (JSONObject)targets.get(0);
+                JSONObject targetJsonObj = (JSONObject)memberTargets.get(0);
                 if (Optional.ofNullable(targetJsonObj).isPresent()){
                     String targetObj =  (String)targetJsonObj.get("target");
                     target = Optional.ofNullable(targetObj)
-                        .map( o ->  TargetsMap.getTargets().get(o.toString()))
+                        .map( o ->  TargetsMap.memberTargets().get(o.toString()))
                         .orElse(null);
                 }
             }
@@ -135,16 +115,16 @@ public class MemberResource {
 
 
             if (beginTime != null && endTime!= null
-                && chainBeginTime != null && chainEndTime != null
                 && target != null && platform != null){
 
                 switch (target) {
                     // 单个指标
                    case "MemberShareDetail":
 //                       return revenueService.getRevenue(target,platform,beginTime,endTime,chainBeginTime,chainEndTime);
-
+                    case "ChannelRegisterMember":
+                       return channelRegisterMemberService.getChannelMemberRegisterCount(target,platform,beginTime,endTime,10);
                     // 趋势
-//                    case "RevenueTrend" :
+//                    case "ChannelRegisterMember" :
 //                        return revenueService.getRevenueTrend(target,platform,beginTime,endTime,chainBeginTime,chainEndTime, TrendConstants.aggCount);
 
                     default:
