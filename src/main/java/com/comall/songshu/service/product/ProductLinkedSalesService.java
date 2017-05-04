@@ -23,7 +23,7 @@ public class ProductLinkedSalesService {
     @Autowired
     private ProductLinkedSalesRepository productLinkedSalesRepository;
 
-    public String getProductLinkedSales(String target, String platformName, Timestamp beginTime, Timestamp endTime, Timestamp chainBeginTime, Timestamp chainEndTime,Integer topCount) {
+    public String getProductLinkedSales(String target, String platformName, Timestamp beginTime, Timestamp endTime, Integer topCount) {
 
 
         int platform = TransferUtil.getPlatform(platformName);
