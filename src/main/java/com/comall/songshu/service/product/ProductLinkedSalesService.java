@@ -7,7 +7,9 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 关联商品销售统计
@@ -25,27 +27,29 @@ public class ProductLinkedSalesService {
 
 
         int platform = TransferUtil.getPlatform(platformName);
-        List<Object[]> linkedProductResult;
         //存放排面靠前几的商品集合（父集）
         List<Object[]> productSalesResult;
         //存放关联商品集合（子集）
-        List<Object[]> productLinkedSalesResult;
+        Map<Integer,List<Object[]>> linkedSalesMap = new HashMap<>();
         if (platform<0){//全部
             productSalesResult =  productLinkedSalesRepository.getProductSalesAllPlatform(beginTime,endTime,topCount);
             if(productSalesResult != null){
                 for(Object[] o : productSalesResult){
-                    productLinkedSalesResult = productLinkedSalesRepository.getProductLinkedSalesAllPlatform(beginTime,endTime,topCount,(Integer) o[0]);
+                    Integer productId = (Integer) o[0];
+                    List<Object[]> productLinkedSalesResult = productLinkedSalesRepository.getProductLinkedSalesAllPlatform(beginTime,endTime,topCount,productId);
+                    linkedSalesMap.put(productId,productLinkedSalesResult);
                 }
             }
         }else {
             productSalesResult =  productLinkedSalesRepository.getProductSalesSinglePlatform(beginTime,endTime,platform,topCount);
             if(productSalesResult != null){
                 for(Object[] o : productSalesResult){
-                    productLinkedSalesResult = productLinkedSalesRepository.getProductLinkedSalesSinglePlatform(beginTime,endTime,topCount,topCount,(Integer) o[0]);
+                    Integer productId = (Integer) o[0];
+                    List<Object[]> productLinkedSalesResult = productLinkedSalesRepository.getProductLinkedSalesSinglePlatform(beginTime,endTime,topCount,topCount,productId);
+                    linkedSalesMap.put(productId,productLinkedSalesResult);
                 }
             }
         }
-
 
         return null;
     }
