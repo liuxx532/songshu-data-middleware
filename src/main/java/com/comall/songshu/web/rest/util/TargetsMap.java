@@ -78,14 +78,14 @@ public class TargetsMap {
     static Map<String,String> memberTargets = new HashMap<>();
 
     public static Map<String,String> memberTargets() {
-//        memberTargets.put("商品销售额","ProductRevenue");
+        memberTargets.put("分享详情","MemberShareDetail");
         return memberTargets;
     }
 
     static Map<String,String> memberTargetNames = new HashMap<>();
 
     public static Map<String,String> memberTargetNames() {
-//        memberTargetNames.put("ProductRevenue", "商品销售额");
+        memberTargetNames.put("MemberShareDetail", "分享详情");
         return memberTargetNames;
     }
 }

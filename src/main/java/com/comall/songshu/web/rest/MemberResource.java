@@ -1,6 +1,7 @@
 package com.comall.songshu.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
+import com.comall.songshu.service.member.MemberShareService;
 import com.comall.songshu.web.rest.util.ServiceUtil;
 import com.comall.songshu.web.rest.util.TargetsMap;
 import org.joda.time.DateTime;
@@ -10,6 +11,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -27,6 +29,9 @@ import java.util.Optional;
 public class MemberResource {
 
     private final Logger log = LoggerFactory.getLogger(MemberResource.class);
+
+    @Autowired
+    private MemberShareService memberShareService;
 
     @GetMapping("")
     @Timed
@@ -135,8 +140,8 @@ public class MemberResource {
 
                 switch (target) {
                     // 单个指标
-//                    case "Revenue":
-//                        return revenueService.getRevenue(target,platform,beginTime,endTime,chainBeginTime,chainEndTime);
+                   case "MemberShareDetail":
+//                       return revenueService.getRevenue(target,platform,beginTime,endTime,chainBeginTime,chainEndTime);
 
                     // 趋势
 //                    case "RevenueTrend" :
