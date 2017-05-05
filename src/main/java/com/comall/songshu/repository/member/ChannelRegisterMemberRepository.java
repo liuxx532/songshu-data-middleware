@@ -1,5 +1,7 @@
 package com.comall.songshu.repository.member;
 
+import com.comall.songshu.domain.Author;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.sql.Timestamp;
@@ -11,7 +13,7 @@ import java.util.List;
  * @author liushengling
  * @create 2017-05-04-16:39
  **/
-public interface ChannelRegisterMemberRepository {
+public interface ChannelRegisterMemberRepository extends JpaRepository<Author,Long> {
 
 
 
