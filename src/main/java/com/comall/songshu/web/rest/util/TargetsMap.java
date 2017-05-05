@@ -83,6 +83,7 @@ public class TargetsMap {
         memberTargets.put("分享详情","MemberShareDetail");
         memberTargets.put("分享趋势","MemberShareTrend");
         memberTargets.put("渠道注册用户","ChannelRegisterMember");
+        memberTargets.put("用户数据","MemberDetail");
         return memberTargets;
     }
 
@@ -92,6 +93,7 @@ public class TargetsMap {
         memberTargetNames.put("MemberShareDetail", "分享详情");
         memberTargetNames.put("MemberShareTrend", "分享趋势");
         memberTargetNames.put("ChannelRegisterMember", "渠道注册用户");
+        memberTargetNames.put("MemberDetail", "用户数据");
         return memberTargetNames;
     }
 }

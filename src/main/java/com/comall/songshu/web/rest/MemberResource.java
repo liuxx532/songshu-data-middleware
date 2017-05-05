@@ -3,6 +3,7 @@ package com.comall.songshu.web.rest;
 import com.codahale.metrics.annotation.Timed;
 import com.comall.songshu.constants.TrendConstants;
 import com.comall.songshu.service.member.ChannelRegisterMemberService;
+import com.comall.songshu.service.member.MemberDetailService;
 import com.comall.songshu.service.member.MemberShareService;
 import com.comall.songshu.web.rest.util.ServiceUtil;
 import com.comall.songshu.web.rest.util.TargetsMap;
@@ -37,6 +38,9 @@ public class MemberResource {
 
     @Autowired
     private ChannelRegisterMemberService channelRegisterMemberService;
+
+    @Autowired
+    private MemberDetailService memberDetailService;
 
     @GetMapping("")
     @Timed
@@ -124,6 +128,9 @@ public class MemberResource {
                        return memberShareService.getMemberShareDetailByName(target,platform,beginTime,endTime);
                     case "ChannelRegisterMember":
                        return channelRegisterMemberService.getChannelMemberRegisterCount(target,platform,beginTime,endTime,10);
+                    case "MemberDetail":
+                        return memberDetailService.getMemberDetail(target,platform,beginTime,endTime);
+
                     // 趋势
                     case "MemberShareTrend" :
                         return memberShareService.getMemberShareTrendByName(target,platform,beginTime,endTime, TrendConstants.aggCount);
