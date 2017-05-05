@@ -28,6 +28,7 @@ public class ChannelRegisterMemberService {
         int platform = TransferUtil.getPlatform(platformName);
         List<Object[] > channelMemberRegisterCountResult;
 
+        //TODO REPOSITORY层sql编写
         if (platform<0){//全部
             channelMemberRegisterCountResult = channelRegisterMemberRepository.getChannelMemberRegisterCountAllPlatform(beginTime,endTime,topCount);
         }else {
@@ -35,7 +36,7 @@ public class ChannelRegisterMemberService {
         }
 
         List<Object[] > channelMemberRegisterCount = Optional.ofNullable(channelMemberRegisterCountResult).orElse(null);
-
+        //TODO 返回数据拼装
         return channelMemberRegisterCount.toString();
     }
 }
