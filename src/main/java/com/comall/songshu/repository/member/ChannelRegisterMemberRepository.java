@@ -13,14 +13,14 @@ import java.util.List;
  * @author liushengling
  * @create 2017-05-04-16:39
  **/
-public interface ChannelRegisterMemberRepository extends JpaRepository<Author,Long> {
+public interface ChannelRegisterMemberRepository extends JpaRepository<Author,Long>{
 
 
 
-    @Query(value = " ", nativeQuery = true)
+    @Query(value = "SELECT now()", nativeQuery = true)
     List<Object[]> getChannelMemberRegisterCountAllPlatform(Timestamp beginTime, Timestamp endTime, Integer topCount);
 
 
-    @Query(value = " ", nativeQuery = true)
+    @Query(value = "SELECT now()", nativeQuery = true)
     List<Object[]> getChannelMemberRegisterCountSinglePlatform(Timestamp beginTime, Timestamp endTime, Integer plateForm, Integer topCount);
 }

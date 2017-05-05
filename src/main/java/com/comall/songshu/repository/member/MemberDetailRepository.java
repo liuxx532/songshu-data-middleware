@@ -72,11 +72,22 @@ public interface MemberDetailRepository extends JpaRepository<Author,Long> {
 //    SELECT count(DISTINCT(m.id)) AS memberCount , 'register' AS type ,'2' as date FROM songshu_cs_member m
 //    WHERE m."regTime" BETWEEN '2016-06-01 00:00:00' AND '2016-08-01 00:00:00' ) base
 //    GROUP BY date) main
-    @Query(value = "SELECT count(DISTINCT o.\"MemberId\") AS  memberCount FROM  songshu_cs_order o " +
-        "INNER JOIN songshu_cs_order_payable op ON op.\"OrderId\" = o.\"Id\" " +
-        "INNER JOIN songshu_cs_payment_record pr ON pr.\"MergePaymentNo\" = op.\"MergePaymentId\" " +
-        "WHERE  op.\"PaymentStatus\" = 1 AND  o.\"orderType\" in(0,1) AND  o.\"OrderStatus\" NOT IN (6,7) " +
-        "AND pr.\"PaidTime\" BETWEEN ?1 AND ?2 ", nativeQuery = true)
+    @Query(value = "SELECT COALESCE(sum(main.pay)/sum(main.register),0) AS consumeTransferRate FROM\n" +
+        "(SELECT\n" +
+        "MAX(CASE type WHEN 'pay' THEN memberCount ELSE 0 END ) pay,\n" +
+        "MAX(CASE type WHEN 'register' THEN memberCount ELSE 0 END ) register\n" +
+        "FROM\n" +
+        "(SELECT count(DISTINCT o.\"MemberId\") AS  memberCount,'pay' AS type ,'1' AS date FROM  songshu_cs_order o\n" +
+        "INNER JOIN songshu_cs_order_payable op ON op.\"OrderId\" = o.\"Id\"\n" +
+        "INNER JOIN songshu_cs_payment_record pr ON pr.\"MergePaymentNo\" = op.\"MergePaymentId\"\n" +
+        "INNER JOIN songshu_cs_member m ON m.id = o.\"MemberId\"\n" +
+        "WHERE  op.\"PaymentStatus\" = 1 AND  o.\"orderType\" IN(0,1) AND  o.\"OrderStatus\" NOT IN (6,7)\n" +
+        "AND m.\"regTime\" BETWEEN ?1 AND ?2 \n" +
+        "AND pr.\"PaidTime\" BETWEEN ?1 AND ?2 \n" +
+        "UNION ALL\n" +
+        "SELECT count(DISTINCT(m.id)) AS memberCount , 'register' AS type ,'2' AS date FROM songshu_cs_member m\n" +
+        "WHERE m.\"regTime\" BETWEEN ?1 AND ?2 ) base\n" +
+        "GROUP BY date) main", nativeQuery = true)
     Double getLogonConsumeRateAllPlatform(Timestamp beginTime, Timestamp endTime);
 
 
@@ -139,7 +150,7 @@ public interface MemberDetailRepository extends JpaRepository<Author,Long> {
         "INNER JOIN songshu_cs_payment_record pr ON pr.\"MergePaymentNo\" = op.\"MergePaymentId\" " +
         "WHERE  op.\"PaymentStatus\" = 1 AND  o.\"orderType\" in(0,1) AND  o.\"OrderStatus\" NOT IN (6,7) " +
         "AND pr.\"PaidTime\" < ?1 )", nativeQuery = true)
-    Double getRepeatPurchaseRateAllPlatform(Timestamp beginTime, Timestamp endTime);
+    Integer getRepeatPurchaseRateAllPlatform(Timestamp beginTime, Timestamp endTime);
 
 
 //    SELECT count(DISTINCT(n."MemberId")) AS rebuyMemberCount from
@@ -166,5 +177,5 @@ public interface MemberDetailRepository extends JpaRepository<Author,Long> {
         "INNER JOIN songshu_cs_payment_record pr ON pr.\"MergePaymentNo\" = op.\"MergePaymentId\" " +
         "WHERE  op.\"PaymentStatus\" = 1 AND  o.\"orderType\" in(0,1) AND  o.\"OrderStatus\" NOT IN (6,7) " +
         "AND pr.\"PaidTime\" < ?1 AND o.\"Channel\" = ?3)", nativeQuery = true)
-    Double getRepeatPurchaseRateSinglePlatform(Timestamp beginTime, Timestamp endTime, Integer plateForm);
+    Integer getRepeatPurchaseRateSinglePlatform(Timestamp beginTime, Timestamp endTime, Integer plateForm);
 }

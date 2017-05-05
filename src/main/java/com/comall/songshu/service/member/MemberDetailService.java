@@ -39,23 +39,24 @@ public class MemberDetailService {
         Integer newRegisterCount;
         //注册-消费转化率 (注册且消费用户数／注册用户数)*100%
         Double logonConsumeRate;
-        //注册用户数
-        Double repeatPurchaseRate;
+        //复购数
+        Integer repeatPurchaseCount;
 
         if (platform<0){//全部
             uniqueVisitorCount = uniqueVisitorsRepository.getUniqueVisitorsAllPlatform(beginTime,endTime);
             consumerCount = memberDetailRepository.getConsumerCountAllPlatform(beginTime,endTime);
             newRegisterCount = memberDetailRepository.getMemberRegisterCountAllPlatform(beginTime,endTime);
             logonConsumeRate = memberDetailRepository.getLogonConsumeRateAllPlatform(beginTime,endTime);
-            repeatPurchaseRate = memberDetailRepository.getRepeatPurchaseRateAllPlatform(beginTime,endTime);
+            repeatPurchaseCount = memberDetailRepository.getRepeatPurchaseRateAllPlatform(beginTime,endTime);
         }else {
             uniqueVisitorCount = uniqueVisitorsRepository.getUniqueVisitorsSinglePlatform(platformName,beginTime,endTime);
             consumerCount = memberDetailRepository.getConsumerCountSinglePlatform(beginTime,endTime,platform);
             newRegisterCount = memberDetailRepository.getMemberRegisterCountSinglePlatform(beginTime,endTime,platform);
             logonConsumeRate = memberDetailRepository.getLogonConsumeRateSinglePlatform(beginTime,endTime,platform);
-            repeatPurchaseRate = memberDetailRepository.getRepeatPurchaseRateSinglePlatform(beginTime,endTime,platform);
+            repeatPurchaseCount = memberDetailRepository.getRepeatPurchaseRateSinglePlatform(beginTime,endTime,platform);
         }
-
+        //复购率
+        Integer repeatPurchaseRate = consumerCount >0 ? repeatPurchaseCount/consumerCount : 0;
 
         return "uniqueVisitorCount:"+uniqueVisitorCount
             + "consumerCount:"+consumerCount
