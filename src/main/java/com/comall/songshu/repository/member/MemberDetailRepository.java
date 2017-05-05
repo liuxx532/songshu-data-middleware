@@ -178,4 +178,63 @@ public interface MemberDetailRepository extends JpaRepository<Author,Long> {
         "WHERE  op.\"PaymentStatus\" = 1 AND  o.\"orderType\" in(0,1) AND  o.\"OrderStatus\" NOT IN (6,7) " +
         "AND pr.\"PaidTime\" < ?1 AND o.\"Channel\" = ?3)", nativeQuery = true)
     Integer getRepeatPurchaseRateSinglePlatform(Timestamp beginTime, Timestamp endTime, Integer plateForm);
+
+
+    /**
+     * 启动次数（全平台）
+     * @param beginTime
+     * @param endTime
+     * @return
+     */
+    @Query(value = "SELECT now()", nativeQuery = true)
+    Integer getOpenTimesAllPlatform(Timestamp beginTime, Timestamp endTime);
+
+    /**
+     * 启动次数（单平台）
+     * @param beginTime
+     * @param endTime
+     * @param plateForm
+     * @return
+     */
+    @Query(value = "SELECT now()", nativeQuery = true)
+    Integer getOpenTimesSinglePlatform(Timestamp beginTime, Timestamp endTime, Integer plateForm);
+
+    /**
+     * 访问时长（全平台）
+     * @param beginTime
+     * @param endTime
+     * @return
+     */
+    @Query(value = "SELECT now()", nativeQuery = true)
+    Integer getVisitTimeAllPlatform(Timestamp beginTime, Timestamp endTime);
+
+    /**
+     * 访问时长（单平台）
+     * @param beginTime
+     * @param endTime
+     * @param plateForm
+     * @return
+     */
+    @Query(value = "SELECT now()", nativeQuery = true)
+    Integer getVisitTimeSinglePlatform(Timestamp beginTime, Timestamp endTime, Integer plateForm);
+
+    /**
+     * 页面浏览量（全平台）
+     * @param beginTime
+     * @param endTime
+     * @return
+     */
+    @Query(value = "SELECT now()", nativeQuery = true)
+    Integer getVisitDepthAllPlatform(Timestamp beginTime, Timestamp endTime);
+
+    /**
+     * 页面浏览量（单平台）
+     * @param beginTime
+     * @param endTime
+     * @param plateForm
+     * @return
+     */
+    @Query(value = "SELECT now()", nativeQuery = true)
+    Integer getVisitDepthSinglePlatform(Timestamp beginTime, Timestamp endTime, Integer plateForm);
+
 }

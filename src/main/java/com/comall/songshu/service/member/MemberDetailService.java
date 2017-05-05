@@ -43,30 +43,62 @@ public class MemberDetailService {
         //复购数
         Integer repeatPurchaseCount;
 
+        //启动次数
+        Integer openTimes;
+        //访问时长
+        Integer visitTime;
+        //页面浏览量
+        Integer visitDepth;
+
+
+
+        //TODO REPOSITORY层神策相关sql编写
         if (platform<0){//全部
             uniqueVisitorCount = uniqueVisitorsRepository.getUniqueVisitorsAllPlatform(beginTime,endTime);
             consumerCount = memberDetailRepository.getConsumerCountAllPlatform(beginTime,endTime);
             newRegisterCount = memberDetailRepository.getMemberRegisterCountAllPlatform(beginTime,endTime);
             logonConsumeRate = memberDetailRepository.getLogonConsumeRateAllPlatform(beginTime,endTime);
             repeatPurchaseCount = memberDetailRepository.getRepeatPurchaseRateAllPlatform(beginTime,endTime);
+
+            openTimes = memberDetailRepository.getOpenTimesAllPlatform(beginTime,endTime);
+            visitTime = memberDetailRepository.getVisitTimeAllPlatform(beginTime,endTime);
+            visitDepth = memberDetailRepository.getVisitDepthAllPlatform(beginTime,endTime);
         }else {
             uniqueVisitorCount = uniqueVisitorsRepository.getUniqueVisitorsSinglePlatform(platformName,beginTime,endTime);
             consumerCount = memberDetailRepository.getConsumerCountSinglePlatform(beginTime,endTime,platform);
             newRegisterCount = memberDetailRepository.getMemberRegisterCountSinglePlatform(beginTime,endTime,platform);
             logonConsumeRate = memberDetailRepository.getLogonConsumeRateSinglePlatform(beginTime,endTime,platform);
             repeatPurchaseCount = memberDetailRepository.getRepeatPurchaseRateSinglePlatform(beginTime,endTime,platform);
+
+            openTimes = memberDetailRepository.getOpenTimesSinglePlatform(beginTime,endTime,platform);
+            visitTime = memberDetailRepository.getVisitTimeSinglePlatform(beginTime,endTime,platform);
+            visitDepth = memberDetailRepository.getVisitDepthSinglePlatform(beginTime,endTime,platform);
         }
         //复购率
         Double repeatPurchaseRate = Optional.ofNullable(consumerCount)
             .filter(c -> c>0)
             .map(d -> new BigDecimal(repeatPurchaseCount).doubleValue()/new BigDecimal(d).doubleValue())
             .orElse(0.0);
+        //平均访问时长
+        Integer avgVisitTime = Optional.ofNullable(uniqueVisitorCount)
+            .filter(c -> c>0)
+            .map(d -> (int)(visitTime/uniqueVisitorCount))
+            .orElse(0);
+        //平均访问深度
+        Integer avgVisitDepth = Optional.ofNullable(uniqueVisitorCount)
+            .filter(c -> c>0)
+            .map(d -> (int)(visitDepth/uniqueVisitorCount))
+            .orElse(0);
 
-        return "uniqueVisitorCount:"+uniqueVisitorCount
-            + "consumerCount:"+consumerCount
-            + "newRegisterCount:"+newRegisterCount
-            + "logonConsumeRate:"+logonConsumeRate
-            + "repeatPurchaseRate:"+repeatPurchaseRate;
+        //TODO 返回数据拼装
+        return "uniqueVisitorCount:"+uniqueVisitorCount+"==="
+            + "consumerCount:"+consumerCount+"==="
+            + "newRegisterCount:"+newRegisterCount+"==="
+            + "logonConsumeRate:"+logonConsumeRate+"==="
+            + "repeatPurchaseRate:"+repeatPurchaseRate+"==="
+            + "openTimes:"+openTimes+"==="
+            + "avgVisitTime:"+avgVisitTime+"==="
+            + "avgVisitDepth:"+avgVisitDepth;
     }
 
     public static void main(String[] at){
