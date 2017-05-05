@@ -44,7 +44,7 @@ public class ProductRevenueService {
 
 
         JSONArray productRevenueArray =  new JSONArray();
-
+        //TODO REPOSITORY层神策相关sql编写
         if(Optional.ofNullable(productRevenueResult)
             .filter(l -> l.size() >0).isPresent()){
             for(Object[] o : productRevenueResult){
@@ -104,7 +104,7 @@ public class ProductRevenueService {
 
             }
         }
-
+        //TODO 返回数据拼装
         return productRevenueArray.toString();
     }
 }
