@@ -7,6 +7,7 @@ import com.comall.songshu.web.rest.util.TransferUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
@@ -56,7 +57,10 @@ public class MemberDetailService {
             repeatPurchaseCount = memberDetailRepository.getRepeatPurchaseRateSinglePlatform(beginTime,endTime,platform);
         }
         //复购率
-        Integer repeatPurchaseRate = consumerCount >0 ? repeatPurchaseCount/consumerCount : 0;
+        Double repeatPurchaseRate = Optional.ofNullable(consumerCount)
+            .filter(c -> c>0)
+            .map(d -> new BigDecimal(repeatPurchaseCount).doubleValue()/new BigDecimal(d).doubleValue())
+            .orElse(0.0);
 
         return "uniqueVisitorCount:"+uniqueVisitorCount
             + "consumerCount:"+consumerCount
@@ -64,4 +68,17 @@ public class MemberDetailService {
             + "logonConsumeRate:"+logonConsumeRate
             + "repeatPurchaseRate:"+repeatPurchaseRate;
     }
+
+    public static void main(String[] at){
+        Integer a = 1231;
+        Integer b = 231312;
+        BigDecimal aa = new BigDecimal(a);
+        BigDecimal bb = new BigDecimal(b);
+        System.out.println(aa.doubleValue());
+        System.out.println(bb.doubleValue());
+
+        Double cc = new BigDecimal(a).doubleValue()/new BigDecimal(b).doubleValue();
+        System.out.println(cc.doubleValue());
+    }
+
 }
