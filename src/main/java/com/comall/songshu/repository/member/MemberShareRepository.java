@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 /**
  * Created by huanghaizhou on 2017/5/4.
@@ -40,7 +41,7 @@ public interface MemberShareRepository  extends JpaRepository<Author,Long> {
      * @return
      */
     @Query(value = "", nativeQuery = true)
-    Integer getMemberShareTrendWithAllPlatformByName(String name, Timestamp beginTime, Timestamp endTime, Integer interval);
+    List<Object[]> getMemberShareTrendWithAllPlatformByName(String name, Timestamp beginTime, Timestamp endTime, Integer interval);
 
     /**
      * 获取用户分享趋势
@@ -51,5 +52,5 @@ public interface MemberShareRepository  extends JpaRepository<Author,Long> {
      * @return
      */
     @Query(value = "", nativeQuery = true)
-    Integer getMemberShareTrendWithSinglePlatformByName(String name,Timestamp beginTime, Timestamp endTime,Integer platform, Integer interval);
+    List<Object[]> getMemberShareTrendWithSinglePlatformByName(String name, Timestamp beginTime, Timestamp endTime, Integer platform, Integer interval);
 }
