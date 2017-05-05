@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 /**
  * Created by huanghaizhou on 2017/5/4.
@@ -49,10 +50,10 @@ public class MemberShareService {
 
         Integer interval = ServiceUtil.getInstance().getAggTimeValue(beginTime,endTime,aggCount);
 
-        Integer shareProductCount = 0;
-        Integer shareOrderCount = 0;
-        Integer shareSpecialPageCount = 0;
-        Integer shareRegisterCount = 0;
+        List<Object[]> shareProductCount;
+        List<Object[]> shareOrderCount;
+        List<Object[]> shareSpecialPageCount;
+        List<Object[]> shareRegisterCount;
         if (platform<0) {
             //TODO 填入对应的事件字段名
             shareProductCount = memberShareRepository.getMemberShareTrendWithAllPlatformByName("事件名字段，需要改", beginTime, endTime,interval);
