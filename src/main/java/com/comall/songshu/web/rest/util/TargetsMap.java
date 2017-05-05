@@ -84,6 +84,7 @@ public class TargetsMap {
         memberTargets.put("分享趋势","MemberShareTrend");
         memberTargets.put("渠道注册用户","ChannelRegisterMember");
         memberTargets.put("用户数据","MemberDetail");
+        memberTargets.put("用户漏斗","MemberFunnel");
         return memberTargets;
     }
 
@@ -94,6 +95,7 @@ public class TargetsMap {
         memberTargetNames.put("MemberShareTrend", "分享趋势");
         memberTargetNames.put("ChannelRegisterMember", "渠道注册用户");
         memberTargetNames.put("MemberDetail", "用户数据");
+        memberTargetNames.put("MemberFunnel", "用户漏斗");
         return memberTargetNames;
     }
 }

@@ -4,6 +4,7 @@ import com.codahale.metrics.annotation.Timed;
 import com.comall.songshu.constants.TrendConstants;
 import com.comall.songshu.service.member.ChannelRegisterMemberService;
 import com.comall.songshu.service.member.MemberDetailService;
+import com.comall.songshu.service.member.MemberFunnelService;
 import com.comall.songshu.service.member.MemberShareService;
 import com.comall.songshu.web.rest.util.ServiceUtil;
 import com.comall.songshu.web.rest.util.TargetsMap;
@@ -41,6 +42,9 @@ public class MemberResource {
 
     @Autowired
     private MemberDetailService memberDetailService;
+
+    @Autowired
+    private MemberFunnelService memberFunnelService;
 
     @GetMapping("")
     @Timed
@@ -135,6 +139,9 @@ public class MemberResource {
                     case "MemberShareTrend" :
                         return memberShareService.getMemberShareTrendByName(target,platform,beginTime,endTime, TrendConstants.aggCount);
 
+                    //漏斗
+                    case "MemberFunnel" :
+                        return memberFunnelService.getMemberFunnel(target,"待定",platform,beginTime,endTime);
                     default:
                         throw new IllegalArgumentException("target=" + target);
                 }
