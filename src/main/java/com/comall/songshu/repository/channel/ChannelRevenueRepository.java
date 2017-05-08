@@ -12,10 +12,10 @@ public interface ChannelRevenueRepository {
 
     // 所有平台（5 个）
     @Query(value = "SELECT now()", nativeQuery = true)
-    Double getChannelRevenueWithAllPlatform(Timestamp beginTime, Timestamp endTime,String channelName);
+    Double getChannelRevenueWithAllPlatform(Timestamp beginTime, Timestamp endTime);
 
 
     // 单个平台
     @Query(value = "SELECT now()", nativeQuery = true)
-    Double getChannelRevenueWithSinglePlatform(Integer platform, Timestamp beginTime, Timestamp endTime,String channelName);
+    Double getChannelRevenueWithSinglePlatform(Integer platform, Timestamp beginTime, Timestamp endTime);
 }
