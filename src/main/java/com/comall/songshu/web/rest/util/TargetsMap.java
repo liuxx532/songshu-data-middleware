@@ -102,13 +102,14 @@ public class TargetsMap {
 
     public static Map<String,String> channelTargets() {
         channelTargets.put("访问时长分布","VisitTimeDistribution");
+        channelTargets.put("访问深度分布","VisitDeepDistribution");
         return channelTargets;
     }
 
     static Map<String,String> channelTargetNames = new HashMap<>();
 
     public static Map<String,String> channelTargetNames() {
-        channelTargetNames.put("VisitTimeDistribution", "访问时长分布");
+        channelTargetNames.put("VisitDeepDistribution", "访问深度分布");
         return channelTargetNames;
     }
 }

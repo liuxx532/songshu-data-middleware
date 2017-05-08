@@ -1,6 +1,7 @@
 package com.comall.songshu.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
+import com.comall.songshu.service.channel.VisitDeepDistributionService;
 import com.comall.songshu.service.channel.VisitTimeDistributionService;
 import com.comall.songshu.web.rest.util.ServiceUtil;
 import com.comall.songshu.web.rest.util.TargetsMap;
@@ -31,6 +32,8 @@ public class ChannelResource {
 
     @Autowired
     private VisitTimeDistributionService visitTimeDistributionService;
+    @Autowired
+    private VisitDeepDistributionService visitDeepDistributionService;
 
     @GetMapping("")
     @Timed
@@ -115,6 +118,8 @@ public class ChannelResource {
                 switch (target) {
                     case "VisitTimeDistribution":
                         return visitTimeDistributionService.getVisitTimeDistribution(target,platform,beginTime,endTime);
+                    case "VisitDeepDistribution":
+                        return visitDeepDistributionService.getVisitDeepDistribution(target,platform,beginTime,endTime);
 
                     default:
                         throw new IllegalArgumentException("target=" + target);
