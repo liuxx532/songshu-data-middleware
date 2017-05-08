@@ -1,6 +1,7 @@
 package com.comall.songshu.service.channel;
 
 import com.comall.songshu.repository.channel.VisitDeepDistributionRepository;
+import com.comall.songshu.web.rest.util.JsonStringBuilder;
 import com.comall.songshu.web.rest.util.TransferUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,15 +22,14 @@ public class VisitDeepDistributionService {
 
         int platform = TransferUtil.getPlatform(platformName);
 
-        List<Object[]> visitDeep = null;
+        List<Object[]> visitDeepDistribution = null;
 
         if (platform<0) {
-            visitDeep = visitDeepDistributionRepository.getVisitDeepWithAllPlatform(beginTime,endTime);
+            visitDeepDistribution = visitDeepDistributionRepository.getVisitDeepWithAllPlatform(beginTime,endTime);
         }else{
-            visitDeep = visitDeepDistributionRepository.getVisitDeepSinglePlatform(beginTime,endTime,platform);
+            visitDeepDistribution = visitDeepDistributionRepository.getVisitDeepSinglePlatform(beginTime,endTime,platform);
         }
 
-        //TODO 组装数据
-        return null;
+        return JsonStringBuilder.buildRankJsonString(visitDeepDistribution);
     }
 }
