@@ -98,4 +98,17 @@ public class TargetsMap {
         memberTargetNames.put("MemberFunnel", "用户漏斗");
         return memberTargetNames;
     }
+    static Map<String,String> channelTargets = new HashMap<>();
+
+    public static Map<String,String> channelTargets() {
+        channelTargets.put("访问时长分布","VisitTimeDistribution");
+        return channelTargets;
+    }
+
+    static Map<String,String> channelTargetNames = new HashMap<>();
+
+    public static Map<String,String> channelTargetNames() {
+        channelTargetNames.put("VisitTimeDistribution", "访问时长分布");
+        return channelTargetNames;
+    }
 }
