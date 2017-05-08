@@ -105,6 +105,8 @@ public class TargetsMap {
         channelTargets.put("访问深度分布","VisitDeepDistribution");
         channelTargets.put("TOP10机型分布","ManufacturerRank");
         channelTargets.put("TOP10地区分布","RegionRank");
+        channelTargets.put("年龄分布","AgeDistribution");
+        channelTargets.put("性别分布","SexDistribution");
         return channelTargets;
     }
 
