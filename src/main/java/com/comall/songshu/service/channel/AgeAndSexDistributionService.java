@@ -144,16 +144,16 @@ public class AgeAndSexDistributionService {
                     ageGroupOneJson.put(CommonConstants.AGE_GROUP_LEVEL_ONE,ageGroupOnePercentage);
                     ageDistributionArray.put(ageGroupOneJson);
                     JSONObject ageGroupTwoJson = new JSONObject();
-                    ageGroupTwoJson.put(CommonConstants.AGE_GROUP_LEVEL_ONE,ageGroupTwoPercentage);
+                    ageGroupTwoJson.put(CommonConstants.AGE_GROUP_LEVEL_TWO,ageGroupTwoPercentage);
                     ageDistributionArray.put(ageGroupTwoJson);
                     JSONObject ageGroupThreeJson = new JSONObject();
-                    ageGroupThreeJson.put(CommonConstants.AGE_GROUP_LEVEL_ONE,ageGroupThreePercentage);
+                    ageGroupThreeJson.put(CommonConstants.AGE_GROUP_LEVEL_THREE,ageGroupThreePercentage);
                     ageDistributionArray.put(ageGroupThreeJson);
                     JSONObject ageGroupFourJson = new JSONObject();
-                    ageGroupFourJson.put(CommonConstants.AGE_GROUP_LEVEL_ONE,ageGroupFourPercentage);
+                    ageGroupFourJson.put(CommonConstants.AGE_GROUP_LEVEL_FOUR,ageGroupFourPercentage);
                     ageDistributionArray.put(ageGroupFourJson);
                     JSONObject ageGroupFiveJson = new JSONObject();
-                    ageGroupFiveJson.put(CommonConstants.AGE_GROUP_LEVEL_ONE,ageGroupFivePercentage);
+                    ageGroupFiveJson.put(CommonConstants.AGE_GROUP_LEVEL_FIVE,ageGroupFivePercentage);
                     ageDistributionArray.put(ageGroupFiveJson);
                 } catch (JSONException e) {
                     e.printStackTrace();
