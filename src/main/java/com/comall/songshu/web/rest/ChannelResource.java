@@ -50,6 +50,8 @@ public class ChannelResource {
     private ChannelUniqueVisitorsService channelUniqueVisitorsService;
     @Autowired
     private ChannelGrossMarginRateService channelGrossMarginRateService;
+    @Autowired
+    private ChannelConsumerCountService channelConsumerCountService;
 
 
     @GetMapping("")
@@ -179,6 +181,8 @@ public class ChannelResource {
                         return channelUniqueVisitorsService.getChannelUniqueVisitors(target,platform,beginTime,endTime,chainBeginTime,chainEndTime);
                     case "ChannelGrossMarginRate":
                         return channelGrossMarginRateService.getChannelGrossMarginRate(target,platform,beginTime,endTime,chainBeginTime,chainEndTime);
+                    case "ChannelConsumerCount":
+                        return channelConsumerCountService.getChannelConsumerRevenue(target,platform,beginTime,endTime,chainBeginTime,chainEndTime);
                     default:
                         throw new IllegalArgumentException("target=" + target);
                 }
