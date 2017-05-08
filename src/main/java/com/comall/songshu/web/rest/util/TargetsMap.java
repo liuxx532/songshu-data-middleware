@@ -109,6 +109,7 @@ public class TargetsMap {
     static Map<String,String> channelTargetNames = new HashMap<>();
 
     public static Map<String,String> channelTargetNames() {
+        channelTargetNames.put("VisitTimeDistribution", "访问时长分布");
         channelTargetNames.put("VisitDeepDistribution", "访问深度分布");
         return channelTargetNames;
     }
