@@ -1,6 +1,7 @@
 package com.comall.songshu.service.channel;
 
 import com.comall.songshu.repository.channel.VisitTimeDistributionRepository;
+import com.comall.songshu.web.rest.util.JsonStringBuilder;
 import com.comall.songshu.web.rest.util.TransferUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,7 +31,8 @@ public class VisitTimeDistributionService {
             visitTimeDistribution = visitTimeDistributionRepository.getVisitTimeDistributionSinglePlatform(beginTime,endTime,platform);
         }
 
-        //TODO 组装数据
-        return null;
+
+        return JsonStringBuilder.buildRankJsonString(visitTimeDistribution);
     }
+
 }
