@@ -7,6 +7,7 @@ import com.comall.songshu.web.rest.util.ServiceUtil;
 import com.comall.songshu.web.rest.util.TransferUtil;
 import com.comall.songshu.web.rest.vm.TopStat;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.util.List;
@@ -16,6 +17,7 @@ import java.util.Optional;
  * 渠道销售额
  * Created by huanghaizhou on 2017/5/8.
  */
+@Service
 public class ChannelRevenueService {
 
     @Autowired
