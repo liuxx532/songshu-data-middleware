@@ -21,7 +21,7 @@ public interface AgeAndSexDistributionRepository extends JpaRepository<Author,Lo
 //    INNER JOIN songshu_cs_member_info info ON info."memberId" = m.id
 //    WHERE m."regTime" BETWEEN '2016-07-01 00:00:00' AND '2016-08-01 00:00:00'
 //    group BY info."gender" ORDER BY info."gender" desc) sexInfo;
-    @Query(value = "SELECT CASE WHEN sexInfo.gender >0  THEN '男' ELSE '女' END AS sexGroup, sexInfo.memberCount FROM  " +
+    @Query(value = "SELECT CASE WHEN sexInfo.gender >0  THEN '男' ELSE '女' END AS sexGroup, sexInfo.memberCount AS memberCount FROM  " +
         "(SELECT info.\"gender\" AS gender, count(DISTINCT(m.id)) AS memberCount FROM  songshu_cs_member m " +
         "INNER JOIN songshu_cs_member_info info ON info.\"memberId\" = m.id " +
         "WHERE m.\"regTime\" BETWEEN ?1 AND ?2  " +
@@ -33,7 +33,7 @@ public interface AgeAndSexDistributionRepository extends JpaRepository<Author,Lo
 //    INNER JOIN songshu_cs_member_info info ON info."memberId" = m.id
 //    WHERE m."regTime" BETWEEN '2016-07-01 00:00:00' AND '2016-08-01 00:00:00' AND m."multipleChannelsId" = 1
 //    group BY info."gender" ORDER BY info."gender" desc) sexInfo;
-    @Query(value = "SELECT CASE WHEN sexInfo.gender >0  THEN '男' ELSE '女' END AS sexGroup, sexInfo.memberCount FROM  " +
+    @Query(value = "SELECT CASE WHEN sexInfo.gender >0  THEN '男' ELSE '女' END AS sexGroup, sexInfo.memberCount AS memberCount FROM  " +
         "(SELECT info.\"gender\" as gender, count(DISTINCT(m.id)) as memberCount FROM  songshu_cs_member m " +
         "INNER JOIN songshu_cs_member_info info ON info.\"memberId\" = m.id " +
         "WHERE m.\"regTime\" BETWEEN ?1 AND ?2 AND m.\"multipleChannelsId\" = ?3 " +
