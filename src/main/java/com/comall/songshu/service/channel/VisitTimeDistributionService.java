@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 /**
  * 访问时长分布Service
@@ -21,12 +22,15 @@ public class VisitTimeDistributionService {
 
         int platform = TransferUtil.getPlatform(platformName);
 
-        if (platform<0) {
-            visitTimeDistributionRepository.getVisitTimeDistributionWithAllPlatform(beginTime,endTime);
-        }else{
+        List<Object[]> visitTimeDistribution = null;
 
+        if (platform<0) {
+            visitTimeDistribution = visitTimeDistributionRepository.getVisitTimeDistributionWithAllPlatform(beginTime,endTime);
+        }else{
+            visitTimeDistribution = visitTimeDistributionRepository.getVisitTimeDistributionSinglePlatform(beginTime,endTime,platform);
         }
 
+        //TODO 组装数据
         return null;
     }
 }

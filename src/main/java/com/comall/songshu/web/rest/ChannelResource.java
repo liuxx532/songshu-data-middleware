@@ -1,6 +1,7 @@
 package com.comall.songshu.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
+import com.comall.songshu.service.channel.VisitTimeDistributionService;
 import com.comall.songshu.web.rest.util.ServiceUtil;
 import com.comall.songshu.web.rest.util.TargetsMap;
 import org.joda.time.format.DateTimeFormat;
@@ -9,6 +10,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -26,6 +28,9 @@ import java.util.Optional;
 public class ChannelResource {
 
     private final Logger log = LoggerFactory.getLogger(ChannelResource.class);
+
+    @Autowired
+    private VisitTimeDistributionService visitTimeDistributionService;
 
     @GetMapping("")
     @Timed
@@ -109,7 +114,7 @@ public class ChannelResource {
 
                 switch (target) {
                     case "VisitTimeDistribution":
-//                        return productRevenueService.getProductRevenue(target,platform,beginTime,endTime,20);
+                        return visitTimeDistributionService.getVisitTimeDistribution(target,platform,beginTime,endTime);
 
                     default:
                         throw new IllegalArgumentException("target=" + target);
