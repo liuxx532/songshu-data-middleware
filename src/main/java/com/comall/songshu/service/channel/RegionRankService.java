@@ -4,6 +4,7 @@ import com.comall.songshu.repository.channel.RegionRankRepository;
 import com.comall.songshu.web.rest.util.JsonStringBuilder;
 import com.comall.songshu.web.rest.util.TransferUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.util.List;
@@ -11,6 +12,7 @@ import java.util.List;
 /**
  * Created by huanghaizhou on 2017/5/8.
  */
+@Service
 public class RegionRankService {
 
     @Autowired
