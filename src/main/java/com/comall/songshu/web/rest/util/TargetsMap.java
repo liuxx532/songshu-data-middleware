@@ -104,6 +104,7 @@ public class TargetsMap {
         channelTargets.put("访问时长分布","VisitTimeDistribution");
         channelTargets.put("访问深度分布","VisitDeepDistribution");
         channelTargets.put("TOP10机型分布","ManufacturerRank");
+        channelTargets.put("TOP10地区分布","RegionRank");
         return channelTargets;
     }
 
@@ -113,6 +114,7 @@ public class TargetsMap {
         channelTargetNames.put("VisitTimeDistribution", "访问时长分布");
         channelTargetNames.put("VisitDeepDistribution", "访问深度分布");
         channelTargetNames.put("ManufacturerRank", "TOP10机型分布");
+        channelTargetNames.put("RegionRank", "TOP10地区分布");
         return channelTargetNames;
     }
 }

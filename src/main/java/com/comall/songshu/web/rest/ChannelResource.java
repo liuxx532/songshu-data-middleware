@@ -2,6 +2,7 @@ package com.comall.songshu.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import com.comall.songshu.service.channel.ManufacturerRankService;
+import com.comall.songshu.service.channel.RegionRankService;
 import com.comall.songshu.service.channel.VisitDeepDistributionService;
 import com.comall.songshu.service.channel.VisitTimeDistributionService;
 import com.comall.songshu.web.rest.util.ServiceUtil;
@@ -37,6 +38,8 @@ public class ChannelResource {
     private VisitDeepDistributionService visitDeepDistributionService;
     @Autowired
     private ManufacturerRankService manufacturerRankService;
+    @Autowired
+    private RegionRankService regionRankService;
 
     @GetMapping("")
     @Timed
@@ -125,6 +128,8 @@ public class ChannelResource {
                         return visitDeepDistributionService.getVisitDeepDistribution(target,platform,beginTime,endTime);
                     case "ManufacturerRank":
                         return manufacturerRankService.getManufacturerRank(target,platform,beginTime,endTime);
+                    case "RegionRank":
+                        return regionRankService.getRegionRank(target,platform,beginTime,endTime);
 
                     default:
                         throw new IllegalArgumentException("target=" + target);
