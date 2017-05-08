@@ -103,6 +103,7 @@ public class TargetsMap {
     public static Map<String,String> channelTargets() {
         channelTargets.put("访问时长分布","VisitTimeDistribution");
         channelTargets.put("访问深度分布","VisitDeepDistribution");
+        channelTargets.put("TOP10机型分布","ManufacturerRank");
         return channelTargets;
     }
 
@@ -111,6 +112,7 @@ public class TargetsMap {
     public static Map<String,String> channelTargetNames() {
         channelTargetNames.put("VisitTimeDistribution", "访问时长分布");
         channelTargetNames.put("VisitDeepDistribution", "访问深度分布");
+        channelTargetNames.put("ManufacturerRank", "TOP10机型分布");
         return channelTargetNames;
     }
 }
