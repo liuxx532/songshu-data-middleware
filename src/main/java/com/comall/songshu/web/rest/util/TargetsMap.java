@@ -107,6 +107,12 @@ public class TargetsMap {
         channelTargets.put("TOP10地区分布","RegionRank");
         channelTargets.put("年龄分布","AgeDistribution");
         channelTargets.put("性别分布","SexDistribution");
+        channelTargets.put("渠道页面销售额","ChannelRevenue");
+        channelTargets.put("渠道页面订单量","ChannelOrderCount");
+        channelTargets.put("渠道页面客单价","ChannelAvgOrderRevenue");
+        channelTargets.put("渠道页面访客数","ChannelUniqueVisitors");
+        channelTargets.put("渠道页面毛利率","ChannelGrossMarginRate");
+        channelTargets.put("渠道页面消费用户数","ChannelConsumerCount");
         return channelTargets;
     }
 
@@ -116,7 +122,11 @@ public class TargetsMap {
         channelTargetNames.put("VisitTimeDistribution", "访问时长分布");
         channelTargetNames.put("VisitDeepDistribution", "访问深度分布");
         channelTargetNames.put("ManufacturerRank", "TOP10机型分布");
-        channelTargetNames.put("RegionRank", "TOP10地区分布");
+        channelTargetNames.put("ChannelRevenue", "渠道页面销售额");
+        channelTargetNames.put("ChannelAvgOrderRevenue", "渠道页面客单价");
+        channelTargetNames.put("ChannelUniqueVisitors", "渠道页面访客数");
+        channelTargetNames.put("ChannelGrossMarginRate", "渠道页面毛利率");
+        channelTargetNames.put("ChannelConsumerCount", "渠道页面消费用户数");
         return channelTargetNames;
     }
 }

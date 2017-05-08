@@ -4,6 +4,7 @@ import com.codahale.metrics.annotation.Timed;
 import com.comall.songshu.service.channel.*;
 import com.comall.songshu.web.rest.util.ServiceUtil;
 import com.comall.songshu.web.rest.util.TargetsMap;
+import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.json.JSONArray;
@@ -39,17 +40,30 @@ public class ChannelResource {
     private RegionRankService regionRankService;
     @Autowired
     private AgeAndSexDistributionService ageAndSexDistributionService;
+    @Autowired
+    private ChannelRevenueService channelRevenueService;
+    @Autowired
+    private ChannelOrderCountService channelOrderCountService;
+    @Autowired
+    private ChannelAvgOrderRevenueService channelAvgOrderRevenueService;
+    @Autowired
+    private ChannelUniqueVisitorsService channelUniqueVisitorsService;
+    @Autowired
+    private ChannelGrossMarginRateService channelGrossMarginRateService;
+    @Autowired
+    private ChannelConsumerCountService channelConsumerCountService;
+
 
     @GetMapping("")
     @Timed
     public Map<String,String> getTargets() {
-        return TargetsMap.memberTargets();
+        return TargetsMap.channelTargets();
     }
 
     @PostMapping("/search")
     @Timed
     public Collection<String> getKeys() {
-        return TargetsMap.memberTargets().keySet();
+        return TargetsMap.channelTargets().keySet();
     }
 
     @PostMapping("/query")
@@ -80,6 +94,9 @@ public class ChannelResource {
             Timestamp beginTime = null;
             //结束时间
             Timestamp endTime = null;
+            //环比时间
+            Timestamp chainBeginTime = null;
+            Timestamp chainEndTime = null;
 
             if(fromTimeStr != null && toTimeStr != null){
                 beginTime = Optional.of(fromTimeStr)
@@ -92,7 +109,28 @@ public class ChannelResource {
                     .filter(s -> s.length() >0)
                     .map( s -> ServiceUtil.getInstance().parseTimestamp(s))
                     .orElse(null);
+                //环比时间
+                String[] chainCreateTime = ServiceUtil.getInstance().getChainIndexDateTime(fromTimeStr,toTimeStr);
+                if(chainCreateTime != null){
+                    chainBeginTime = Optional.of(chainCreateTime)
+                        .filter( array -> array.length >0)
+                        .map( a -> a[0])
+                        .map(String::trim)
+                        .filter(s -> s.length() >0)
+                        .map( s -> DateTime.parse(s))
+                        .map( d-> Timestamp.valueOf(d.toString(dateTimeFormat)))
+                        .orElse(null);
+                    chainEndTime = Optional.of(chainCreateTime)
+                        .filter( array -> array.length >1)
+                        .map( a -> a[1])
+                        .map(String::trim)
+                        .filter(s -> s.length() >0)
+                        .map( s -> DateTime.parse(s))
+                        .map( d-> Timestamp.valueOf(d.toString(dateTimeFormat)))
+                        .orElse(null);
+                }
             }
+
 
 
             //指标中文名称
@@ -133,6 +171,18 @@ public class ChannelResource {
                         return ageAndSexDistributionService.getAgeDistribution(target,platform,beginTime,endTime);
                     case "SexDistribution":
                         return ageAndSexDistributionService.getSexDistribution(target,platform,beginTime,endTime);
+                    case "ChannelRevenue":
+                        return channelRevenueService.getChannelRevenue(target,platform,beginTime,endTime,chainBeginTime,chainEndTime);
+                    case "ChannelOrderCount":
+                        return channelOrderCountService.getChannelOrderCount(target,platform,beginTime,endTime,chainBeginTime,chainEndTime);
+                    case "ChannelAvgOrderRevenue":
+                        return channelAvgOrderRevenueService.getChannelAvgOrderRevenue(target,platform,beginTime,endTime,chainBeginTime,chainEndTime);
+                    case "ChannelUniqueVisitors":
+                        return channelUniqueVisitorsService.getChannelUniqueVisitors(target,platform,beginTime,endTime,chainBeginTime,chainEndTime);
+                    case "ChannelGrossMarginRate":
+                        return channelGrossMarginRateService.getChannelGrossMarginRate(target,platform,beginTime,endTime,chainBeginTime,chainEndTime);
+                    case "ChannelConsumerCount":
+                        return channelConsumerCountService.getChannelConsumerRevenue(target,platform,beginTime,endTime,chainBeginTime,chainEndTime);
                     default:
                         throw new IllegalArgumentException("target=" + target);
                 }
