@@ -13,9 +13,9 @@ import java.util.List;
  */
 public interface ManufacturerRankRepository  extends JpaRepository<Author,Long> {
 
-    @Query(value = "", nativeQuery = true)
+    @Query(value = "SELECT now() ", nativeQuery = true)
     List<Object[]> getManufacturerRankWithAllPlatform(Timestamp beginTime, Timestamp endTime);
 
-    @Query(value = "", nativeQuery = true)
+    @Query(value = "SELECT now() ", nativeQuery = true)
     List<Object[]> getManufacturerRankWithSinglePlatform(Timestamp beginTime, Timestamp endTime,Integer platform);
 }

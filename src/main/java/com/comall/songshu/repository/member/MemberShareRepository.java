@@ -18,7 +18,7 @@ public interface MemberShareRepository  extends JpaRepository<Author,Long> {
      * @param endTime
      * @return
      */
-    @Query(value = "", nativeQuery = true)
+    @Query(value = "SELECT now()", nativeQuery = true)
     Integer getMemberShareWithAllPlatformByName(String name,Timestamp beginTime, Timestamp endTime);
 
     /**
@@ -29,7 +29,7 @@ public interface MemberShareRepository  extends JpaRepository<Author,Long> {
      * @param platform
      * @return
      */
-    @Query(value = "", nativeQuery = true)
+    @Query(value = "SELECT now()", nativeQuery = true)
     Integer getMemberShareWithSinglePlatformByName(String name,Timestamp beginTime, Timestamp endTime,Integer platform);
 
     /**
@@ -40,7 +40,7 @@ public interface MemberShareRepository  extends JpaRepository<Author,Long> {
      * @param interval
      * @return
      */
-    @Query(value = "", nativeQuery = true)
+    @Query(value = "SELECT now()", nativeQuery = true)
     List<Object[]> getMemberShareTrendWithAllPlatformByName(String name, Timestamp beginTime, Timestamp endTime, Integer interval);
 
     /**
@@ -51,6 +51,6 @@ public interface MemberShareRepository  extends JpaRepository<Author,Long> {
      * @param interval
      * @return
      */
-    @Query(value = "", nativeQuery = true)
+    @Query(value = "SELECT now()", nativeQuery = true)
     List<Object[]> getMemberShareTrendWithSinglePlatformByName(String name, Timestamp beginTime, Timestamp endTime, Integer platform, Integer interval);
 }

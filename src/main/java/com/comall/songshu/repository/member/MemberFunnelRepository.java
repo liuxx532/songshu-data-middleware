@@ -20,7 +20,7 @@ public interface MemberFunnelRepository  extends JpaRepository<Author,Long> {
      * @param endTime
      * @return
      */
-    @Query(value = "", nativeQuery = true)
+    @Query(value = "SELECT now()", nativeQuery = true)
     Integer getMemberFunnelOpenTimesWithAllPlatformForVisitor(Timestamp beginTime, Timestamp endTime);
     /**
      * 会员漏斗图-商品详情页-访客
@@ -28,7 +28,7 @@ public interface MemberFunnelRepository  extends JpaRepository<Author,Long> {
      * @param endTime
      * @return
      */
-    @Query(value = "", nativeQuery = true)
+    @Query(value = "SELECT now()", nativeQuery = true)
     Integer getMemberFunnelProductDetailWithAllPlatformForVisitor(Timestamp beginTime, Timestamp endTime);
     /**
      * 会员漏斗图-加入购物车-访客
@@ -36,7 +36,7 @@ public interface MemberFunnelRepository  extends JpaRepository<Author,Long> {
      * @param endTime
      * @return
      */
-    @Query(value = "", nativeQuery = true)
+    @Query(value = "SELECT now()", nativeQuery = true)
     Integer getMemberFunnelAddCardWithAllPlatformForVisitor(Timestamp beginTime, Timestamp endTime);
     /**
      * 会员漏斗图-提交订单-访客
@@ -44,7 +44,7 @@ public interface MemberFunnelRepository  extends JpaRepository<Author,Long> {
      * @param endTime
      * @return
      */
-    @Query(value = "", nativeQuery = true)
+    @Query(value = "SELECT now()", nativeQuery = true)
     Integer getMemberFunnelCreateOrderWithAllPlatformForVisitor(Timestamp beginTime, Timestamp endTime);
     /**
      * 会员漏斗图-支付订单-访客
@@ -52,7 +52,7 @@ public interface MemberFunnelRepository  extends JpaRepository<Author,Long> {
      * @param endTime
      * @return
      */
-    @Query(value = "", nativeQuery = true)
+    @Query(value = "SELECT now()", nativeQuery = true)
     Integer getMemberFunnelPayOrderWithAllPlatformForVisitor(Timestamp beginTime, Timestamp endTime);
 
     //---------------------------------------------------------------------------
@@ -66,7 +66,7 @@ public interface MemberFunnelRepository  extends JpaRepository<Author,Long> {
      * @param platform
      * @return
      */
-    @Query(value = "", nativeQuery = true)
+    @Query(value = "SELECT now()", nativeQuery = true)
     Integer getMemberFunnelOpenTimesWithSinglePlatformForVisitor(Timestamp beginTime, Timestamp endTime, Integer platform);
     /**
      * 会员漏斗图-商品详情页-访客
@@ -75,7 +75,7 @@ public interface MemberFunnelRepository  extends JpaRepository<Author,Long> {
      * @param platform
      * @return
      */
-    @Query(value = "", nativeQuery = true)
+    @Query(value = "SELECT now()", nativeQuery = true)
     Integer getMemberFunnelProductDetailWithSinglePlatformForVisitor(Timestamp beginTime, Timestamp endTime, Integer platform);
     /**
      * 会员漏斗图-加入购物车-访客
@@ -84,7 +84,7 @@ public interface MemberFunnelRepository  extends JpaRepository<Author,Long> {
      * @param platform
      * @return
      */
-    @Query(value = "", nativeQuery = true)
+    @Query(value = "SELECT now()", nativeQuery = true)
     Integer getMemberFunnelAddCardWithSinglePlatformForVisitor(Timestamp beginTime, Timestamp endTime, Integer platform);
     /**
      * 会员漏斗图-提交订单-访客
@@ -93,7 +93,7 @@ public interface MemberFunnelRepository  extends JpaRepository<Author,Long> {
      * @param platform
      * @return
      */
-    @Query(value = "", nativeQuery = true)
+    @Query(value = "SELECT now()", nativeQuery = true)
     Integer getMemberFunnelCreateOrderWithSinglePlatformForVisitor(Timestamp beginTime, Timestamp endTime, Integer platform);
     /**
      * 会员漏斗图-支付订单-访客
@@ -102,7 +102,7 @@ public interface MemberFunnelRepository  extends JpaRepository<Author,Long> {
      * @param platform
      * @return
      */
-    @Query(value = "", nativeQuery = true)
+    @Query(value = "SELECT now()", nativeQuery = true)
     Integer getMemberFunnelPayOrderWithSinglePlatformForVisitor(Timestamp beginTime, Timestamp endTime, Integer platform);
 
     //---------------------------------------------------------------------------
@@ -115,7 +115,7 @@ public interface MemberFunnelRepository  extends JpaRepository<Author,Long> {
      * @param endTime
      * @return
      */
-    @Query(value = "", nativeQuery = true)
+    @Query(value = "SELECT now()", nativeQuery = true)
     Integer getMemberFunnelOpenTimesWithAllPlatformForRegister(Timestamp beginTime, Timestamp endTime);
     /**
      * 会员漏斗图-商品详情页-注册用户
@@ -123,7 +123,7 @@ public interface MemberFunnelRepository  extends JpaRepository<Author,Long> {
      * @param endTime
      * @return
      */
-    @Query(value = "", nativeQuery = true)
+    @Query(value = "SELECT now()", nativeQuery = true)
     Integer getMemberFunnelProductDetailWithAllPlatformForRegister(Timestamp beginTime, Timestamp endTime);
     /**
      * 会员漏斗图-加入购物车-注册用户
@@ -131,7 +131,7 @@ public interface MemberFunnelRepository  extends JpaRepository<Author,Long> {
      * @param endTime
      * @return
      */
-    @Query(value = "", nativeQuery = true)
+    @Query(value = "SELECT now()", nativeQuery = true)
     Integer getMemberFunnelAddCardWithAllPlatformForRegister(Timestamp beginTime, Timestamp endTime);
     /**
      * 会员漏斗图-提交订单-注册用户
@@ -139,7 +139,7 @@ public interface MemberFunnelRepository  extends JpaRepository<Author,Long> {
      * @param endTime
      * @return
      */
-    @Query(value = "", nativeQuery = true)
+    @Query(value = "SELECT now()", nativeQuery = true)
     Integer getMemberFunnelCreateOrderWithAllPlatformForRegister(Timestamp beginTime, Timestamp endTime);
     /**
      * 会员漏斗图-支付订单-注册用户
@@ -147,7 +147,7 @@ public interface MemberFunnelRepository  extends JpaRepository<Author,Long> {
      * @param endTime
      * @return
      */
-    @Query(value = "", nativeQuery = true)
+    @Query(value = "SELECT now()", nativeQuery = true)
     Integer getMemberFunnelPayOrderWithAllPlatformForRegister(Timestamp beginTime, Timestamp endTime);
     //---------------------------------------------------------------------------
 
@@ -159,7 +159,7 @@ public interface MemberFunnelRepository  extends JpaRepository<Author,Long> {
      * @param endTime
      * @return
      */
-    @Query(value = "", nativeQuery = true)
+    @Query(value = "SELECT now()", nativeQuery = true)
     Integer getMemberFunnelOpenTimesWithSinglePlatformForRegister(Timestamp beginTime, Timestamp endTime, Integer platform);
     /**
      * 会员漏斗图-商品详情页-注册用户
@@ -167,7 +167,7 @@ public interface MemberFunnelRepository  extends JpaRepository<Author,Long> {
      * @param endTime
      * @return
      */
-    @Query(value = "", nativeQuery = true)
+    @Query(value = "SELECT now()", nativeQuery = true)
     Integer getMemberFunnelProductDetailWithSinglePlatformForRegister(Timestamp beginTime, Timestamp endTime, Integer platform);
     /**
      * 会员漏斗图-加入购物车-注册用户
@@ -175,7 +175,7 @@ public interface MemberFunnelRepository  extends JpaRepository<Author,Long> {
      * @param endTime
      * @return
      */
-    @Query(value = "", nativeQuery = true)
+    @Query(value = "SELECT now()", nativeQuery = true)
     Integer getMemberFunnelAddCardWithSinglePlatformForRegister(Timestamp beginTime, Timestamp endTime, Integer platform);
     /**
      * 会员漏斗图-提交订单-注册用户
@@ -183,7 +183,7 @@ public interface MemberFunnelRepository  extends JpaRepository<Author,Long> {
      * @param endTime
      * @return
      */
-    @Query(value = "", nativeQuery = true)
+    @Query(value = "SELECT now()", nativeQuery = true)
     Integer getMemberFunnelCreateOrderWithSinglePlatformForRegister(Timestamp beginTime, Timestamp endTime, Integer platform);
     /**
      * 会员漏斗图-支付订单-注册用户
@@ -191,6 +191,6 @@ public interface MemberFunnelRepository  extends JpaRepository<Author,Long> {
      * @param endTime
      * @return
      */
-    @Query(value = "", nativeQuery = true)
+    @Query(value = "SELECT now()", nativeQuery = true)
     Integer getMemberFunnelPayOrderWithSinglePlatformForRegister(Timestamp beginTime, Timestamp endTime, Integer platform);
 }

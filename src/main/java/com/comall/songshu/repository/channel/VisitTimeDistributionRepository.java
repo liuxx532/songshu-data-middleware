@@ -13,9 +13,9 @@ import java.util.List;
  */
 public interface VisitTimeDistributionRepository  extends JpaRepository<Author,Long> {
 
-    @Query(value = "", nativeQuery = true)
+    @Query(value = "SELECT now() ", nativeQuery = true)
     List<Object[]> getVisitTimeDistributionWithAllPlatform(Timestamp beginTime, Timestamp endTime);
 
-    @Query(value = "", nativeQuery = true)
+    @Query(value = "SELECT now() ", nativeQuery = true)
     List<Object[]> getVisitTimeDistributionSinglePlatform(Timestamp beginTime, Timestamp endTime,Integer platform);
 }

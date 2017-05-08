@@ -12,9 +12,9 @@ import java.util.List;
  */
 public interface VisitDeepDistributionRepository extends JpaRepository<Author,Long> {
 
-    @Query(value = "", nativeQuery = true)
+    @Query(value = "SELECT now() ", nativeQuery = true)
     List<Object[]> getVisitDeepWithAllPlatform(Timestamp beginTime, Timestamp endTime);
 
-    @Query(value = "", nativeQuery = true)
+    @Query(value = "SELECT now() ", nativeQuery = true)
     List<Object[]> getVisitDeepSinglePlatform(Timestamp beginTime, Timestamp endTime,Integer platform);
 }
