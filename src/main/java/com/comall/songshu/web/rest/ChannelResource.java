@@ -1,10 +1,7 @@
 package com.comall.songshu.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
-import com.comall.songshu.service.channel.ManufacturerRankService;
-import com.comall.songshu.service.channel.RegionRankService;
-import com.comall.songshu.service.channel.VisitDeepDistributionService;
-import com.comall.songshu.service.channel.VisitTimeDistributionService;
+import com.comall.songshu.service.channel.*;
 import com.comall.songshu.web.rest.util.ServiceUtil;
 import com.comall.songshu.web.rest.util.TargetsMap;
 import org.joda.time.format.DateTimeFormat;
@@ -27,7 +24,7 @@ import java.util.Optional;
  * Created by huanghaizhou on 2017/5/8.
  */
 @RestController
-@RequestMapping("/product")
+@RequestMapping("/channel")
 public class ChannelResource {
 
     private final Logger log = LoggerFactory.getLogger(ChannelResource.class);
@@ -40,6 +37,8 @@ public class ChannelResource {
     private ManufacturerRankService manufacturerRankService;
     @Autowired
     private RegionRankService regionRankService;
+    @Autowired
+    private AgeAndSexDistributionService ageAndSexDistributionService;
 
     @GetMapping("")
     @Timed
@@ -97,16 +96,16 @@ public class ChannelResource {
 
 
             //指标中文名称
-            JSONArray productTargets = (JSONArray)obj.get("targets");
+            JSONArray  channelTargets = (JSONArray)obj.get("targets");
             String target = null;
-            if (Optional.ofNullable(productTargets)
+            if (Optional.ofNullable( channelTargets)
                 .filter((value) -> value.length() >0)
                 .isPresent()) {
-                JSONObject targetJsonObj = (JSONObject)productTargets.get(0);
+                JSONObject targetJsonObj = (JSONObject) channelTargets.get(0);
                 if (Optional.ofNullable(targetJsonObj).isPresent()){
                     String targetObj =  (String)targetJsonObj.get("target");
                     target = Optional.ofNullable(targetObj)
-                        .map( o ->  TargetsMap.productTargets().get(o.toString()))
+                        .map( o ->  TargetsMap. channelTargets().get(o.toString()))
                         .orElse(null);
                 }
             }
@@ -130,7 +129,10 @@ public class ChannelResource {
                         return manufacturerRankService.getManufacturerRank(target,platform,beginTime,endTime);
                     case "RegionRank":
                         return regionRankService.getRegionRank(target,platform,beginTime,endTime);
-
+                    case "AgeDistribution":
+                        return ageAndSexDistributionService.getAgeDistribution(target,platform,beginTime,endTime);
+                    case "SexDistribution":
+                        return ageAndSexDistributionService.getSexDistribution(target,platform,beginTime,endTime);
                     default:
                         throw new IllegalArgumentException("target=" + target);
                 }
