@@ -1,5 +1,7 @@
 package com.comall.songshu.repository.channel;
 
+import com.comall.songshu.domain.Author;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.sql.Timestamp;
@@ -11,7 +13,7 @@ import java.util.List;
  * @author liushengling
  * @create 2017-05-08-11:53
  **/
-public interface AgeAndSexDistributionRepository {
+public interface AgeAndSexDistributionRepository extends JpaRepository<Author,Long> {
 
 
 //    SELECT CASE WHEN sexInfo.gender >0  THEN '男' ELSE '女' END AS sexGroup, sexInfo.memberCount FROM
