@@ -52,7 +52,8 @@ public class ChannelResource {
     private ChannelGrossMarginRateService channelGrossMarginRateService;
     @Autowired
     private ChannelConsumerCountService channelConsumerCountService;
-
+    @Autowired
+    private ChannelPageInfoService channelPageInfoService;
 
     @GetMapping("")
     @Timed
@@ -183,6 +184,8 @@ public class ChannelResource {
                         return channelGrossMarginRateService.getChannelGrossMarginRate(target,platform,beginTime,endTime,chainBeginTime,chainEndTime);
                     case "ChannelConsumerCount":
                         return channelConsumerCountService.getChannelConsumerRevenue(target,platform,beginTime,endTime,chainBeginTime,chainEndTime);
+                    case "ChannelPageInfo":
+                        return channelPageInfoService.getChannelPageInfo(target,platform,beginTime,endTime);
                     default:
                         throw new IllegalArgumentException("target=" + target);
                 }
