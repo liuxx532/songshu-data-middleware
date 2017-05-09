@@ -51,6 +51,6 @@ public class ProductLinkedSalesService {
             }
         }
 
-        return null;
+        return productSalesResult.toString();
     }
 }

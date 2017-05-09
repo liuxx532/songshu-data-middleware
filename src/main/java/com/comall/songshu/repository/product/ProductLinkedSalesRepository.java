@@ -17,7 +17,7 @@ public interface ProductLinkedSalesRepository extends JpaRepository<Author,Long>
 
 
 
-//    SELECT  p."Id" as productId,p."Name" AS  productName, base.salesCount AS salesCount,CONCAT('/',pic."locationName",'/',pic."digest",'/',pic."extension") AS picUrl FROM
+//    SELECT  p."Id" as productId,p."Name" AS  productName, base.salesCount AS salesCount,CONCAT('/',pic."Location",'/',pic."Digest",pic."Extension") AS picUrl FROM
 //    (SELECT i."ProductId" AS productId,count(DISTINCT o."Id") AS  salesCount FROM songshu_cs_order_item i
 //    INNER JOIN songshu_cs_order o ON o."Id" = i."OrderId"
 //    INNER JOIN songshu_cs_order_payable op ON op."OrderId" = o."Id"
@@ -27,10 +27,10 @@ public interface ProductLinkedSalesRepository extends JpaRepository<Author,Long>
 //    GROUP BY i."ProductId" ORDER BY salesCount DESC LIMIT 3) base
 //    INNER JOIN songshu_cs_product p ON p."Id" = base.productId
 //    INNER JOIN songshu_cs_product_picture pp ON pp."productId" = p."Id"
-//    INNER JOIN songshu_cs_picture pic ON pic."Id" = pp.pictureId
+//    INNER JOIN songshu_cs_picture pic ON pic."Id" = pp."pictureId"
 //    ORDER BY base.salesCount DESC LIMIT 3
     @Query(value = "SELECT  p.\"Id\" AS productId,p.\"Name\" AS  productName, base.salesCount AS salesCount" +
-        ",CONCAT('/',pic.\"locationName\",'/',pic.\"digest\",'/',pic.\"extension\") AS picUrl  " +
+        ",CONCAT('/',pic.\"Location\",'/',pic.\"Digest\",pic.\"Extension\") AS picUrl " +
         "  FROM  (SELECT i.\"ProductId\" AS productId,count(DISTINCT o.\"Id\") AS  salesCount FROM songshu_cs_order_item i " +
         "        INNER JOIN songshu_cs_order o ON o.\"Id\" = i.\"OrderId\" " +
         "        INNER JOIN songshu_cs_order_payable op ON op.\"OrderId\" = o.\"Id\" " +
@@ -40,13 +40,13 @@ public interface ProductLinkedSalesRepository extends JpaRepository<Author,Long>
         "    GROUP BY i.\"ProductId\" ORDER BY salesCount DESC LIMIT ?3) base " +
         "    INNER JOIN songshu_cs_product p ON p.\"Id\" = base.productId " +
         "    INNER JOIN songshu_cs_product_picture pp ON pp.\"productId\" = p.\"Id\" " +
-        "    INNER JOIN songshu_cs_picture pic ON pic.\"Id\" = pp.pictureId " +
+        "    INNER JOIN songshu_cs_picture pic ON pic.\"Id\" = pp.\"pictureId\" " +
         "ORDER BY base.salesCount DESC LIMIT ?3 ", nativeQuery = true)
     List<Object[]> getProductSalesAllPlatform(Timestamp beginTime, Timestamp endTime, Integer topCount);
 
 
 
-//    SELECT  p."Id" as productId,p."Name" AS  productName, base.salesCount AS salesCount,CONCAT('/',pic."locationName",'/',pic."digest",'/',pic."extension") AS picUrl FROM
+//    SELECT  p."Id" as productId,p."Name" AS  productName, base.salesCount AS salesCount,CONCAT('/',pic."Location",'/',pic."Digest",pic."Extension") AS picUrl FROM
 //    (SELECT i."ProductId" AS productId,count(DISTINCT o."Id") AS  salesCount FROM songshu_cs_order_item i
 //    INNER JOIN songshu_cs_order o ON o."Id" = i."OrderId"
 //    INNER JOIN songshu_cs_order_payable op ON op."OrderId" = o."Id"
@@ -56,10 +56,10 @@ public interface ProductLinkedSalesRepository extends JpaRepository<Author,Long>
 //    GROUP BY i."ProductId" ORDER BY salesCount DESC LIMIT 3) base
 //    INNER JOIN songshu_cs_product p ON p."Id" = base.productId
 //    INNER JOIN songshu_cs_product_picture pp ON pp."productId" = p."Id"
-//    INNER JOIN songshu_cs_picture pic ON pic."Id" = pp.pictureId
+//    INNER JOIN songshu_cs_picture pic ON pic."Id" = pp."pictureId"
 //    ORDER BY base.salesCount DESC LIMIT 3;
     @Query(value = "SELECT  p.\"Id\" AS productId,p.\"Name\" AS  productName, base.salesCount AS salesCount" +
-        ",CONCAT('/',pic.\"locationName\",'/',pic.\"digest\",'/',pic.\"extension\") AS picUrl  " +
+        ",CONCAT('/',pic.\"Location\",'/',pic.\"Digest\",pic.\"Extension\") AS picUrl " +
         "  FROM  (SELECT i.\"ProductId\" AS productId,count(DISTINCT o.\"Id\") AS  salesCount FROM songshu_cs_order_item i " +
         "        INNER JOIN songshu_cs_order o ON o.\"Id\" = i.\"OrderId\" " +
         "        INNER JOIN songshu_cs_order_payable op ON op.\"OrderId\" = o.\"Id\" " +
@@ -69,12 +69,12 @@ public interface ProductLinkedSalesRepository extends JpaRepository<Author,Long>
         "    GROUP BY i.\"ProductId\" ORDER BY salesCount DESC LIMIT ?4 ) base " +
         "    INNER JOIN songshu_cs_product p ON p.\"Id\" = base.productId " +
         "    INNER JOIN songshu_cs_product_picture pp ON pp.\"productId\" = p.\"Id\" " +
-        "    INNER JOIN songshu_cs_picture pic ON pic.\"Id\" = pp.pictureId " +
+        "    INNER JOIN songshu_cs_picture pic ON pic.\"Id\" = pp.\"pictureId\" " +
         "ORDER BY base.salesCount DESC LIMIT ?4 ", nativeQuery = true)
     List<Object[]> getProductSalesSinglePlatform(Timestamp beginTime, Timestamp endTime, Integer plateForm, Integer topCount);
 
 
-//    SELECT  p."Id" as productId,p."Name" AS  productName, base.salesCount AS salesCount,CONCAT('/',pic."locationName",'/',pic."digest",'/',pic."extension") AS picUrl FROM
+//    SELECT  p."Id" as productId,p."Name" AS  productName, base.salesCount AS salesCount,CONCAT('/',pic."Location",'/',pic."Digest",pic."Extension") AS picUrl FROM
 //    (SELECT i."ProductId" AS productId,count(DISTINCT o."Id") AS  salesCount FROM songshu_cs_order_item i
 //    INNER JOIN songshu_cs_order o ON o."Id" = i."OrderId"
 //    INNER JOIN songshu_cs_order_payable op ON op."OrderId" = o."Id"
@@ -92,10 +92,10 @@ public interface ProductLinkedSalesRepository extends JpaRepository<Author,Long>
 //    GROUP BY i."ProductId" ORDER BY salesCount DESC LIMIT 3) base
 //    INNER JOIN songshu_cs_product p ON p."Id" = base.productId
 //    INNER JOIN songshu_cs_product_picture pp ON pp."productId" = p."Id"
-//    INNER JOIN songshu_cs_picture pic ON pic."Id" = pp.pictureId
+//    INNER JOIN songshu_cs_picture pic ON pic."Id" = pp."pictureId"
 //    ORDER BY base.salesCount DESC LIMIT 3
     @Query(value = "SELECT  p.\"Id\" AS productId,p.\"Name\" AS  productName, base.salesCount AS salesCount" +
-        ",CONCAT('/',pic.\"locationName\",'/',pic.\"digest\",'/',pic.\"extension\") AS picUrl  " +
+        ",CONCAT('/',pic.\"Location\",'/',pic.\"Digest\",pic.\"Extension\") AS picUrl " +
         "   FROM (SELECT i.\"ProductId\" AS productId,count(DISTINCT o.\"Id\") AS  salesCount FROM songshu_cs_order_item i " +
         "        INNER JOIN songshu_cs_order o ON o.\"Id\" = i.\"OrderId\" " +
         "        INNER JOIN songshu_cs_order_payable op ON op.\"OrderId\" = o.\"Id\" " +
@@ -113,12 +113,12 @@ public interface ProductLinkedSalesRepository extends JpaRepository<Author,Long>
         "    GROUP BY i.\"ProductId\" ORDER BY salesCount DESC LIMIT ?3) base " +
         "    INNER JOIN songshu_cs_product p ON p.\"Id\" = base.productId " +
         "    INNER JOIN songshu_cs_product_picture pp ON pp.\"productId\" = p.\"Id\" " +
-        "    INNER JOIN songshu_cs_picture pic ON pic.\"Id\" = pp.pictureId " +
+        "    INNER JOIN songshu_cs_picture pic ON pic.\"Id\" = pp.\"pictureId\" " +
         "ORDER BY base.salesCount DESC LIMIT ?3", nativeQuery = true)
     List<Object[]> getProductLinkedSalesAllPlatform(Timestamp beginTime, Timestamp endTime, Integer topCount,Integer productId);
 
 
-//    SELECT  p."Id" as productId,p."Name" AS  productName, base.salesCount AS salesCount,CONCAT('/',pic."locationName",'/',pic."digest",'/',pic."extension") AS picUrl FROM
+//    SELECT  p."Id" as productId,p."Name" AS  productName, base.salesCount AS salesCount,CONCAT('/',pic."Location",'/',pic."Digest",pic."Extension") AS picUrl FROM
 //    (SELECT i."ProductId" AS productId,count(DISTINCT o."Id") AS  salesCount FROM songshu_cs_order_item i
 //    INNER JOIN songshu_cs_order o ON o."Id" = i."OrderId"
 //    INNER JOIN songshu_cs_order_payable op ON op."OrderId" = o."Id"
@@ -136,10 +136,10 @@ public interface ProductLinkedSalesRepository extends JpaRepository<Author,Long>
 //    GROUP BY i."ProductId" ORDER BY salesCount DESC LIMIT 3) base
 //    INNER JOIN songshu_cs_product p ON p."Id" = base.productId
 //    INNER JOIN songshu_cs_product_picture pp ON pp."productId" = p."Id"
-//    INNER JOIN songshu_cs_picture pic ON pic."Id" = pp.pictureId
+//    INNER JOIN songshu_cs_picture pic ON pic."Id" = pp."pictureId"
 //    ORDER BY base.salesCount DESC LIMIT 3
     @Query(value = "SELECT  p.\"Id\" AS productId,p.\"Name\" AS  productName, base.salesCount AS salesCount" +
-        ",CONCAT('/',pic.\"locationName\",'/',pic.\"digest\",'/',pic.\"extension\") AS picUrl  " +
+        ",CONCAT('/',pic.\"Location\",'/',pic.\"Digest\",pic.\"Extension\") AS picUrl  " +
         "  FROM  (SELECT i.\"ProductId\" AS productId,count(DISTINCT o.\"Id\") AS  salesCount FROM songshu_cs_order_item i " +
         "        INNER JOIN songshu_cs_order o ON o.\"Id\" = i.\"OrderId\" " +
         "        INNER JOIN songshu_cs_order_payable op ON op.\"OrderId\" = o.\"Id\" " +
@@ -157,7 +157,7 @@ public interface ProductLinkedSalesRepository extends JpaRepository<Author,Long>
         "    GROUP BY i.\"ProductId\" ORDER BY salesCount DESC LIMIT ?4) base " +
         "    INNER JOIN songshu_cs_product p ON p.\"Id\" = base.productId " +
         "    INNER JOIN songshu_cs_product_picture pp ON pp.\"productId\" = p.\"Id\" " +
-        "    INNER JOIN songshu_cs_picture pic ON pic.\"Id\" = pp.pictureId " +
+        "    INNER JOIN songshu_cs_picture pic ON pic.\"Id\" = pp.\"pictureId\" " +
         "ORDER BY base.salesCount DESC LIMIT ?4", nativeQuery = true)
     List<Object[]> getProductLinkedSalesSinglePlatform(Timestamp beginTime, Timestamp endTime, Integer plateForm, Integer topCount,Integer productId);
 }

@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
@@ -38,9 +39,9 @@ public class AgeAndSexDistributionService {
         }
         if(Optional.ofNullable(sexDistributionResult)
             .filter(l -> l.size() >0).isPresent()){
-            Integer totalCount = 0;
-            Integer maleCount = 0;
-            Integer femaleCount = 0;
+            BigDecimal totalCount = BigDecimal.ZERO;
+            BigDecimal maleCount = BigDecimal.ZERO;
+            BigDecimal femaleCount = BigDecimal.ZERO;
 
             for(Object[] o :sexDistributionResult){
                 String sex = Optional.ofNullable(o[0])
@@ -48,11 +49,13 @@ public class AgeAndSexDistributionService {
                             .map(String::trim)
                             .filter(s -> s.length()>0)
                             .orElse(null);
-                Integer count = Optional.ofNullable(o[1])
-                                .map(value -> (Integer)value)
-                                .orElse(0);
-                if(sex != null && count >0){
-                    totalCount +=  count;
+                BigDecimal count = Optional.ofNullable(o[1])
+                            .map(obj -> obj.toString())
+                            .map(BigDecimal::new)
+                            .orElse(BigDecimal.ZERO);
+
+                if(sex != null){
+                    totalCount =  totalCount.add(count);
                     if(sex.equalsIgnoreCase(CommonConstants.SEX_MALE)){
                         maleCount = count;
                     }else {
@@ -64,17 +67,17 @@ public class AgeAndSexDistributionService {
 
             Double malePercentage = 0.0;
             Double femalePercentage = 0.0;
-            if(totalCount >0){
-                malePercentage = new BigDecimal(maleCount).doubleValue()/new BigDecimal(totalCount).doubleValue();
-                femalePercentage = new BigDecimal(femaleCount).doubleValue()/new BigDecimal(totalCount).doubleValue();
+            if(totalCount.doubleValue() >0){
+                malePercentage = maleCount.doubleValue()/totalCount.doubleValue();
+                femalePercentage = femaleCount.doubleValue()/totalCount.doubleValue();
             }
             try {
-                JSONObject maleJson = new JSONObject();
-                maleJson.put(CommonConstants.SEX_MALE,malePercentage);
-                sexDistributionArray.put(maleJson);
-                JSONObject femaleJson = new JSONObject();
-                maleJson.put(CommonConstants.SEX_FEMALE,femalePercentage);
-                sexDistributionArray.put(femaleJson);
+                JSONObject maleObject = new JSONObject();
+                maleObject.put(CommonConstants.SEX_MALE,malePercentage);
+                JSONObject femaleObject = new JSONObject();
+                femaleObject.put(CommonConstants.SEX_FEMALE,femalePercentage);
+                sexDistributionArray.put(maleObject);
+                sexDistributionArray.put(femaleObject);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -95,12 +98,12 @@ public class AgeAndSexDistributionService {
 
         if(Optional.ofNullable(ageDistributionResult)
             .filter(l -> l.size() >0).isPresent()){
-            Integer totalCount = 0;
-            Integer ageGroupOneCount = 0;
-            Integer ageGroupTwoCount = 0;
-            Integer ageGroupThreeCount = 0;
-            Integer ageGroupFourCount = 0;
-            Integer ageGroupFiveCount = 0;
+            BigDecimal totalCount = BigDecimal.ZERO;
+            BigDecimal ageGroupOneCount = BigDecimal.ZERO;
+            BigDecimal ageGroupTwoCount = BigDecimal.ZERO;
+            BigDecimal ageGroupThreeCount = BigDecimal.ZERO;
+            BigDecimal ageGroupFourCount = BigDecimal.ZERO;
+            BigDecimal ageGroupFiveCount = BigDecimal.ZERO;
 
 
             for(Object[] o : ageDistributionResult){
@@ -109,11 +112,13 @@ public class AgeAndSexDistributionService {
                     .map(String::trim)
                     .filter(s -> s.length()>0)
                     .orElse(null);
-                Integer count = Optional.ofNullable(o[1])
-                    .map(value -> (Integer)value)
-                    .orElse(0);
-                if(ageGroup != null && count >0){
-                    totalCount +=  count;
+                BigDecimal count = Optional.ofNullable(o[1])
+                    .map(obj -> obj.toString())
+                    .map(BigDecimal::new)
+                    .orElse(BigDecimal.ZERO);
+
+                if(ageGroup != null){
+                    totalCount =  totalCount.add(count);
                     if(ageGroup.equalsIgnoreCase(CommonConstants.AGE_GROUP_LEVEL_ONE)){
                         ageGroupOneCount = count;
                     }else if(ageGroup.equalsIgnoreCase(CommonConstants.AGE_GROUP_LEVEL_TWO)){
@@ -126,39 +131,38 @@ public class AgeAndSexDistributionService {
                         ageGroupFiveCount = count;
                     }
                 }
+            }
 
-                Double ageGroupOnePercentage = 0.0;
-                Double ageGroupTwoPercentage = 0.0;
-                Double ageGroupThreePercentage = 0.0;
-                Double ageGroupFourPercentage = 0.0;
-                Double ageGroupFivePercentage = 0.0;
-                if(totalCount >0){
-                    ageGroupOnePercentage = new BigDecimal(ageGroupOneCount).doubleValue()/new BigDecimal(totalCount).doubleValue();
-                    ageGroupTwoPercentage = new BigDecimal(ageGroupTwoCount).doubleValue()/new BigDecimal(totalCount).doubleValue();
-                    ageGroupThreePercentage = new BigDecimal(ageGroupThreeCount).doubleValue()/new BigDecimal(totalCount).doubleValue();
-                    ageGroupFourPercentage = new BigDecimal(ageGroupFourCount).doubleValue()/new BigDecimal(totalCount).doubleValue();
-                    ageGroupFivePercentage = new BigDecimal(ageGroupFiveCount).doubleValue()/new BigDecimal(totalCount).doubleValue();
-                }
-                try {
-                    JSONObject ageGroupOneJson = new JSONObject();
-                    ageGroupOneJson.put(CommonConstants.AGE_GROUP_LEVEL_ONE,ageGroupOnePercentage);
-                    ageDistributionArray.put(ageGroupOneJson);
-                    JSONObject ageGroupTwoJson = new JSONObject();
-                    ageGroupTwoJson.put(CommonConstants.AGE_GROUP_LEVEL_TWO,ageGroupTwoPercentage);
-                    ageDistributionArray.put(ageGroupTwoJson);
-                    JSONObject ageGroupThreeJson = new JSONObject();
-                    ageGroupThreeJson.put(CommonConstants.AGE_GROUP_LEVEL_THREE,ageGroupThreePercentage);
-                    ageDistributionArray.put(ageGroupThreeJson);
-                    JSONObject ageGroupFourJson = new JSONObject();
-                    ageGroupFourJson.put(CommonConstants.AGE_GROUP_LEVEL_FOUR,ageGroupFourPercentage);
-                    ageDistributionArray.put(ageGroupFourJson);
-                    JSONObject ageGroupFiveJson = new JSONObject();
-                    ageGroupFiveJson.put(CommonConstants.AGE_GROUP_LEVEL_FIVE,ageGroupFivePercentage);
-                    ageDistributionArray.put(ageGroupFiveJson);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
+            Double ageGroupOnePercentage = 0.0;
+            Double ageGroupTwoPercentage = 0.0;
+            Double ageGroupThreePercentage = 0.0;
+            Double ageGroupFourPercentage = 0.0;
+            Double ageGroupFivePercentage = 0.0;
+            if(totalCount.doubleValue() >0){
+                ageGroupOnePercentage = ageGroupOneCount.doubleValue()/totalCount.doubleValue();
+                ageGroupTwoPercentage = ageGroupTwoCount.doubleValue()/totalCount.doubleValue();
+                ageGroupThreePercentage = ageGroupThreeCount.doubleValue()/totalCount.doubleValue();
+                ageGroupFourPercentage = ageGroupFourCount.doubleValue()/totalCount.doubleValue();
+                ageGroupFivePercentage = ageGroupFiveCount.doubleValue()/totalCount.doubleValue();
+            }
+            try {
+                JSONObject ageGroupOneObject = new JSONObject();
+                ageGroupOneObject.put(CommonConstants.AGE_GROUP_LEVEL_ONE,ageGroupOnePercentage);
+                JSONObject ageGroupTwoObject = new JSONObject();
+                ageGroupTwoObject.put(CommonConstants.AGE_GROUP_LEVEL_TWO,ageGroupTwoPercentage);
+                JSONObject ageGroupThreeObject = new JSONObject();
+                ageGroupThreeObject.put(CommonConstants.AGE_GROUP_LEVEL_THREE,ageGroupThreePercentage);
+                JSONObject ageGroupFourObject = new JSONObject();
+                ageGroupFourObject.put(CommonConstants.AGE_GROUP_LEVEL_FOUR,ageGroupFourPercentage);
+                JSONObject ageGroupFiveObject = new JSONObject();
+                ageGroupFiveObject.put(CommonConstants.AGE_GROUP_LEVEL_FIVE,ageGroupFivePercentage);
+                ageDistributionArray.put(ageGroupOneObject);
+                ageDistributionArray.put(ageGroupTwoObject);
+                ageDistributionArray.put(ageGroupThreeObject);
+                ageDistributionArray.put(ageGroupFourObject);
+                ageDistributionArray.put(ageGroupFiveObject);
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
         }
         return ageDistributionArray.toString();
