@@ -44,7 +44,7 @@
     ],
     "labels": {
         "HAPROXY_GROUP": "external",
-        "HAPROXY_0_VHOST": "songshu-data-middleware-dev.prd-bda.co-mall"
+        "HAPROXY_0_VHOST": "songshu-data-middleware-dev.product.co-mall"
     },
     "portDefinitions": [
         {
