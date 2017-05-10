@@ -1,5 +1,6 @@
 package com.comall.songshu.service.product;
 
+import com.comall.songshu.constants.TitleConstants;
 import com.comall.songshu.repository.product.ProductRevenueRepository;
 import com.comall.songshu.web.rest.util.AssembleUtil;
 import com.comall.songshu.web.rest.util.JsonStringBuilder;
@@ -43,38 +44,70 @@ public class ProductRevenueService {
         }
 
 
-        JSONArray productRevenueArray =  new JSONArray();
+
+        JSONArray dataPointsArray =  new JSONArray();
         //TODO REPOSITORY层神策相关sql编写
         if(Optional.ofNullable(productRevenueResult)
             .filter(l -> l.size() >0).isPresent()){
+            //封装表头
+            JSONArray productRevenueTitleArray =  new JSONArray();
+            JSONObject productRevenueTitle = new JSONObject();
+            long currentMills = System.currentTimeMillis();
+            try {
+                productRevenueTitle.put(TitleConstants.RANK,"排名");
+                productRevenueTitle.put(TitleConstants.CATEGORY_NAME,"品类");
+                productRevenueTitle.put(TitleConstants.PRODUCT_NAME,"商品名称");
+                productRevenueTitle.put(TitleConstants.REVENUE,"销售额");
+                productRevenueTitle.put(TitleConstants.ORDER_COUNT,"订单量");
+                productRevenueTitle.put(TitleConstants.GOODS_COST,"商品成本");
+                productRevenueTitle.put(TitleConstants.GROSSMARIN_RATE,"毛利率");
+                productRevenueTitle.put(TitleConstants.UNIQUE_VISITOR,"访客数");
+                productRevenueTitle.put(TitleConstants.ADD2CART_TIMES,"加购次数");
+                productRevenueTitle.put(TitleConstants.COLLECTION_COUNT,"收藏量");
+                productRevenueTitle.put(TitleConstants.PAID_RATE,"付费率");
+                productRevenueTitle.put(TitleConstants.EXIT_RATE,"退出率");
+                productRevenueTitleArray.put(productRevenueTitle);
+                productRevenueTitleArray.put(currentMills);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            JSONArray productRevenueDataPointArray =  new JSONArray();
+            JSONArray productRevenueArray =  new JSONArray();
+
+            int rank = 1;
             for(Object[] o : productRevenueResult){
                 JSONObject productRevenue;
                 try {
                     productRevenue = new JSONObject();
                     Integer productId = (Integer)o[0];
+                    Integer goodsId = (Integer)o[1];
+                    String productCode = (String)o[2];
+                    String productIdLike ="%productId="+productId+"%";
+                    String goodsIdLike ="%goodsId="+goodsId+"%";
                     //加入购物车数
-                    Integer addCartTimes;
+                    Integer addCartTimes = 1;
                     //收藏数
-                    Integer collectionCount;
+                    Integer collectionCount = 2;
                     //商品页面访客数
-                    Integer productPageVisitors;
+                    Integer productPageVisitors = 3;
                     //商品消费用户数
-                    Integer productConsumerCount;
+                    Integer productConsumerCount = 4;
                     //退出商品页面用户数
-                    Integer productPageLeaveVisitors;
+                    Integer productPageLeaveVisitors = 5;
                     if (platform<0) {//全部
-                        addCartTimes = productRevenueRepository.getAddCartTimesAllPlatform(beginTime,endTime,productId);
-                        collectionCount = productRevenueRepository.getCollectionCountAllPlatform(beginTime,endTime,productId);
-                        productPageVisitors = productRevenueRepository.getProductPageVisitorsAllPlatform(beginTime,endTime,productId);
-                        productConsumerCount = productRevenueRepository.getProductConsumerCountAllPlatform(beginTime,endTime,productId);
-                        productPageLeaveVisitors = productRevenueRepository.getProductPageLeaveVistorsAllPlatform(beginTime,endTime,productId);
+//                        addCartTimes = productRevenueRepository.getAddCartTimesAllPlatform(beginTime,endTime,productCode);
+//                        collectionCount = productRevenueRepository.getCollectionCountAllPlatform(beginTime,endTime,productCode);
+//                        productPageVisitors = productRevenueRepository.getProductPageVisitorsAllPlatform(beginTime,endTime,productIdLike,goodsIdLike);
+//                        productConsumerCount = productRevenueRepository.getProductConsumerCountAllPlatform(beginTime,endTime,productId);
+//                        productPageLeaveVisitors = productRevenueRepository.getProductPageLeaveVisitorsAllPlatform(beginTime,endTime,productIdLike,goodsIdLike);
                     }else{
-                        addCartTimes = productRevenueRepository.getAddCartTimesSinglePlatform(beginTime,endTime,productId,platform);
-                        collectionCount = productRevenueRepository.getCollectionCountSinglePlatform(beginTime,endTime,productId,platform);
-                        productPageVisitors = productRevenueRepository.getProductPageVisitorsSinglePlatform(beginTime,endTime,productId,platform);
-                        productConsumerCount = productRevenueRepository.getProductConsumerCountSinglePlatform(beginTime,endTime,productId,platform);
-                        productPageLeaveVisitors = productRevenueRepository.getProductPageLeaveVistorsSinglePlatform(beginTime,endTime,productId,platform);
+//                        addCartTimes = productRevenueRepository.getAddCartTimesSinglePlatform(beginTime,endTime,productCode,platformName);
+//                        collectionCount = productRevenueRepository.getCollectionCountSinglePlatform(beginTime,endTime,productCode,platformName);
+//                        productPageVisitors = productRevenueRepository.getProductPageVisitorsSinglePlatform(beginTime,endTime,productIdLike,goodsIdLike,platformName);
+//                        productConsumerCount = productRevenueRepository.getProductConsumerCountSinglePlatform(beginTime,endTime,productId,platform);
+//                        productPageLeaveVisitors = productRevenueRepository.getProductPageLeaveVisitorsSinglePlatform(beginTime,endTime,productIdLike,goodsIdLike,platformName);
                     }
+
 
                     //付费率
                     Double paidRate = Optional.ofNullable(productPageVisitors)
@@ -87,24 +120,30 @@ public class ProductRevenueService {
                         .map(value ->new BigDecimal(productPageLeaveVisitors).doubleValue()/new BigDecimal(value).doubleValue())
                         .orElse(0.0);
 
-                    productRevenue.put("categoryName",o[1]);
-                    productRevenue.put("productName",o[2]);
-                    productRevenue.put("revenue",o[3]);
-                    productRevenue.put("cost",o[4]);
-                    productRevenue.put("grossMarginRate",o[5]);
-                    productRevenue.put("addCartTimes",addCartTimes);
-                    productRevenue.put("collectionCount",collectionCount);
-                    productRevenue.put("paidRate",paidRate);
-                    productRevenue.put("exitRate",exitRate);
+                    productRevenue.put(TitleConstants.RANK,rank);
+                    productRevenue.put(TitleConstants.CATEGORY_NAME,o[3]);
+                    productRevenue.put(TitleConstants.PRODUCT_NAME,o[4]);
+                    productRevenue.put(TitleConstants.REVENUE,o[5]);
+                    productRevenue.put(TitleConstants.GOODS_COST,o[6]);
+                    productRevenue.put(TitleConstants.ORDER_COUNT,o[7]);
+                    productRevenue.put(TitleConstants.GROSSMARIN_RATE,o[8]);
+                    productRevenue.put(TitleConstants.UNIQUE_VISITOR,productPageVisitors);
+                    productRevenue.put(TitleConstants.ADD2CART_TIMES,addCartTimes);
+                    productRevenue.put(TitleConstants.COLLECTION_COUNT,collectionCount);
+                    productRevenue.put(TitleConstants.PAID_RATE,paidRate);
+                    productRevenue.put(TitleConstants.EXIT_RATE,exitRate);
                     productRevenueArray.put(productRevenue);
-
+                    rank++;
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-
             }
+            productRevenueDataPointArray.put(productRevenueArray);
+            productRevenueDataPointArray.put(currentMills);
+            dataPointsArray.put(productRevenueDataPointArray);
+            dataPointsArray.put(productRevenueTitleArray);
         }
         //TODO 返回数据拼装
-        return productRevenueArray.toString();
+        return JsonStringBuilder.buildCommonJsonString(target,dataPointsArray,"");
     }
 }

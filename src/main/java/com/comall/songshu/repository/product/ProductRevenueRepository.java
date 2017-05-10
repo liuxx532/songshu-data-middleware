@@ -17,8 +17,8 @@ public interface ProductRevenueRepository extends JpaRepository<Author,Long> {
 
 
 
-//    SELECT p."id" as productId, c."Name" as categoryName, p."Name" AS  productName, main.revenue,main.cost,main.grossMaringRate FROM(
-//        SELECT base.productId,base.revenue,base.cost, COALESCE((base.revenue-base.cost)/base.revenue,0) AS grossMaringRate FROM
+//    SELECT SELECT p."Id" AS productId ,g."Id" AS goodsId ,p."Code" as productCode, c."Name" as categoryName, p."Name" AS  productName, main.revenue,main.cost,main.salesCount,main.grossMaringRate FROM(
+//        SELECT base.productId,base.revenue,base.cost, base.salesCount,COALESCE((base.revenue-base.cost)/base.revenue,0) AS grossMaringRate FROM
 //        (SELECT i."ProductId" AS productId, COALESCE(SUM(i."AfterFoldingPrice"),0) AS revenue,count(DISTINCT o."Id") AS  salesCount
 //,COALESCE(SUM(i."ReferCost" * i."Quantity"),0) AS cost
 //    FROM songshu_cs_order_item i
@@ -29,11 +29,12 @@ public interface ProductRevenueRepository extends JpaRepository<Author,Long> {
 //    WHERE  op."PaymentStatus" = 1 AND  o."orderType" in(0,1) AND  o."OrderStatus" NOT IN (6,7)
 //    GROUP BY i."ProductId" ORDER BY revenue DESC LIMIT 20 ) base) main
 //    INNER JOIN songshu_cs_product p ON p."Id" = main.productId
+//    INNER JOIN songshu_cs_goods g ON p."Id" = g."ProductId"
 //    INNER JOIN songshu_cs_category c ON c."Id" = p."CategoryId"
 //    ORDER BY main.revenue DESC LIMIT 20;
-    @Query(value = "SELECT p.\"Id\" AS productId,  c.\"Name\" AS categoryName, p.\"Name\" AS  productName, main.revenue,main.cost,main.grossMaringRate FROM( " +
-        "SELECT base.productId,base.revenue,base.cost, COALESCE((base.revenue-base.cost)/base.revenue,0) AS grossMaringRate FROM " +
-        "(SELECT i.\"ProductId\" AS productId, COALESCE(SUM(i.\"AfterFoldingPrice\"),0) AS revenue,count(DISTINCT o.\"Id\") AS  salesCount " +
+    @Query(value = "SELECT p.\"Id\" AS productId ,g.\"Id\" AS goodsId,p.\"Code\" AS productCode,  c.\"Name\" AS categoryName, p.\"Name\" AS  productName, main.revenue,main.cost,main.salesCount, main.grossMaringRate FROM( " +
+        "SELECT base.productId,base.revenue,base.cost, base.salesCount,COALESCE((base.revenue-base.cost)/base.revenue,0) AS grossMaringRate FROM " +
+        "(SELECT i.\"ProductId\" AS productId,COALESCE(SUM(i.\"AfterFoldingPrice\"),0) AS revenue,count(DISTINCT o.\"Id\") AS  salesCount " +
         ",COALESCE(SUM(i.\"ReferCost\" * i.\"Quantity\"),0) AS cost " +
         "FROM songshu_cs_order_item i " +
         "INNER JOIN songshu_cs_order o ON o.\"Id\" = i.\"OrderId\" " +
@@ -43,14 +44,15 @@ public interface ProductRevenueRepository extends JpaRepository<Author,Long> {
         "WHERE  op.\"PaymentStatus\" = 1 AND  o.\"orderType\" IN(0,1) AND  o.\"OrderStatus\" NOT IN (6,7) " +
         "GROUP BY i.\"ProductId\" ORDER BY revenue DESC LIMIT ?3 ) base) main " +
         "INNER JOIN songshu_cs_product p ON p.\"Id\" = main.productId " +
+        "INNER JOIN songshu_cs_goods g ON p.\"Id\" = g.\"ProductId\" " +
         "INNER JOIN songshu_cs_category c ON c.\"Id\" = p.\"CategoryId\" " +
         "ORDER BY main.revenue DESC LIMIT ?3 ", nativeQuery = true)
     List<Object[]> getProductRevenueAllPlatform(Timestamp beginTime, Timestamp endTime,Integer topCount);
 
 
 
-//    SELECT p."id" as productId, c."Name" as categoryName, p."Name" AS  productName, main.revenue,main.cost,main.grossMaringRate FROM(
-//        SELECT base.productId,base.revenue,base.cost, COALESCE((base.revenue-base.cost)/base.revenue,0) AS grossMaringRate FROM
+//    SELECT SELECT p."Id" AS productId ,g."Id" AS goodsId,p."Code" as productCode, c."Name" as categoryName, p."Name" AS  productName, main.revenue,main.cost,main.salesCount,main.grossMaringRate FROM(
+//        SELECT base.productId,base.revenue,base.cost, base.salesCount,COALESCE((base.revenue-base.cost)/base.revenue,0) AS grossMaringRate FROM
 //        (SELECT i."ProductId" AS productId, COALESCE(SUM(i."AfterFoldingPrice"),0) AS revenue,count(DISTINCT o."Id") AS  salesCount
 //,COALESCE(SUM(i."ReferCost" * i."Quantity"),0) AS cost
 //    FROM songshu_cs_order_item i
@@ -61,10 +63,11 @@ public interface ProductRevenueRepository extends JpaRepository<Author,Long> {
 //    WHERE  op."PaymentStatus" = 1 AND  o."orderType" in(0,1) AND  o."OrderStatus" NOT IN (6,7) AND o."Channel" = 1
 //    GROUP BY i."ProductId" ORDER BY revenue DESC LIMIT 20 ) base) main
 //    INNER JOIN songshu_cs_product p ON p."Id" = main.productId
+//    INNER JOIN songshu_cs_goods g ON p."Id" = g."ProductId"
 //    INNER JOIN songshu_cs_category c ON c."Id" = p."CategoryId"
 //    ORDER BY main.revenue DESC LIMIT 20;
-    @Query(value = "SELECT p.\"Id\" AS productId, c.\"Name\" as categoryName, p.\"Name\" AS  productName, main.revenue,main.cost,main.grossMaringRate FROM( " +
-        "SELECT base.productId,base.revenue,base.cost, COALESCE((base.revenue-base.cost)/base.revenue,0) AS grossMaringRate FROM " +
+    @Query(value = "SELECT p.\"Id\" AS productId ,g.\"Id\" AS goodsId,p.\"Code\" AS productCode, c.\"Name\" as categoryName, p.\"Name\" AS  productName, main.revenue,main.cost,main.salesCount,main.grossMaringRate FROM( " +
+        "SELECT base.productId,base.revenue,base.cost,base.salesCount, COALESCE((base.revenue-base.cost)/base.revenue,0) AS grossMaringRate FROM " +
         " (SELECT i.\"ProductId\" AS productId, COALESCE(SUM(i.\"AfterFoldingPrice\"),0) AS revenue,count(DISTINCT o.\"Id\") AS  salesCount " +
         ",COALESCE(SUM(i.\"ReferCost\" * i.\"Quantity\"),0) AS cost " +
         "FROM songshu_cs_order_item i " +
@@ -75,6 +78,7 @@ public interface ProductRevenueRepository extends JpaRepository<Author,Long> {
         "WHERE  op.\"PaymentStatus\" = 1 AND  o.\"orderType\" in(0,1) AND  o.\"OrderStatus\" NOT IN (6,7) AND o.\"Channel\" = ?3 " +
         "GROUP BY i.\"ProductId\" ORDER BY revenue DESC LIMIT ?4 ) base) main " +
         "INNER JOIN songshu_cs_product p ON p.\"Id\" = main.productId " +
+        "INNER JOIN songshu_cs_goods g ON p.\"Id\" = g.\"ProductId\" " +
         "INNER JOIN songshu_cs_category c ON c.\"Id\" = p.\"CategoryId\" " +
         "ORDER BY main.revenue DESC LIMIT ?4 ", nativeQuery = true)
     List<Object[]> getProductRevenueSinglePlatform(Timestamp beginTime, Timestamp endTime,Integer plateForm,Integer topCount);
@@ -86,64 +90,88 @@ public interface ProductRevenueRepository extends JpaRepository<Author,Long> {
      * 加入购物车次数（全平台）
      * @param beginTime
      * @param endTime
-     * @param productId
+     * @param productCode
      * @return
      */
-    @Query(value = "SELECT now()", nativeQuery = true)
-    Integer getAddCartTimesAllPlatform(Timestamp beginTime, Timestamp endTime,Integer productId);
+//    SELECT COUNT(1) AS totalCount FROM songshu_shence_events WHERE event ='AddCardEvent' AND productcode ='6956511900046'
+//    AND times BETWEEN '2016-11-01 00:00:00' AND '2016-12-01 00:00:00' ;
+    @Query(value = "SELECT COUNT(1) AS totalCount FROM songshu_shence_events e WHERE e.event ='AddCardEvent' AND e.productcode = ?3  " +
+        "AND e.times BETWEEN ?1 AND ?2 ", nativeQuery = true)
+    Integer getAddCartTimesAllPlatform(Timestamp beginTime, Timestamp endTime,String productCode);
 
     /**
      * 加入购物车次数（单平台）
      * @param beginTime
      * @param endTime
-     * @param productId
-     * @param plateForm
+     * @param productCode
+     * @param plateFormName
      * @return
      */
-    @Query(value = "SELECT now()", nativeQuery = true)
-    Integer getAddCartTimesSinglePlatform(Timestamp beginTime, Timestamp endTime,Integer productId, Integer plateForm);
+//    SELECT COUNT(1) AS totalCount FROM songshu_shence_events WHERE event ='AddCardEvent' AND productcode ='6956511900046'
+//    AND times BETWEEN '2016-11-01 00:00:00' AND '2016-12-01 00:00:00' AND platform ='ios';
+    @Query(value = "SELECT COUNT(1) AS totalCount FROM songshu_shence_events e WHERE e.event ='AddCardEvent' AND e.productcode = ?3  " +
+        "AND e.times BETWEEN ?1 AND ?2 AND e.platform =?4 ", nativeQuery = true)
+    Integer getAddCartTimesSinglePlatform(Timestamp beginTime, Timestamp endTime,String productCode, String plateFormName);
 
     /**
      * 收藏数（全平台）
      * @param beginTime
      * @param endTime
-     * @param productId
+     * @param productCode
      * @return
      */
-    @Query(value = "SELECT now()", nativeQuery = true)
-    Integer getCollectionCountAllPlatform(Timestamp beginTime, Timestamp endTime,Integer productId);
+//    SELECT COUNT(1) AS totalCount FROM songshu_shence_events e WHERE e.event ='CollectProductEvent' AND e.productcode ='6956511900046'
+//    AND e.times BETWEEN '2016-11-01 00:00:00' AND '2016-12-01 00:00:00' ;
+    @Query(value = "SELECT COUNT(1) AS totalCount FROM songshu_shence_events WHERE event ='CollectProductEvent' AND productcode = ?3  " +
+        "AND times BETWEEN ?1 AND ?2 ", nativeQuery = true)
+    Integer getCollectionCountAllPlatform(Timestamp beginTime, Timestamp endTime,String productCode);
 
     /**
      * 收藏数（单平台）
      * @param beginTime
      * @param endTime
-     * @param productId
-     * @param plateForm
+     * @param productCode
+     * @param plateFormName
      * @return
      */
-    @Query(value = "SELECT now()", nativeQuery = true)
-    Integer getCollectionCountSinglePlatform(Timestamp beginTime, Timestamp endTime,Integer productId, Integer plateForm);
+//    SELECT COUNT(1) AS totalCount FROM songshu_shence_events e WHERE e.event ='CollectProductEvent' AND e.productcode ='6956511900046'
+//    AND e.times BETWEEN '2016-11-01 00:00:00' AND '2016-12-01 00:00:00' AND e.platform ='ios';
+    @Query(value = "SELECT COUNT(1) AS totalCount FROM songshu_shence_events e WHERE e.event ='CollectProductEvent' AND e.productcode =?3  " +
+        "AND e.times BETWEEN ?1 AND ?2 AND e.platform = ?4", nativeQuery = true)
+    Integer getCollectionCountSinglePlatform(Timestamp beginTime, Timestamp endTime,String productCode, String plateFormName);
 
     /**
      * 商品页面访客数（全平台）
      * @param beginTime
      * @param endTime
-     * @param productId
+     * @param productIdLike
+     * @param goodsIdLike
      * @return
      */
-    @Query(value = "SELECT now()", nativeQuery = true)
-    Integer getProductPageVisitorsAllPlatform(Timestamp beginTime, Timestamp endTime,Integer productId);
+//    SELECT COUNT(DISTINCT e.distinct_id) AS totaldiscount FROM songshu_shence_events e WHERE e.event ='$pageview' AND e.url like '%/productInfo%'
+//    AND (e.url like '%productId=100100436%' OR  e.url like '%goodsId=100100436%')
+//    AND e.times BETWEEN '2016-11-01 00:00:00' AND '2016-12-01 00:00:00'
+    @Query(value = "SELECT COUNT(DISTINCT e.distinct_id) AS totaldiscount FROM songshu_shence_events e WHERE e.event ='$pageview' AND e.url LIKE '%/productInfo?%' " +
+        "AND (e.url LIKE ?3 OR  e.url LIKE ?4 ) " +
+        "AND e.times BETWEEN ?1 AND ?2  ", nativeQuery = true)
+    Integer getProductPageVisitorsAllPlatform(Timestamp beginTime, Timestamp endTime,String productIdLike,String goodsIdLike);
 
     /**
      * 商品页面访客数（单平台）
      * @param beginTime
      * @param endTime
-     * @param productId
-     * @param plateForm
+     * @param productIdLike
+     * @param goodsIdLike
+     * @param plateFormName
      * @return
      */
-    @Query(value = "SELECT now()", nativeQuery = true)
-    Integer getProductPageVisitorsSinglePlatform(Timestamp beginTime, Timestamp endTime,Integer productId, Integer plateForm);
+//    SELECT COUNT(DISTINCT e.distinct_id) AS totaldiscount FROM songshu_shence_events e WHERE e.event ='$pageview' AND e.url like '%/productInfo%'
+//    AND (e.url like '%productId=100100436%' OR  e.url like '%goodsId=100100436%')
+//    AND e.times BETWEEN '2016-11-01 00:00:00' AND '2016-12-01 00:00:00' AND e.platform ='ios'
+    @Query(value = "SELECT COUNT(DISTINCT e.distinct_id) AS totaldiscount FROM songshu_shence_events e WHERE e.event ='$pageview' AND e.url LIKE '%/productInfo%' " +
+        "AND (e.url LIKE ?3 OR  e.url LIKE ?4 ) " +
+        "AND e.times BETWEEN ?1 AND ?2 AND e.platform = ?5 ", nativeQuery = true)
+    Integer getProductPageVisitorsSinglePlatform(Timestamp beginTime, Timestamp endTime,String productIdLike,String goodsIdLike, String plateFormName);
 
     /**
      * 商品消费用户数（全平台）
@@ -163,7 +191,7 @@ public interface ProductRevenueRepository extends JpaRepository<Author,Long> {
         "INNER JOIN songshu_cs_order_payable op ON op.\"OrderId\" = o.\"Id\" " +
         "INNER JOIN songshu_cs_payment_record pr ON pr.\"MergePaymentNo\" = op.\"MergePaymentId\" " +
         "WHERE  op.\"PaymentStatus\" = 1 AND  o.\"orderType\" IN(0,1) AND  o.\"OrderStatus\" NOT IN (6,7) AND i.\"ProductId\" = ?3 " +
-        "AND pr.\"PaidTime\" BETWEEN ?1 AND ?2 AND o.\"Channel\" = ?4 ", nativeQuery = true)
+        "AND pr.\"PaidTime\" BETWEEN ?1 AND ?2 ", nativeQuery = true)
     Integer getProductConsumerCountAllPlatform(Timestamp beginTime, Timestamp endTime,Integer productId);
 
     /**
@@ -192,20 +220,32 @@ public interface ProductRevenueRepository extends JpaRepository<Author,Long> {
      * 退出商品页面访客数（全平台）
      * @param beginTime
      * @param endTime
-     * @param productId
+     * @param productIdLike
+     * @param goodsIdLike
      * @return
      */
-    @Query(value = "SELECT now()", nativeQuery = true)
-    Integer getProductPageLeaveVistorsAllPlatform(Timestamp beginTime, Timestamp endTime,Integer productId);
+//    SELECT COUNT(DISTINCT e.distinct_id) AS totaldiscount FROM songshu_shence_events e WHERE e.event ='$pageview' AND e.referrer like '%/productInfo%'
+//    AND (e.referrer like '%productId=100100436%' OR  e.referrer like '%goodsId=100100436%')
+//    AND e.times BETWEEN '2016-11-01 00:00:00' AND '2016-12-01 00:00:00'
+    @Query(value = " SELECT COUNT(DISTINCT e.distinct_id) AS totaldiscount FROM songshu_shence_events e WHERE e.event ='$pageview' AND e.referrer like '%/productInfo%' " +
+        "AND (e.url LIKE ?3 OR  e.url LIKE ?4 ) " +
+        "AND e.times BETWEEN ?1 AND ?2 ", nativeQuery = true)
+    Integer getProductPageLeaveVisitorsAllPlatform(Timestamp beginTime, Timestamp endTime,String productIdLike,String goodsIdLike);
 
     /**
      * 退出商品页面访客数（单平台）
      * @param beginTime
      * @param endTime
-     * @param productId
-     * @param plateForm
+     * @param productIdLike
+     * @param goodsIdLike
+     * @param plateFormName
      * @return
      */
-    @Query(value = "SELECT now()", nativeQuery = true)
-    Integer getProductPageLeaveVistorsSinglePlatform(Timestamp beginTime, Timestamp endTime,Integer productId, Integer plateForm);
+//    SELECT COUNT(DISTINCT e.distinct_id) AS totaldiscount FROM songshu_shence_events e WHERE e.event ='$pageview' AND e.referrer like '%/productInfo%'
+//    AND (e.referrer like '%productId=100100436%' OR  e.referrer like '%goodsId=100100436%')
+//    AND e.times BETWEEN '2016-11-01 00:00:00' AND '2016-12-01 00:00:00' AND e.platform ='ios'
+    @Query(value = "SELECT COUNT(DISTINCT e.distinct_id) AS totaldiscount FROM songshu_shence_events e WHERE e.event ='$pageview' AND e.referrer LIKE '%/productInfo%' " +
+        "AND (e.referrer LIKE ?3 OR  e.referrer LIKE ?4 ) " +
+        "AND e.times BETWEEN ?1 AND ?2 AND e.platform =?5 ", nativeQuery = true)
+    Integer getProductPageLeaveVisitorsSinglePlatform(Timestamp beginTime, Timestamp endTime,String productIdLike,String goodsIdLike, String plateFormName);
 }
