@@ -27,7 +27,7 @@ public class RegionRankService {
         if (platform<0) {
             regionRank = regionRankRepository.getRegionRankWithAllPlatform(beginTime,endTime);
         }else{
-            regionRank = regionRankRepository.getRegionRankWithSinglePlatform(beginTime,endTime,platform);
+            regionRank = regionRankRepository.getRegionRankWithSinglePlatform(beginTime,endTime,platformName);
         }
 
         return JsonStringBuilder.buildRankJsonString(regionRank);
