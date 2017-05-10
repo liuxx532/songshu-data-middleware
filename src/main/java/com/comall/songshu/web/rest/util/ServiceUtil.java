@@ -190,18 +190,4 @@ public class ServiceUtil {
     }
 
 
-//    public static void main(String[] a12){
-//        Date now = new Date();
-//        Timestamp beginTime = new Timestamp(now.getTime());
-//        Timestamp endTime = new Timestamp(now.getTime()+6000);
-//        Integer count = ServiceUtil.getInstance().getAggTimeValue(beginTime,endTime,2);
-//        System.out.println(count);
-//
-//        String zone = ServiceUtil.getInstance().formatDateTime("   ");
-//        System.out.println(zone);
-//
-//        long l = ServiceUtil.getInstance().getChainIndexDateTimeMillis("2017-01-31 00:00:00","");
-//        System.out.println(l);
-//    }
-
 }
