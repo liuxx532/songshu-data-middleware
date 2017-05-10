@@ -101,16 +101,16 @@ public class MemberDetailService {
             + "avgVisitDepth:"+avgVisitDepth;
     }
 
-    public static void main(String[] at){
-        Integer a = 1231;
-        Integer b = 231312;
-        BigDecimal aa = new BigDecimal(a);
-        BigDecimal bb = new BigDecimal(b);
-        System.out.println(aa.doubleValue());
-        System.out.println(bb.doubleValue());
-
-        Double cc = new BigDecimal(a).doubleValue()/new BigDecimal(b).doubleValue();
-        System.out.println(cc.doubleValue());
-    }
+//    public static void main(String[] at){
+//        Integer a = 1231;
+//        Integer b = 231312;
+//        BigDecimal aa = new BigDecimal(a);
+//        BigDecimal bb = new BigDecimal(b);
+//        System.out.println(aa.doubleValue());
+//        System.out.println(bb.doubleValue());
+//
+//        Double cc = new BigDecimal(a).doubleValue()/new BigDecimal(b).doubleValue();
+//        System.out.println(cc.doubleValue());
+//    }
 
 }
