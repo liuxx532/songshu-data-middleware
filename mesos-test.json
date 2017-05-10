@@ -1,0 +1,56 @@
+{
+    "id": "/team-bda/songshu-data-middleware-test",
+    "cmd": null,
+    "cpus": 1,
+    "mem": 6144,
+    "disk": 0,
+    "instances": 1,
+    "acceptedResourceRoles": [
+        "*",
+        "slave_public"
+    ],
+    "container": {
+        "type": "DOCKER",
+        "volumes": [],
+        "docker": {
+            "image": "harbor.product.co-mall/product_bda/songshu-data-middleware-test",
+            "network": "BRIDGE",
+            "portMappings": [
+                {
+                    "containerPort": 8083,
+                    "hostPort": 0,
+                    "servicePort": 8083,
+                    "protocol": "tcp",
+                    "labels": {
+                        "VIP_0": "192.168.2.11:8083"
+                    }
+                }
+            ],
+            "privileged": false,
+            "parameters": [],
+            "forcePullImage": true
+        }
+    },
+    "healthChecks": [
+        {
+            "protocol": "TCP",
+            "portIndex": 0,
+            "gracePeriodSeconds": 300,
+            "intervalSeconds": 60,
+            "timeoutSeconds": 20,
+            "maxConsecutiveFailures": 3,
+            "ignoreHttp1xx": false
+        }
+    ],
+    "labels": {
+        "HAPROXY_GROUP": "external",
+        "HAPROXY_0_VHOST": "songshu-data-middleware-test.prd-bda.co-mall"
+    },
+    "portDefinitions": [
+        {
+            "port": 8083,
+            "protocol": "tcp",
+            "labels": {}
+        }
+    ]
+}
