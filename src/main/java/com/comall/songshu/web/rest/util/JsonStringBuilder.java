@@ -19,6 +19,23 @@ import java.util.Optional;
  */
 public class JsonStringBuilder {
 
+
+    public static String buildCommonJsonString(String target, JSONArray dataPointsArray, String columnName) {
+        JSONArray resultArray = new JSONArray();
+        try {
+            JSONObject result = new JSONObject();
+            result.put("target",target);
+            result.put("datapoints",dataPointsArray);
+            result.put("columnName",columnName);
+            resultArray.put(result);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return resultArray.toString();
+    }
+
+
+
     /**
      * 构建index首页头部指标
      * @param target
@@ -44,7 +61,7 @@ public class JsonStringBuilder {
 
             JSONObject result = new JSONObject();
             result.put("target",target);
-            result.put("dataPoints",dataPointsArray);
+            result.put("datapoints",dataPointsArray);
             result.put("columnName",columnName);
             resultArray.put(result);
         } catch (JSONException e) {
@@ -70,13 +87,13 @@ public class JsonStringBuilder {
 
                 JSONObject currentResult = new JSONObject();
                 currentResult.put("target","当前");
-                currentResult.put("dataPoints",dataPointsCurrentArray);
+                currentResult.put("datapoints",dataPointsCurrentArray);
                 currentResult.put("columnName","");
                 resultArray.put(currentResult);
 
                 JSONObject chainResult = new JSONObject();
                 chainResult.put("target","环比");
-                chainResult.put("dataPoints",dataPointsChainArray);
+                chainResult.put("datapoints",dataPointsChainArray);
                 chainResult.put("columnName","");
                 resultArray.put(chainResult);
             } catch (JSONException e) {
@@ -122,13 +139,13 @@ public class JsonStringBuilder {
 
                 JSONObject currentResult = new JSONObject();
                 currentResult.put("target","当前");
-                currentResult.put("dataPoints",dataPointsCurrentArray);
+                currentResult.put(" datapoints",dataPointsCurrentArray);
                 currentResult.put("columnName","");
                 resultArray.put(currentResult);
 
                 JSONObject chainResult = new JSONObject();
                 chainResult.put("target","环比");
-                chainResult.put("dataPoints",dataPointsChainArray);
+                chainResult.put("datapoints",dataPointsChainArray);
                 chainResult.put("columnName","");
                 resultArray.put(chainResult);
             } catch (JSONException e) {
@@ -179,7 +196,7 @@ public class JsonStringBuilder {
 
                     JSONObject result = new JSONObject();
                     result.put("target",name);
-                    result.put("dataPoints",dataPointsArray);
+                    result.put("datapoints",dataPointsArray);
                     result.put("columnName","");
                     resultArray.put(result);
                 } catch (JSONException e) {
@@ -209,7 +226,7 @@ public class JsonStringBuilder {
 
             JSONObject firstResult = new JSONObject();
             firstResult.put("target","首单");
-            firstResult.put("dataPoints",firstDataPointsArray);
+            firstResult.put("datapoints",firstDataPointsArray);
             firstResult.put("columnName","");
             resultArray.put(firstResult);
 
@@ -222,7 +239,7 @@ public class JsonStringBuilder {
 
             JSONObject notFirstResult = new JSONObject();
             notFirstResult.put("target","非首单");
-            notFirstResult.put("dataPoints",notFirstDataPointsArray);
+            notFirstResult.put("datapoints",notFirstDataPointsArray);
             notFirstResult.put("columnName","");
             resultArray.put(notFirstResult);
             return resultArray.toString();
@@ -264,7 +281,7 @@ public class JsonStringBuilder {
                         dataPointsArray.put(dataPointArray);
                         JSONObject result = new JSONObject();
                         result.put("target",platformName);
-                        result.put("dataPoints",dataPointsArray);
+                        result.put("datapoints",dataPointsArray);
                         result.put("columnName","");
                         resultArray.put(result);
                     } catch (JSONException e) {
