@@ -15,9 +15,7 @@ import rx.exceptions.Exceptions;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * 商品销售
@@ -51,28 +49,27 @@ public class ProductRevenueService {
             .filter(l -> l.size() >0).isPresent()){
             //封装表头
             JSONArray productRevenueTitleArray =  new JSONArray();
-            JSONObject productRevenueTitle = new JSONObject();
             long currentMills = System.currentTimeMillis();
-            try {
-                productRevenueTitle.put(TitleConstants.RANK,"排名");
-                productRevenueTitle.put(TitleConstants.CATEGORY_NAME,"品类");
-                productRevenueTitle.put(TitleConstants.PRODUCT_NAME,"商品名称");
-                productRevenueTitle.put(TitleConstants.REVENUE,"销售额");
-                productRevenueTitle.put(TitleConstants.ORDER_COUNT,"订单量");
-                productRevenueTitle.put(TitleConstants.GOODS_COST,"商品成本");
-                productRevenueTitle.put(TitleConstants.GROSSMARIN_RATE,"毛利率");
-                productRevenueTitle.put(TitleConstants.UNIQUE_VISITOR,"访客数");
-                productRevenueTitle.put(TitleConstants.ADD2CART_TIMES,"加购次数");
-                productRevenueTitle.put(TitleConstants.COLLECTION_COUNT,"收藏量");
-                productRevenueTitle.put(TitleConstants.PAID_RATE,"付费率");
-                productRevenueTitle.put(TitleConstants.EXIT_RATE,"退出率");
-                productRevenueTitleArray.put(productRevenueTitle);
-                productRevenueTitleArray.put(currentMills);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+            Map<String,String> productRevenueTitleMap = new LinkedHashMap<>();
+            productRevenueTitleMap.put(TitleConstants.RANK,"排名");
+            productRevenueTitleMap.put(TitleConstants.CATEGORY_NAME,"品类");
+            productRevenueTitleMap.put(TitleConstants.PRODUCT_NAME,"商品名称");
+            productRevenueTitleMap.put(TitleConstants.REVENUE,"销售额");
+            productRevenueTitleMap.put(TitleConstants.ORDER_COUNT,"订单量");
+            productRevenueTitleMap.put(TitleConstants.GOODS_COST,"商品成本");
+            productRevenueTitleMap.put(TitleConstants.GROSSMARIN_RATE,"毛利率");
+            productRevenueTitleMap.put(TitleConstants.UNIQUE_VISITOR,"访客数");
+            productRevenueTitleMap.put(TitleConstants.ADD2CART_TIMES,"加购次数");
+            productRevenueTitleMap.put(TitleConstants.COLLECTION_COUNT,"收藏量");
+            productRevenueTitleMap.put(TitleConstants.PAID_RATE,"付费率");
+            productRevenueTitleMap.put(TitleConstants.EXIT_RATE,"退出率");
+            productRevenueTitleArray.put(productRevenueTitleMap);
+            productRevenueTitleArray.put(currentMills);
+
+
+
             JSONArray productRevenueDataPointArray =  new JSONArray();
-            JSONArray productRevenueArray =  new JSONArray();
+            List<JSONObject> productRevenueList = new LinkedList<>();
 
             int rank = 1;
             for(Object[] o : productRevenueResult){
@@ -132,13 +129,13 @@ public class ProductRevenueService {
                     productRevenue.put(TitleConstants.COLLECTION_COUNT,collectionCount);
                     productRevenue.put(TitleConstants.PAID_RATE,paidRate);
                     productRevenue.put(TitleConstants.EXIT_RATE,exitRate);
-                    productRevenueArray.put(productRevenue);
+                    productRevenueList.add(productRevenue);
                     rank++;
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
             }
-            productRevenueDataPointArray.put(productRevenueArray);
+            productRevenueDataPointArray.put(productRevenueList);
             productRevenueDataPointArray.put(currentMills);
             dataPointsArray.put(productRevenueDataPointArray);
             dataPointsArray.put(productRevenueTitleArray);
