@@ -56,4 +56,8 @@ public class TitleConstants {
      * 退出率
      */
     public static  String EXIT_RATE = "exitRate";
+    /**
+     * 销售额占比
+     */
+    public static  String REVENUE_RATE = "revenueRate";
 }
