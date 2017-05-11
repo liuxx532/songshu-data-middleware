@@ -63,16 +63,16 @@ public class ProductCategoryRankService {
     private String buildJson(List<Object[]> src,String target) {
         JSONArray dataPointsArray = new JSONArray();
         long currentMills = System.currentTimeMillis();
-        List titleDataPoint = new LinkedList();
+        JSONArray titleDataPoint = new JSONArray();
         List dataPoint = new LinkedList();
-        List dataPointParent = new LinkedList();
+        JSONArray dataPointParent = new JSONArray();
         Map<String,String> titleDateItem = new LinkedHashMap<>();
 
         //标题
         titleDateItem.put(TitleConstants.CATEGORY_NAME, "品类名称");
         titleDateItem.put(TitleConstants.REVENUE_RATE, "销售额占比");
-        titleDataPoint.add(titleDateItem);
-        titleDataPoint.add(currentMills);
+        titleDataPoint.put(titleDateItem);
+        titleDataPoint.put(currentMills);
 
         //数据
         for (Object[] item : src) {
@@ -81,8 +81,8 @@ public class ProductCategoryRankService {
             dateItem.put(TitleConstants.REVENUE_RATE, item[1].toString());
             dataPoint.add(dateItem);
         }
-        dataPointParent.add(dataPoint);
-        dataPointParent.add(currentMills);
+        dataPointParent.put(dataPoint);
+        dataPointParent.put(currentMills);
 
         dataPointsArray.put(dataPointParent);
         dataPointsArray.put(titleDataPoint);
