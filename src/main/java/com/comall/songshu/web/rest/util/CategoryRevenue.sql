@@ -232,3 +232,20 @@ OR e.referrer like '#/tabs/index/productInfo?productId=100100436%'
 OR e.referrer like '#/tabs/user/productInfo?productId=100100436%'
 OR e.referrer like '#/tabs/integral/productInfo?productId=100100436%')
 AND e.times BETWEEN '2016-05-11 00:00:00' AND '2017-05-11 00:00:00';
+
+
+-- 渠道注册用户数据
+SELECT u.utm_source,COUNT(u.second_id) as userCount FROM songshu_shence_users u
+INNER JOIN songshu_shence_events e ON e.distinct_id = u.second_id
+WHERE  e.times BETWEEN '2017-01-01 00:00:00' AND '2017-12-01 00:00:00'
+AND u.second_id is not null AND u.utm_source is NOT NULL
+AND u.utm_source NOT IN('test','preproduction','production','newtest','channel_10')
+AND e.platform ='ios'  GROUP BY u.utm_source  ORDER BY userCount DESC LIMIT 10;
+
+
+SELECT u.utm_source,COUNT(u.second_id) as userCount FROM songshu_shence_users u
+INNER JOIN songshu_cs_member mem ON u.second_id = mem."id"
+WHERE  mem."regTime" BETWEEN '2017-01-01 00:00:00' AND '2017-12-01 00:00:00'
+AND u.second_id is not null AND u.utm_source is NOT NULL
+AND u.utm_source NOT IN('test','preproduction','production','newtest','channel_10')
+AND mem."multipleChannelsId" = 1   GROUP BY u.utm_source  ORDER BY userCount DESC LIMIT 10;
