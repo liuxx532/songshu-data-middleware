@@ -1,6 +1,7 @@
 package com.comall.songshu.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
+import com.comall.songshu.service.product.ProductCategoryRankService;
 import com.comall.songshu.service.product.ProductLinkedSalesService;
 import com.comall.songshu.service.product.ProductRadarService;
 import com.comall.songshu.service.product.ProductRevenueService;
@@ -37,6 +38,9 @@ public class ProductResource {
 
     @Autowired
     private ProductLinkedSalesService productLinkedSalesService;
+
+    @Autowired
+    private ProductCategoryRankService productCategoryRankService;
 
 
 
@@ -132,6 +136,8 @@ public class ProductResource {
                      //TODO 由于需要传入被过滤的品类ID，但是不知道前端字段具体怎么传，先待定
 //                    case "ProductRadar":
 //                        return
+                    case "ProductCategoryRank":
+                        return productCategoryRankService.getProductCategoryRank(target,platform,beginTime,endTime);
                     default:
                         throw new IllegalArgumentException("target=" + target);
                 }
