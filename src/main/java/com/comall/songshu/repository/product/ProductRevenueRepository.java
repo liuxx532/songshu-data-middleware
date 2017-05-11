@@ -140,38 +140,7 @@ public interface ProductRevenueRepository extends JpaRepository<Author,Long> {
         "AND e.times BETWEEN ?1 AND ?2 AND e.platform = ?4", nativeQuery = true)
     Integer getCollectionCountSinglePlatform(Timestamp beginTime, Timestamp endTime,String productCode, String plateFormName);
 
-    /**
-     * 商品页面访客数（全平台）
-     * @param beginTime
-     * @param endTime
-     * @param productIdLike
-     * @param goodsIdLike
-     * @return
-     */
-//    SELECT COUNT(DISTINCT e.distinct_id) AS totaldiscount FROM songshu_shence_events e WHERE e.event ='$pageview' AND e.url like '%/productInfo%'
-//    AND (e.url like '%productId=100100436%' OR  e.url like '%goodsId=100100436%')
-//    AND e.times BETWEEN '2016-11-01 00:00:00' AND '2016-12-01 00:00:00'
-    @Query(value = "SELECT COUNT(DISTINCT e.distinct_id) AS totaldiscount FROM songshu_shence_events e WHERE e.event ='$pageview' AND e.url LIKE '%/productInfo?%' " +
-        "AND (e.url LIKE ?3 OR  e.url LIKE ?4 ) " +
-        "AND e.times BETWEEN ?1 AND ?2  ", nativeQuery = true)
-    Integer getProductPageVisitorsAllPlatform(Timestamp beginTime, Timestamp endTime,String productIdLike,String goodsIdLike);
 
-    /**
-     * 商品页面访客数（单平台）
-     * @param beginTime
-     * @param endTime
-     * @param productIdLike
-     * @param goodsIdLike
-     * @param plateFormName
-     * @return
-     */
-//    SELECT COUNT(DISTINCT e.distinct_id) AS totaldiscount FROM songshu_shence_events e WHERE e.event ='$pageview' AND e.url like '%/productInfo%'
-//    AND (e.url like '%productId=100100436%' OR  e.url like '%goodsId=100100436%')
-//    AND e.times BETWEEN '2016-11-01 00:00:00' AND '2016-12-01 00:00:00' AND e.platform ='ios'
-    @Query(value = "SELECT COUNT(DISTINCT e.distinct_id) AS totaldiscount FROM songshu_shence_events e WHERE e.event ='$pageview' AND e.url LIKE '%/productInfo%' " +
-        "AND (e.url LIKE ?3 OR  e.url LIKE ?4 ) " +
-        "AND e.times BETWEEN ?1 AND ?2 AND e.platform = ?5 ", nativeQuery = true)
-    Integer getProductPageVisitorsSinglePlatform(Timestamp beginTime, Timestamp endTime,String productIdLike,String goodsIdLike, String plateFormName);
 
     /**
      * 商品消费用户数（全平台）
@@ -220,32 +189,105 @@ public interface ProductRevenueRepository extends JpaRepository<Author,Long> {
      * 退出商品页面访客数（全平台）
      * @param beginTime
      * @param endTime
-     * @param productIdLike
-     * @param goodsIdLike
+     * @param categoriesProductLike
+     * @param indexProductLike
+     * @param cartLike
+     * @param userProductLike
+     * @param integralProductLike
      * @return
      */
-//    SELECT COUNT(DISTINCT e.distinct_id) AS totaldiscount FROM songshu_shence_events e WHERE e.event ='$pageview' AND e.referrer like '%/productInfo%'
-//    AND (e.referrer like '%productId=100100436%' OR  e.referrer like '%goodsId=100100436%')
-//    AND e.times BETWEEN '2016-11-01 00:00:00' AND '2016-12-01 00:00:00'
-    @Query(value = " SELECT COUNT(DISTINCT e.distinct_id) AS totaldiscount FROM songshu_shence_events e WHERE e.event ='$pageview' AND e.referrer like '%/productInfo%' " +
-        "AND (e.url LIKE ?3 OR  e.url LIKE ?4 ) " +
+//    SELECT COUNT(DISTINCT e.distinct_id)  FROM songshu_shence_events e
+//    WHERE e.event = '$pageview'
+//    AND (e.referrer like '#/tabs/categories/productInfo?productId=100100436%'
+//        OR e.referrer like '#/tabs/cart/productInfo?productId=100100436%'
+//        OR e.referrer like '#/tabs/index/productInfo?productId=100100436%'
+//        OR e.referrer like '#/tabs/user/productInfo?productId=100100436%'
+//        OR e.referrer like '#/tabs/integral/productInfo?productId=100100436%')
+//    AND e.times BETWEEN '2016-05-11 00:00:00' AND '2017-05-11 00:00:00';
+    @Query(value = "SELECT COUNT(DISTINCT e.distinct_id)  FROM songshu_shence_events e " +
+        "WHERE e.event = '$pageview' " +
+        "AND (e.referrer like ?3 OR e.referrer like ?4 OR e.referrer like ?5 OR e.referrer like ?6 OR e.referrer like ?7 )" +
         "AND e.times BETWEEN ?1 AND ?2 ", nativeQuery = true)
-    Integer getProductPageLeaveVisitorsAllPlatform(Timestamp beginTime, Timestamp endTime,String productIdLike,String goodsIdLike);
+    Integer getProductPageLeaveVisitorsAllPlatform(Timestamp beginTime, Timestamp endTime
+        ,String categoriesProductLike,String indexProductLike,String cartLike,String userProductLike,String integralProductLike);
 
     /**
      * 退出商品页面访客数（单平台）
      * @param beginTime
      * @param endTime
-     * @param productIdLike
-     * @param goodsIdLike
      * @param plateFormName
+     * @param categoriesProductLike
+     * @param indexProductLike
+     * @param cartLike
+     * @param userProductLike
+     * @param integralProductLike
      * @return
      */
-//    SELECT COUNT(DISTINCT e.distinct_id) AS totaldiscount FROM songshu_shence_events e WHERE e.event ='$pageview' AND e.referrer like '%/productInfo%'
-//    AND (e.referrer like '%productId=100100436%' OR  e.referrer like '%goodsId=100100436%')
-//    AND e.times BETWEEN '2016-11-01 00:00:00' AND '2016-12-01 00:00:00' AND e.platform ='ios'
-    @Query(value = "SELECT COUNT(DISTINCT e.distinct_id) AS totaldiscount FROM songshu_shence_events e WHERE e.event ='$pageview' AND e.referrer LIKE '%/productInfo%' " +
-        "AND (e.referrer LIKE ?3 OR  e.referrer LIKE ?4 ) " +
-        "AND e.times BETWEEN ?1 AND ?2 AND e.platform =?5 ", nativeQuery = true)
-    Integer getProductPageLeaveVisitorsSinglePlatform(Timestamp beginTime, Timestamp endTime,String productIdLike,String goodsIdLike, String plateFormName);
+//    SELECT COUNT(DISTINCT e.distinct_id)  FROM songshu_shence_events e
+//    WHERE e.event = '$pageview'
+//    AND (e.referrer like '#/tabs/categories/productInfo?productId=100100436%'
+//        OR e.referrer like '#/tabs/cart/productInfo?productId=100100436%'
+//        OR e.referrer like '#/tabs/index/productInfo?productId=100100436%'
+//        OR e.referrer like '#/tabs/user/productInfo?productId=100100436%'
+//        OR e.referrer like '#/tabs/integral/productInfo?productId=100100436%')
+//    AND e.times BETWEEN '2016-05-11 00:00:00' AND '2017-05-11 00:00:00' AND e.platform ='ios';
+    @Query(value = "SELECT COUNT(DISTINCT e.distinct_id)  FROM songshu_shence_events e " +
+        "WHERE e.event = '$pageview' " +
+        "AND (e.referrer like ?4 OR e.referrer like ?5 OR e.referrer like ?6 OR e.referrer like ?7 OR e.referrer like ?8 )" +
+        "AND e.times BETWEEN ?1 AND ?2 AND  e.platform =?3 ", nativeQuery = true)
+    Integer getProductPageLeaveVisitorsSinglePlatform(Timestamp beginTime, Timestamp endTime,String plateFormName
+        ,String categoriesProductLike,String indexProductLike,String cartLike,String userProductLike,String integralProductLike);
+
+    /**
+     * 商品页面访客数（全平台）
+     * @param beginTime
+     * @param endTime
+     * @param categoriesProductLike
+     * @param indexProductLike
+     * @param cartLike
+     * @param userProductLike
+     * @param integralProductLike
+     * @return
+     */
+//    SELECT COUNT(DISTINCT e.distinct_id)  FROM songshu_shence_events e
+//    WHERE e.event = '$pageview'
+//    AND (e.url like '#/tabs/categories/productInfo?productId=100100436%'
+//        OR e.url like '#/tabs/cart/productInfo?productId=100100436%'
+//        OR e.url like '#/tabs/index/productInfo?productId=100100436%'
+//        OR e.url like '#/tabs/user/productInfo?productId=100100436%'
+//        OR e.url like '#/tabs/integral/productInfo?productId=100100436%')
+//    AND e.times BETWEEN '2016-05-11 00:00:00' AND '2017-05-11 00:00:00';
+    @Query(value = "SELECT COUNT(DISTINCT e.distinct_id)  FROM songshu_shence_events e " +
+        "WHERE e.event = '$pageview' " +
+        "AND (e.referrer like ?3 OR e.referrer like ?4 OR e.referrer like ?5 OR e.referrer like ?6 OR e.referrer like ?7 )" +
+        "AND e.times BETWEEN ?1 AND ?2 ", nativeQuery = true)
+    Integer getProductPageVisitorsAllPlatform(Timestamp beginTime, Timestamp endTime
+        ,String categoriesProductLike,String indexProductLike,String cartLike,String userProductLike,String integralProductLike);
+
+    /**
+     * 商品页面访客数（单平台）
+     * @param beginTime
+     * @param endTime
+     * @param plateFormName
+     * @param categoriesProductLike
+     * @param indexProductLike
+     * @param cartLike
+     * @param userProductLike
+     * @param integralProductLike
+     * @return
+     */
+//    SELECT COUNT(DISTINCT e.distinct_id)  FROM songshu_shence_events e
+//    WHERE e.event = '$pageview'
+//    AND (e.url like '#/tabs/categories/productInfo?productId=100100436%'
+//        OR e.url like '#/tabs/cart/productInfo?productId=100100436%'
+//        OR e.url like '#/tabs/index/productInfo?productId=100100436%'
+//        OR e.url like '#/tabs/user/productInfo?productId=100100436%'
+//        OR e.url like '#/tabs/integral/productInfo?productId=100100436%')
+//    AND e.times BETWEEN '2016-05-11 00:00:00' AND '2017-05-11 00:00:00' AND e.platform ='ios';
+    @Query(value = "SELECT COUNT(DISTINCT e.distinct_id)  FROM songshu_shence_events e " +
+        "WHERE e.event = '$pageview' " +
+        "AND (e.referrer like ?4 OR e.referrer like ?5 OR e.referrer like ?6 OR e.referrer like ?7 OR e.referrer like ?8 )" +
+        "AND e.times BETWEEN ?1 AND ?2 AND  e.platform =?3", nativeQuery = true)
+    Integer getProductPageVisitorsSinglePlatform(Timestamp beginTime, Timestamp endTime,String plateFormName
+        ,String categoriesProductLike,String indexProductLike,String cartLike,String userProductLike,String integralProductLike);
 }
