@@ -187,7 +187,7 @@ public class JsonStringBuilder {
             for (Object[] r : rank) {
                 try {
                     String name = (String) r[0];
-                    BigDecimal amount = Optional.ofNullable((BigDecimal) r[1]).orElse(BigDecimal.ZERO);
+                    BigDecimal amount = Optional.ofNullable(new BigDecimal(r[1].toString())).orElse(BigDecimal.ZERO);
                     JSONArray dataPointArray = new JSONArray();
                     dataPointArray.put(amount);
                     dataPointArray.put(System.currentTimeMillis());

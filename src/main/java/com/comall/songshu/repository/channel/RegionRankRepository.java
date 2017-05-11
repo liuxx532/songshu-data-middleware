@@ -13,9 +13,27 @@ import java.util.List;
  */
 public interface RegionRankRepository  extends JpaRepository<Author,Long> {
 
-    @Query(value = "SELECT now() ", nativeQuery = true)
+    //SQL
+    //SELECT se.city, COUNT(DISTINCT se.distinct_id) AS tcount
+    // FROM songshu_shence_events se WHERE se.times
+    // BETWEEN '2015-01-01 00:00:00' AND '2017-04-30 00:00:00' AND se.city
+    // IS NOT NULL AND se.city != '未知' GROUP BY se.city ORDER BY tcount DESC LIMIT 10;
+
+    @Query(value = "SELECT se.city, COALESCE(COUNT(DISTINCT se.distinct_id),0) AS tcount " +
+        "FROM songshu_shence_events se WHERE se.times " +
+        "BETWEEN ?1 AND ?2 AND se.city IS NOT NULL " +
+        "AND se.city != '未知' GROUP BY se.city ORDER BY tcount DESC LIMIT 10;", nativeQuery = true)
     List<Object[]> getRegionRankWithAllPlatform(Timestamp beginTime, Timestamp endTime);
 
-    @Query(value = "SELECT now() ", nativeQuery = true)
-    List<Object[]> getRegionRankWithSinglePlatform(Timestamp beginTime, Timestamp endTime,Integer platform);
+    //SQL
+    //SELECT se.city, COUNT(DISTINCT se.distinct_id) AS tcount
+    // FROM songshu_shence_events se WHERE se.times
+    // BETWEEN '2015-01-01 00:00:00' AND '2017-04-30 00:00:00' AND se.platform = 'android'
+    // AND se.city IS NOT NULL AND se.city != '未知' GROUP BY se.city ORDER BY tcount DESC LIMIT 10;
+
+    @Query(value = "SELECT se.city, COALESCE(COUNT(DISTINCT se.distinct_id),0) AS tcount " +
+        "FROM songshu_shence_events se WHERE se.times BETWEEN ?1 AND ?2 " +
+        "AND se.platform = ?3 AND se.city IS NOT NULL AND se.city != '未知' " +
+        "GROUP BY se.city ORDER BY tcount DESC LIMIT 10;", nativeQuery = true)
+    List<Object[]> getRegionRankWithSinglePlatform(Timestamp beginTime, Timestamp endTime,String platformName);
 }
