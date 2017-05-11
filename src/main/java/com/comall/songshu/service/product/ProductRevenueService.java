@@ -82,27 +82,27 @@ public class ProductRevenueService {
                     String productIdLike ="%productId="+productId+"%";
                     String goodsIdLike ="%goodsId="+goodsId+"%";
                     //加入购物车数
-                    Integer addCartTimes = 1;
+                    Integer addCartTimes;
                     //收藏数
-                    Integer collectionCount = 2;
+                    Integer collectionCount;
                     //商品页面访客数
-                    Integer productPageVisitors = 3;
+                    Integer productPageVisitors;
                     //商品消费用户数
-                    Integer productConsumerCount = 4;
+                    Integer productConsumerCount;
                     //退出商品页面用户数
-                    Integer productPageLeaveVisitors = 5;
+                    Integer productPageLeaveVisitors;
                     if (platform<0) {//全部
-//                        addCartTimes = productRevenueRepository.getAddCartTimesAllPlatform(beginTime,endTime,productCode);
-//                        collectionCount = productRevenueRepository.getCollectionCountAllPlatform(beginTime,endTime,productCode);
-//                        productPageVisitors = productRevenueRepository.getProductPageVisitorsAllPlatform(beginTime,endTime,productIdLike,goodsIdLike);
-//                        productConsumerCount = productRevenueRepository.getProductConsumerCountAllPlatform(beginTime,endTime,productId);
-//                        productPageLeaveVisitors = productRevenueRepository.getProductPageLeaveVisitorsAllPlatform(beginTime,endTime,productIdLike,goodsIdLike);
+                        addCartTimes = productRevenueRepository.getAddCartTimesAllPlatform(beginTime,endTime,productCode);
+                        collectionCount = productRevenueRepository.getCollectionCountAllPlatform(beginTime,endTime,productCode);
+                        productPageVisitors = productRevenueRepository.getProductPageVisitorsAllPlatform(beginTime,endTime,productIdLike,goodsIdLike);
+                        productConsumerCount = productRevenueRepository.getProductConsumerCountAllPlatform(beginTime,endTime,productId);
+                        productPageLeaveVisitors = productRevenueRepository.getProductPageLeaveVisitorsAllPlatform(beginTime,endTime,productIdLike,goodsIdLike);
                     }else{
-//                        addCartTimes = productRevenueRepository.getAddCartTimesSinglePlatform(beginTime,endTime,productCode,platformName);
-//                        collectionCount = productRevenueRepository.getCollectionCountSinglePlatform(beginTime,endTime,productCode,platformName);
-//                        productPageVisitors = productRevenueRepository.getProductPageVisitorsSinglePlatform(beginTime,endTime,productIdLike,goodsIdLike,platformName);
-//                        productConsumerCount = productRevenueRepository.getProductConsumerCountSinglePlatform(beginTime,endTime,productId,platform);
-//                        productPageLeaveVisitors = productRevenueRepository.getProductPageLeaveVisitorsSinglePlatform(beginTime,endTime,productIdLike,goodsIdLike,platformName);
+                        addCartTimes = productRevenueRepository.getAddCartTimesSinglePlatform(beginTime,endTime,productCode,platformName);
+                        collectionCount = productRevenueRepository.getCollectionCountSinglePlatform(beginTime,endTime,productCode,platformName);
+                        productPageVisitors = productRevenueRepository.getProductPageVisitorsSinglePlatform(beginTime,endTime,productIdLike,goodsIdLike,platformName);
+                        productConsumerCount = productRevenueRepository.getProductConsumerCountSinglePlatform(beginTime,endTime,productId,platform);
+                        productPageLeaveVisitors = productRevenueRepository.getProductPageLeaveVisitorsSinglePlatform(beginTime,endTime,productIdLike,goodsIdLike,platformName);
                     }
 
 
