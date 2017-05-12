@@ -13,9 +13,18 @@ import java.util.List;
  */
 public interface ManufacturerRankRepository  extends JpaRepository<Author,Long> {
 
-    @Query(value = "SELECT now() ", nativeQuery = true)
+    //SQL
+    //SELECT count(DISTINCT se.distinct_id) AS tcount, upper(se.manufacturer) AS tmanufacturer
+    // FROM songshu_shence_events se WHERE se.times BETWEEN '2017-04-29 00:00:00' AND '2017-04-30 00:00:00'
+    // AND se.manufacturer IS NOT NULL GROUP BY upper(se.manufacturer) ORDER BY tcount DESC LIMIT 10;
+
+    @Query(value = "SELECT upper(se.manufacturer) AS tmanufacturer,count(DISTINCT se.distinct_id) AS tcount  " +
+        "FROM songshu_shence_events se WHERE se.times BETWEEN ?1 AND ?2 " +
+        "AND se.manufacturer IS NOT NULL GROUP BY upper(se.manufacturer) ORDER BY tcount DESC LIMIT 10;", nativeQuery = true)
     List<Object[]> getManufacturerRankWithAllPlatform(Timestamp beginTime, Timestamp endTime);
 
-    @Query(value = "SELECT now() ", nativeQuery = true)
-    List<Object[]> getManufacturerRankWithSinglePlatform(Timestamp beginTime, Timestamp endTime,Integer platform);
+    @Query(value = "SELECT upper(se.manufacturer) AS tmanufacturer,count(DISTINCT se.distinct_id) AS tcount  " +
+        "FROM songshu_shence_events se WHERE se.times BETWEEN ?1 AND ?2 AND se.platform = ?3 " +
+        "AND se.manufacturer IS NOT NULL GROUP BY upper(se.manufacturer) ORDER BY tcount DESC LIMIT 10;", nativeQuery = true)
+    List<Object[]> getManufacturerRankWithSinglePlatform(Timestamp beginTime, Timestamp endTime,String platformName);
 }
