@@ -17,12 +17,12 @@ public interface ChannelRegisterMemberRepository extends JpaRepository<Author,Lo
 
 
 
-//    SELECT COUNT(DISTINCT base.memberId) AS memberCount , base.utm_source FROM
+//    SELECT COUNT(DISTINCT base.memberId) AS memberCount , upper(base.utm_source) FROM
 //        (SELECT mem."id" AS memberId,
 //         CASE
 //             WHEN mem."multipleChannelsId" = 1 AND u.utm_source IS NOT NULL THEN u.utm_source
 //             WHEN mem."multipleChannelsId" = 1 AND u.utm_source IS NULL THEN 'yingyongbao'
-//             WHEN mem."multipleChannelsId" = 2 THEN 'ios'
+//             WHEN mem."multipleChannelsId" = 2 THEN 'appstore'
 //             WHEN mem."multipleChannelsId" = 3 THEN 'weixin'
 //             WHEN mem."multipleChannelsId" = 5 THEN 'wap'
 //             ELSE 'wap'
@@ -31,12 +31,12 @@ public interface ChannelRegisterMemberRepository extends JpaRepository<Author,Lo
 //             LEFT JOIN songshu_shence_users u  ON u.second_id = mem."id"
 //             WHERE  mem."regTime" BETWEEN '2016-01-01 00:00:00' AND '2016-02-01 00:00:00' )base
 //    GROUP BY base.utm_source ORDER BY memberCount DESC LIMIT  10
-    @Query(value = "    SELECT COUNT(DISTINCT base.memberId) AS memberCount , base.utm_source FROM " +
+    @Query(value = "    SELECT COUNT(DISTINCT base.memberId) AS memberCount , upper(base.utm_source) FROM " +
         "        (SELECT mem.\"id\" AS memberId, " +
         "         CASE " +
         "             WHEN mem.\"multipleChannelsId\" = 1 AND u.utm_source IS NOT NULL THEN u.utm_source " +
         "             WHEN mem.\"multipleChannelsId\" = 1 AND u.utm_source IS NULL THEN 'yingyongbao' " +
-        "             WHEN mem.\"multipleChannelsId\" = 2 THEN 'ios' " +
+        "             WHEN mem.\"multipleChannelsId\" = 2 THEN 'appstore' " +
         "             WHEN mem.\"multipleChannelsId\" = 3 THEN 'weixin' " +
         "             WHEN mem.\"multipleChannelsId\" = 5 THEN 'wap' " +
         "             ELSE 'wap' " +
@@ -48,12 +48,12 @@ public interface ChannelRegisterMemberRepository extends JpaRepository<Author,Lo
     List<Object[]> getChannelMemberRegisterCountAllPlatform(Timestamp beginTime, Timestamp endTime, Integer topCount);
 
 
-//    SELECT COUNT(DISTINCT base.memberId) AS memberCount , base.utm_source FROM
+//    SELECT COUNT(DISTINCT base.memberId) AS memberCount , upper(base.utm_source) FROM
 //        (SELECT mem."id" AS memberId,
 //         CASE
 //             WHEN mem."multipleChannelsId" = 1 AND u.utm_source IS NOT NULL THEN u.utm_source
 //             WHEN mem."multipleChannelsId" = 1 AND u.utm_source IS NULL THEN 'yingyongbao'
-//             WHEN mem."multipleChannelsId" = 2 THEN 'ios'
+//             WHEN mem."multipleChannelsId" = 2 THEN 'appstore'
 //             WHEN mem."multipleChannelsId" = 3 THEN 'weixin'
 //             WHEN mem."multipleChannelsId" = 5 THEN 'wap'
 //             ELSE 'wap'
@@ -62,12 +62,12 @@ public interface ChannelRegisterMemberRepository extends JpaRepository<Author,Lo
 //             LEFT JOIN songshu_shence_users u  ON u.second_id = mem."id"
 //             WHERE  mem."regTime" BETWEEN '2016-01-01 00:00:00' AND '2016-02-01 00:00:00' AND mem."multipleChannelsId" = 1)base
 //    GROUP BY base.utm_source ORDER BY memberCount DESC LIMIT  10
-    @Query(value = "SELECT COUNT(DISTINCT base.memberId) AS memberCount , base.utm_source FROM " +
+    @Query(value = "SELECT COUNT(DISTINCT base.memberId) AS memberCount , upper(base.utm_source) FROM " +
         " (SELECT mem.\"id\" AS memberId, " +
         "        CASE " +
         "        WHEN mem.\"multipleChannelsId\" = 1 AND u.utm_source IS NOT NULL THEN u.utm_source " +
         "        WHEN mem.\"multipleChannelsId\" = 1 AND u.utm_source IS NULL THEN 'yingyongbao' " +
-        "        WHEN mem.\"multipleChannelsId\" = 2 THEN 'ios' " +
+        "        WHEN mem.\"multipleChannelsId\" = 2 THEN 'appstore' " +
         "        WHEN mem.\"multipleChannelsId\" = 3 THEN 'weixin' " +
         "        WHEN mem.\"multipleChannelsId\" = 5 THEN 'wap' " +
         "        ELSE 'wap' " +
