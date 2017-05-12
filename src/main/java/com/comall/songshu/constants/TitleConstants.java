@@ -60,4 +60,16 @@ public class TitleConstants {
      * 销售额占比
      */
     public static  String REVENUE_RATE = "revenueRate";
+    /**
+     * 渠道名称
+     */
+    public static  String CHANNEL_NAME = "channelName";
+    /**
+     * 下载量
+     */
+    public static  String INSTALL_COUNT = "installCount";
+    /**
+     * 注册用户数
+     */
+    public static  String REGISTER_COUNT = "registerCount";
 }

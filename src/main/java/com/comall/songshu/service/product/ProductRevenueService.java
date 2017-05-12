@@ -143,7 +143,6 @@ public class ProductRevenueService {
         productRevenueDataPointArray.put(currentMills);
         dataPointsArray.put(productRevenueDataPointArray);
         dataPointsArray.put(productRevenueTitleArray);
-        //TODO 返回数据拼装
         long end = System.currentTimeMillis();
         System.out.println("===总耗时==="+(end-currentMills));
         return JsonStringBuilder.buildCommonJsonString(target,dataPointsArray,"");

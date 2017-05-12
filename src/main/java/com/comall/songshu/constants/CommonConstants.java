@@ -7,6 +7,11 @@ package com.comall.songshu.constants;
  * @create 2017-05-08-15:43
  **/
 public class CommonConstants {
+    /**
+     * 是否使用假数据
+     */
+    public static boolean isFake = true;
+
 
     /**sex性别*/
     /**
