@@ -17,7 +17,7 @@ public interface ChannelRegisterMemberRepository extends JpaRepository<Author,Lo
 
 
 
-//    SELECT COUNT(base.memberId) AS memberCount , base.utm_source FROM
+//    SELECT COUNT(DISTINCT base.memberId) AS memberCount , base.utm_source FROM
 //        (SELECT mem."id" AS memberId,
 //         CASE
 //             WHEN mem."multipleChannelsId" = 1 AND u.utm_source IS NOT NULL THEN u.utm_source
@@ -31,7 +31,7 @@ public interface ChannelRegisterMemberRepository extends JpaRepository<Author,Lo
 //             LEFT JOIN songshu_shence_users u  ON u.second_id = mem."id"
 //             WHERE  mem."regTime" BETWEEN '2016-01-01 00:00:00' AND '2016-02-01 00:00:00' )base
 //    GROUP BY base.utm_source ORDER BY memberCount DESC LIMIT  10
-    @Query(value = "    SELECT COUNT(base.memberId) AS memberCount , base.utm_source FROM " +
+    @Query(value = "    SELECT COUNT(DISTINCT base.memberId) AS memberCount , base.utm_source FROM " +
         "        (SELECT mem.\"id\" AS memberId, " +
         "         CASE " +
         "             WHEN mem.\"multipleChannelsId\" = 1 AND u.utm_source IS NOT NULL THEN u.utm_source " +
@@ -48,7 +48,7 @@ public interface ChannelRegisterMemberRepository extends JpaRepository<Author,Lo
     List<Object[]> getChannelMemberRegisterCountAllPlatform(Timestamp beginTime, Timestamp endTime, Integer topCount);
 
 
-//    SELECT COUNT(base.memberId) AS memberCount , base.utm_source FROM
+//    SELECT COUNT(DISTINCT base.memberId) AS memberCount , base.utm_source FROM
 //        (SELECT mem."id" AS memberId,
 //         CASE
 //             WHEN mem."multipleChannelsId" = 1 AND u.utm_source IS NOT NULL THEN u.utm_source
@@ -62,7 +62,7 @@ public interface ChannelRegisterMemberRepository extends JpaRepository<Author,Lo
 //             LEFT JOIN songshu_shence_users u  ON u.second_id = mem."id"
 //             WHERE  mem."regTime" BETWEEN '2016-01-01 00:00:00' AND '2016-02-01 00:00:00' AND mem."multipleChannelsId" = 1)base
 //    GROUP BY base.utm_source ORDER BY memberCount DESC LIMIT  10
-    @Query(value = "SELECT COUNT(base.memberId) AS memberCount , base.utm_source FROM " +
+    @Query(value = "SELECT COUNT(DISTINCT base.memberId) AS memberCount , base.utm_source FROM " +
         " (SELECT mem.\"id\" AS memberId, " +
         "        CASE " +
         "        WHEN mem.\"multipleChannelsId\" = 1 AND u.utm_source IS NOT NULL THEN u.utm_source " +
