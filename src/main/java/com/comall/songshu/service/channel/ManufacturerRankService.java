@@ -27,7 +27,7 @@ public class ManufacturerRankService {
         if (platform<0) {
             manufacturerRank = manufacturerRankRepository.getManufacturerRankWithAllPlatform(beginTime,endTime);
         }else{
-            manufacturerRank = manufacturerRankRepository.getManufacturerRankWithSinglePlatform(beginTime,endTime,platform);
+            manufacturerRank = manufacturerRankRepository.getManufacturerRankWithSinglePlatform(beginTime,endTime,platformName);
         }
 
         return JsonStringBuilder.buildRankJsonString(manufacturerRank);
