@@ -81,4 +81,25 @@ public  class TransferUtil {
         return platFormName;
     }
 
+
+    /**
+     * 根据平台id获取神策os值
+     * @param platForm
+     * @return
+     */
+    public static String getSensorsOS(Integer platForm){
+        String sensorsOS = null;
+        if(platForm != null){
+            if(platForm == CHANNEL_ANDROID){
+                sensorsOS = "Android";
+            }else if(platForm == CHANNEL_IOS){
+                sensorsOS = "iOS";
+            }else if(platForm == CHANNEL_WECHAT){
+                sensorsOS = "weixin";
+            }else if(platForm == CHANNEL_WAP){
+                sensorsOS = "wap";
+            }
+        }
+        return sensorsOS;
+    }
 }

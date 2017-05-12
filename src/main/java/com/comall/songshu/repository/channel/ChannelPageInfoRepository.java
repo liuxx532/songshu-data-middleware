@@ -15,22 +15,253 @@ import java.util.List;
  **/
 public interface ChannelPageInfoRepository extends JpaRepository<Author,Long> {
 
-    // 所有平台
-    @Query(value = "SELECT  NOW()", nativeQuery = true)
-    List<Object[]> getChannelDownLoadCountWithAllPlatform(Timestamp beginTime, Timestamp endTime);
+    /**
+     * 渠道下载安装量（全平台）
+     * @param beginTime
+     * @param endTime
+     * @return
+     */
+//  SELECT  count(1)  FROM songshu_shence_events e WHERE e.event ='AppInstall' AND e.times BETWEEN '2016-01-01 00:00:00' AND '2017-02-01 00:00:00'  AND e.os = 'iOS' ;
+    @Query(value = " SELECT  count(1)  FROM songshu_shence_events e WHERE e.event ='AppInstall' " +
+        "AND e.times BETWEEN ?1 AND ?2 \n", nativeQuery = true)
+    Integer getChannelInstallInfoWithAllPlatform(Timestamp beginTime, Timestamp endTime);
 
 
-    // 单个平台
-    @Query(value = "SELECT  NOW()", nativeQuery = true)
-    List<Object[]> getChannelDownLoadCountWithSinglePlatform(Integer platform, Timestamp beginTime, Timestamp endTime);
+    /**
+     *  渠道下载安装量（单平台）
+     * @param beginTime
+     * @param endTime
+     * @param os
+     * @return
+     */
+    //SELECT  count(1)  FROM songshu_shence_events e WHERE e.event ='AppInstall' AND e.times BETWEEN '2016-01-01 00:00:00' AND '2017-02-01 00:00:00'  AND e.os = 'iOS' ;
+    @Query(value = " SELECT  count(1)  FROM songshu_shence_events e WHERE e.event ='AppInstall' " +
+        "AND e.times BETWEEN ?1 AND ?2  AND e.os = ?3 \n", nativeQuery = true)
+    Integer getChannelInstallInfoWithSinglePlatform(Timestamp beginTime, Timestamp endTime,String os);
 
 
-    // 所有平台
-    @Query(value = "SELECT  NOW()", nativeQuery = true)
-    Integer getChannelMemberRegisterCountWithAllPlatform(Timestamp beginTime, Timestamp endTime,String channelName);
+    /**
+     * 渠道下载量及注册用户数（全平台）
+     * @param beginTime
+     * @param endTime
+     * @return
+     */
+//    SELECT install.utm_source AS advSource ,COALESCE(install.memberCount,0) AS installCount,COALESCE(reg.memberCount,0) AS regCount FROM
+//        (SELECT COUNT(DISTINCT base.distinctId) AS memberCount , base.utm_source FROM
+//        (SELECT
+//             e.distinct_id AS distinctId,
+//         CASE
+//             WHEN e.os = 'Android' AND e.utm_source IS NOT NULL  THEN e.utm_source
+//             WHEN e.os = 'Android' AND e.utm_source IS NULL THEN 'yingyongbao'
+//             WHEN e.os = 'iOS'      THEN 'ios'
+//             WHEN e.os = 'weixin'   THEN 'weixin'
+//             WHEN e.os = 'wap'      THEN 'wap'
+//             ELSE 'yingyongbao'
+//             END  AS utm_source,e.os
+//             FROM songshu_shence_events e WHERE e.event ='AppInstall' AND e.times BETWEEN '2016-01-01 00:00:00' AND '2017-02-01 00:00:00'
+//             )base
+//    GROUP BY base.utm_source)install
+//    LEFT JOIN
+//        (SELECT COUNT(DISTINCT base.memberId) AS memberCount , base.utm_source FROM
+//        (SELECT mem."id" AS memberId,
+//         CASE
+//             WHEN mem."multipleChannelsId" = 1 AND u.utm_source IS NOT NULL THEN u.utm_source
+//             WHEN mem."multipleChannelsId" = 1 AND u.utm_source IS NULL THEN 'yingyongbao'
+//             WHEN mem."multipleChannelsId" = 2 THEN 'ios'
+//             WHEN mem."multipleChannelsId" = 3 THEN 'weixin'
+//             WHEN mem."multipleChannelsId" = 5 THEN 'wap'
+//             ELSE 'wap'
+//             END  AS utm_source
+//             from songshu_cs_member mem
+//             LEFT JOIN songshu_shence_users u  ON u.second_id = mem."id"
+//             where  mem."regTime" BETWEEN '2016-01-01 00:00:00' AND '2017-02-01 00:00:00')base
+//    GROUP BY base.utm_source)reg
+//    ON reg.utm_source = install.utm_source
+//    ORDER BY install.memberCount DESC,reg.memberCount DESC;
+    @Query(value = "SELECT install.utm_source AS advSource ,COALESCE(install.memberCount,0) AS installCount,COALESCE(reg.memberCount,0) AS regCount FROM\n" +
+        "    (SELECT COUNT( DISTINCT base.distinctId) AS memberCount , base.utm_source FROM\n" +
+        "        (SELECT\n" +
+        "             e.distinct_id AS distinctId,\n" +
+        "             CASE\n" +
+        "             WHEN e.os = 'Android' AND e.utm_source IS NOT NULL  THEN e.utm_source\n" +
+        "             WHEN e.os = 'Android' AND e.utm_source IS NULL THEN 'yingyongbao'\n" +
+        "             WHEN e.os = 'iOS'      THEN 'ios'\n" +
+        "             WHEN e.os = 'weixin'   THEN 'weixin'\n" +
+        "             WHEN e.os = 'wap'      THEN 'wap'\n" +
+        "             ELSE 'yingyongbao'\n" +
+        "             END  AS utm_source,e.os\n" +
+        "         FROM songshu_shence_events e WHERE e.event ='AppInstall' AND e.times BETWEEN ?1 AND ?2\n" +
+        "         )base\n" +
+        "    GROUP BY base.utm_source)install\n" +
+        "    LEFT JOIN\n" +
+        "    (SELECT COUNT(DISTINCT base.memberId) AS memberCount , base.utm_source FROM\n" +
+        "        (SELECT mem.\"id\" AS memberId,\n" +
+        "                CASE\n" +
+        "                WHEN mem.\"multipleChannelsId\" = 1 AND u.utm_source IS NOT NULL THEN u.utm_source\n" +
+        "                WHEN mem.\"multipleChannelsId\" = 1 AND u.utm_source IS NULL THEN 'yingyongbao'\n" +
+        "                WHEN mem.\"multipleChannelsId\" = 2 THEN 'ios'\n" +
+        "                WHEN mem.\"multipleChannelsId\" = 3 THEN 'weixin'\n" +
+        "                WHEN mem.\"multipleChannelsId\" = 5 THEN 'wap'\n" +
+        "                ELSE 'wap'\n" +
+        "                END  AS utm_source\n" +
+        "         FROM songshu_cs_member mem\n" +
+        "             LEFT JOIN songshu_shence_users u  ON u.second_id = mem.\"id\"\n" +
+        "         WHERE  mem.\"regTime\" BETWEEN ?1 AND ?2)base\n" +
+        "    GROUP BY base.utm_source)reg\n" +
+        "    ON reg.utm_source = install.utm_source\n" +
+        "ORDER BY install.memberCount DESC,reg.memberCount DESC", nativeQuery = true)
+    List<Object[]> getChannelPageInfoWithAllPlatform(Timestamp beginTime, Timestamp endTime);
+
+    /**
+     * 渠道下载量及注册用户数（单平台）
+     * @param beginTime
+     * @param endTime
+     * @param os
+     * @param platform
+     * @return
+     */
+//    SELECT install.utm_source AS advSource ,COALESCE(install.memberCount,0) AS installCount,COALESCE(reg.memberCount,0) AS regCount FROM
+//        (SELECT COUNT(DISTINCT base.distinctId) AS memberCount , base.utm_source FROM
+//        (SELECT
+//             e.distinct_id AS distinctId,
+//         CASE
+//             WHEN e.os = 'Android' AND e.utm_source IS NOT NULL  THEN e.utm_source
+//             WHEN e.os = 'Android' AND e.utm_source IS NULL THEN 'yingyongbao'
+//             WHEN e.os = 'iOS'      THEN 'ios'
+//             WHEN e.os = 'weixin'   THEN 'weixin'
+//             WHEN e.os = 'wap'      THEN 'wap'
+//             ELSE 'yingyongbao'
+//             END  AS utm_source,e.os
+//             FROM songshu_shence_events e WHERE e.event ='AppInstall' AND e.times BETWEEN '2016-01-01 00:00:00' AND '2017-02-01 00:00:00'
+//             AND e.os = 'iOS')base
+//    GROUP BY base.utm_source)install
+//    LEFT JOIN
+//        (SELECT COUNT(DISTINCT base.memberId) AS memberCount , base.utm_source FROM
+//        (SELECT mem."id" AS memberId,
+//         CASE
+//             WHEN mem."multipleChannelsId" = 1 AND u.utm_source IS NOT NULL THEN u.utm_source
+//             WHEN mem."multipleChannelsId" = 1 AND u.utm_source IS NULL THEN 'yingyongbao'
+//             WHEN mem."multipleChannelsId" = 2 THEN 'ios'
+//             WHEN mem."multipleChannelsId" = 3 THEN 'weixin'
+//             WHEN mem."multipleChannelsId" = 5 THEN 'wap'
+//             ELSE 'wap'
+//             END  AS utm_source
+//             from songshu_cs_member mem
+//             LEFT JOIN songshu_shence_users u  ON u.second_id = mem."id"
+//             where  mem."regTime" BETWEEN '2016-01-01 00:00:00' AND '2017-02-01 00:00:00' and mem."multipleChannelsId" = 2)base
+//    GROUP BY base.utm_source)reg
+//    ON reg.utm_source = install.utm_source
+//    ORDER BY install.memberCount DESC,reg.memberCount DESC;
+    @Query(value = "SELECT install.utm_source AS advSource ,COALESCE(install.memberCount,0) AS installCount,COALESCE(reg.memberCount,0) AS regCount FROM\n" +
+        "    (SELECT COUNT(DISTINCT base.distinctId) AS memberCount , base.utm_source FROM\n" +
+        "        (SELECT\n" +
+        "             e.distinct_id AS distinctId,\n" +
+        "             CASE\n" +
+        "             WHEN e.os = 'Android' AND e.utm_source IS NOT NULL  THEN e.utm_source\n" +
+        "             WHEN e.os = 'Android' AND e.utm_source IS NULL THEN 'yingyongbao'\n" +
+        "             WHEN e.os = 'iOS'      THEN 'ios'\n" +
+        "             WHEN e.os = 'weixin'   THEN 'weixin'\n" +
+        "             WHEN e.os = 'wap'      THEN 'wap'\n" +
+        "             ELSE 'yingyongbao'\n" +
+        "             END  AS utm_source,e.os\n" +
+        "         FROM songshu_shence_events e WHERE e.event ='AppInstall' AND e.times BETWEEN  ?1 AND ?2 \n" +
+        "         AND e.os = ?3)base\n" +
+        "    GROUP BY base.utm_source)install\n" +
+        "    LEFT JOIN\n" +
+        "    (SELECT COUNT(DISTINCT base.memberId) AS memberCount , base.utm_source FROM\n" +
+        "        (SELECT mem.\"id\" AS memberId,\n" +
+        "                CASE\n" +
+        "                WHEN mem.\"multipleChannelsId\" = 1 AND u.utm_source IS NOT NULL THEN u.utm_source\n" +
+        "                WHEN mem.\"multipleChannelsId\" = 1 AND u.utm_source IS NULL THEN 'yingyongbao'\n" +
+        "                WHEN mem.\"multipleChannelsId\" = 2 THEN 'ios'\n" +
+        "                WHEN mem.\"multipleChannelsId\" = 3 THEN 'weixin'\n" +
+        "                WHEN mem.\"multipleChannelsId\" = 5 THEN 'wap'\n" +
+        "                ELSE 'wap'\n" +
+        "                END  AS utm_source\n" +
+        "         FROM songshu_cs_member mem\n" +
+        "             LEFT JOIN songshu_shence_users u  ON u.second_id = mem.\"id\"\n" +
+        "         WHERE  mem.\"regTime\" BETWEEN ?1 AND ?2 AND mem.\"multipleChannelsId\" = ?4)base\n" +
+        "    GROUP BY base.utm_source)reg\n" +
+        "    ON reg.utm_source = install.utm_source\n" +
+        "ORDER BY install.memberCount DESC,reg.memberCount DESC", nativeQuery = true)
+    List<Object[]> getChannelPageInfoWithSinglePlatform(Timestamp beginTime, Timestamp endTime,String os, Integer platform);
 
 
-    // 单个平台
-    @Query(value = "SELECT  NOW()", nativeQuery = true)
-    Integer getChannelMemberRegisterCountWithSinglePlatform(Integer platform, Timestamp beginTime, Timestamp endTime,String channelName);
+    /**
+     * 渠道注册用户数（全平台）
+     * @param beginTime
+     * @param endTime
+     * @return
+     */
+//    SELECT reg.utm_source AS advSource ,0 AS installCount,COALESCE(reg.memberCount,0) AS regCount FROM
+//        (SELECT COUNT(DISTINCT base.memberId) AS memberCount , base.utm_source FROM
+//        (SELECT mem."id" AS memberId,
+//         CASE
+//             WHEN mem."multipleChannelsId" = 1 AND u.utm_source IS NOT NULL THEN u.utm_source
+//             WHEN mem."multipleChannelsId" = 1 AND u.utm_source IS NULL THEN 'yingyongbao'
+//             WHEN mem."multipleChannelsId" = 2 THEN 'ios'
+//             WHEN mem."multipleChannelsId" = 3 THEN 'weixin'
+//             WHEN mem."multipleChannelsId" = 5 THEN 'wap'
+//             ELSE 'wap'
+//             END  AS utm_source
+//             from songshu_cs_member mem
+//             LEFT JOIN songshu_shence_users u  ON u.second_id = mem."id"
+//             where  mem."regTime" BETWEEN '2016-01-01 00:00:00' AND '2017-02-01 00:00:00' and mem."multipleChannelsId" = 1)base
+//    GROUP BY base.utm_source)reg ORDER BY reg.memberCount DESC
+    @Query(value = "SELECT reg.utm_source AS advSource ,0 AS installCount,COALESCE(reg.memberCount,0) AS regCount FROM\n" +
+        "    (SELECT COUNT(DISTINCT base.memberId) AS memberCount , base.utm_source FROM\n" +
+        "        (SELECT mem.\"id\" AS memberId,\n" +
+        "                CASE\n" +
+        "                WHEN mem.\"multipleChannelsId\" = 1 AND u.utm_source IS NOT NULL THEN u.utm_source\n" +
+        "                WHEN mem.\"multipleChannelsId\" = 1 AND u.utm_source IS NULL THEN 'yingyongbao'\n" +
+        "                WHEN mem.\"multipleChannelsId\" = 2 THEN 'ios'\n" +
+        "                WHEN mem.\"multipleChannelsId\" = 3 THEN 'weixin'\n" +
+        "                WHEN mem.\"multipleChannelsId\" = 5 THEN 'wap'\n" +
+        "                ELSE 'wap'\n" +
+        "                END  AS utm_source\n" +
+        "         from songshu_cs_member mem\n" +
+        "             LEFT JOIN songshu_shence_users u  ON u.second_id = mem.\"id\"\n" +
+        "         where  mem.\"regTime\" BETWEEN ?1 AND ?2 )base\n" +
+        "    GROUP BY base.utm_source)reg ORDER BY reg.memberCount DESC", nativeQuery = true)
+    List<Object[]> getChannelRegisterInfoWithAllPlatform(Timestamp beginTime, Timestamp endTime);
+
+
+    /**
+     * 渠道注册用户数（单平台）
+     * @param beginTime
+     * @param endTime
+     * @param platform
+     * @return
+     */
+//    SELECT reg.utm_source AS advSource ,0 AS installCount,COALESCE(reg.memberCount,0) AS regCount FROM
+//        (SELECT COUNT( DISTINCT base.memberId) AS memberCount , base.utm_source FROM
+//        (SELECT mem."id" AS memberId,
+//         CASE
+//             WHEN mem."multipleChannelsId" = 1 AND u.utm_source IS NOT NULL THEN u.utm_source
+//             WHEN mem."multipleChannelsId" = 1 AND u.utm_source IS NULL THEN 'yingyongbao'
+//             WHEN mem."multipleChannelsId" = 2 THEN 'ios'
+//             WHEN mem."multipleChannelsId" = 3 THEN 'weixin'
+//             WHEN mem."multipleChannelsId" = 5 THEN 'wap'
+//             ELSE 'wap'
+//             END  AS utm_source
+//             from songshu_cs_member mem
+//             LEFT JOIN songshu_shence_users u  ON u.second_id = mem."id"
+//             where  mem."regTime" BETWEEN '2016-01-01 00:00:00' AND '2017-02-01 00:00:00' and mem."multipleChannelsId" = 1)base
+//    GROUP BY base.utm_source)reg ORDER BY reg.memberCount DESC
+    @Query(value = "SELECT reg.utm_source AS advSource ,0 AS installCount,COALESCE(reg.memberCount,0) AS regCount FROM\n" +
+        "    (SELECT COUNT(DISTINCT base.memberId) AS memberCount , base.utm_source FROM\n" +
+        "        (SELECT mem.\"id\" AS memberId,\n" +
+        "                CASE\n" +
+        "                WHEN mem.\"multipleChannelsId\" = 1 AND u.utm_source IS NOT NULL THEN u.utm_source\n" +
+        "                WHEN mem.\"multipleChannelsId\" = 1 AND u.utm_source IS NULL THEN 'yingyongbao'\n" +
+        "                WHEN mem.\"multipleChannelsId\" = 2 THEN 'ios'\n" +
+        "                WHEN mem.\"multipleChannelsId\" = 3 THEN 'weixin'\n" +
+        "                WHEN mem.\"multipleChannelsId\" = 5 THEN 'wap'\n" +
+        "                ELSE 'wap'\n" +
+        "                END  AS utm_source\n" +
+        "         from songshu_cs_member mem\n" +
+        "             LEFT JOIN songshu_shence_users u  ON u.second_id = mem.\"id\"\n" +
+        "         where  mem.\"regTime\" BETWEEN ?1 AND ?2 and mem.\"multipleChannelsId\" = ?3)base\n" +
+        "    GROUP BY base.utm_source)reg ORDER BY reg.memberCount DESC", nativeQuery = true)
+    List<Object[]> getChannelRegisterInfoWithSinglePlatform(Timestamp beginTime, Timestamp endTime,Integer platform);
 }
