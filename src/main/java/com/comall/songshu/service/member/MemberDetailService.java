@@ -69,10 +69,15 @@ public class MemberDetailService {
             newRegisterCount = memberDetailRepository.getMemberRegisterCountSinglePlatform(beginTime,endTime,platform);
             logonConsumeRate = memberDetailRepository.getLogonConsumeRateSinglePlatform(beginTime,endTime,platform);
             repeatPurchaseCount = memberDetailRepository.getRepeatPurchaseRateSinglePlatform(beginTime,endTime,platform);
-
-            openTimes = memberDetailRepository.getOpenTimesSinglePlatform(beginTime,endTime,platform);
+            if(platform == TransferUtil.CHANNEL_IOS){
+                openTimes = memberDetailRepository.getOpenTimesIosPlatform(beginTime,endTime);
+            }else if (platform == TransferUtil.CHANNEL_ANDROID){
+                openTimes = memberDetailRepository.getOpenTimesSinglePlatform(beginTime,endTime,platformName);
+            }else{
+                openTimes = 0;
+            }
             visitTime = memberDetailRepository.getVisitTimeSinglePlatform(beginTime,endTime,platform);
-            visitDepth = memberDetailRepository.getVisitDepthSinglePlatform(beginTime,endTime,platform);
+            visitDepth = memberDetailRepository.getVisitDepthSinglePlatform(beginTime,endTime,platformName);
         }
         //复购率
         Double repeatPurchaseRate = Optional.ofNullable(consumerCount)
