@@ -21,17 +21,28 @@ public class ChannelRevenueService {
     @Autowired
     private ChannelRevenueRepository channelRevenueRepository;
 
-    public String getChannelRevenue(String target, String platformName, Timestamp beginTime, Timestamp endTime, Timestamp chainBeginTime, Timestamp chainEndTime) {
+    public String getChannelRevenue(String target, String platformName,String channelName, Timestamp beginTime, Timestamp endTime, Timestamp chainBeginTime, Timestamp chainEndTime) {
 
         int platform = TransferUtil.getPlatform(platformName);
-        Double revenueResult;
-        Double chainRevenueResult;
-        if (platform<0){//
-            revenueResult = channelRevenueRepository.getChannelRevenueWithAllPlatform(beginTime,endTime);
-            chainRevenueResult = channelRevenueRepository.getChannelRevenueWithAllPlatform(chainBeginTime,chainEndTime);
+        Double revenueResult = null;
+        Double chainRevenueResult = null;
+
+        boolean isChannelNameEmpty = channelName == null || channelName == "";
+
+        if (platform<0){
+            if(!isChannelNameEmpty){
+                revenueResult = channelRevenueRepository.getChannelRevenueWithAllPlatformAllChannel(beginTime,endTime);
+                chainRevenueResult = channelRevenueRepository.getChannelRevenueWithAllPlatformAllChannel(chainBeginTime,chainEndTime);
+            }else{
+
+            }
         }else {
-            revenueResult = channelRevenueRepository.getChannelRevenueWithSinglePlatform(platform,beginTime,endTime);
-            chainRevenueResult = channelRevenueRepository.getChannelRevenueWithSinglePlatform(platform,chainBeginTime,chainEndTime);
+            if(!isChannelNameEmpty){
+                revenueResult = channelRevenueRepository.getChannelRevenueWithSinglePlatformAllChannel(platform,beginTime,endTime);
+                chainRevenueResult = channelRevenueRepository.getChannelRevenueWithSinglePlatformAllChannel(platform,chainBeginTime,chainEndTime);
+            }else{
+
+            }
         }
 
         Double revenue = Optional.ofNullable(revenueResult).orElse(0.00);

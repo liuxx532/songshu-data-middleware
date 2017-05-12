@@ -81,6 +81,10 @@ public class ChannelResource {
             JSONObject obj = new JSONObject(requestBody);
 
             JSONObject range = (JSONObject)obj.get("range");
+
+            //TODO 渠道名称，六大指标联动时需要，目前还没和前端商量好怎么获取，先写死测试，日后补充
+            String channelName = System.currentTimeMillis() % 2 == 0 ? null : "YINGYONGBAO";
+
             //开始时间str
             String fromTimeStr = null;
             //结束时间str
@@ -173,7 +177,7 @@ public class ChannelResource {
                     case "SexDistribution":
                         return ageAndSexDistributionService.getSexDistribution(target,platform,beginTime,endTime);
                     case "ChannelRevenue":
-                        return channelRevenueService.getChannelRevenue(target,platform,beginTime,endTime,chainBeginTime,chainEndTime);
+                        return channelRevenueService.getChannelRevenue(target,platform,channelName,beginTime,endTime,chainBeginTime,chainEndTime);
                     case "ChannelOrderCount":
                         return channelOrderCountService.getChannelOrderCount(target,platform,beginTime,endTime,chainBeginTime,chainEndTime);
                     case "ChannelAvgOrderRevenue":
