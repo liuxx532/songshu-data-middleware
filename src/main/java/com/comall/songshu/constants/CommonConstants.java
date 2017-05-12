@@ -42,5 +42,31 @@ public class CommonConstants {
      */
     public static  String AGE_GROUP_LEVEL_FIVE = "36岁+";
 
+    /**访问深度*/
+    /**
+     * 访问深度1
+     */
+    public static final String VISIT_DEEP_LEVEL_ONE = "1";
+    /**
+     * 访问深度2-5
+     */
+    public static final String VISIT_DEEP_LEVEL_TWO = "2-5";
+    /**
+     * 访问深度6-10
+     */
+    public static final String VISIT_DEEP_LEVEL_THREE = "6-10";
+    /**
+     * 访问深度11-30
+     */
+    public static final String VISIT_DEEP_LEVEL_FOUR  = "11-30";
+    /**
+     * 访问深度31-40
+     */
+    public static final String VISIT_DEEP_LEVEL_FIVE  = "31-40";
+    /**
+     * 访问深度>41
+     */
+    public static final String VISIT_DEEP_LEVEL_SIX  = ">41";
+
 
 }
