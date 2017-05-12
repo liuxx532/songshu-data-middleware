@@ -266,13 +266,9 @@ public class JsonStringBuilder {
 
             for (Object[] o : list ){
 
-                String platformName = Optional.ofNullable(o)
-                    .map(p -> p[0])
-                    .map(i -> (Integer)i)
-                    .map(s -> TransferUtil.getPlatFormName(s))
-                    .orElse(null);
+                String targetName = (String)o[0];
 
-                if(platformName != null){
+                if(targetName != null){
                     try {
                         JSONArray dataPointArray = new JSONArray();
                         dataPointArray.put(o[1]);
@@ -280,7 +276,7 @@ public class JsonStringBuilder {
                         JSONArray dataPointsArray = new JSONArray();
                         dataPointsArray.put(dataPointArray);
                         JSONObject result = new JSONObject();
-                        result.put("target",platformName);
+                        result.put("target",targetName);
                         result.put("datapoints",dataPointsArray);
                         result.put("columnName","");
                         resultArray.put(result);
