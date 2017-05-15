@@ -2,6 +2,7 @@ package com.comall.songshu.service.channel;
 
 import com.comall.songshu.constants.CommonConstants;
 import com.comall.songshu.repository.channel.AgeAndSexDistributionRepository;
+import com.comall.songshu.web.rest.util.JsonStringBuilder;
 import com.comall.songshu.web.rest.util.TransferUtil;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -12,6 +13,8 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
@@ -89,22 +92,17 @@ public class AgeAndSexDistributionService {
 
         int platform = TransferUtil.getPlatform(platformName);
         List<Object[]> ageDistributionResult;
-        JSONArray ageDistributionArray =  new JSONArray();
         if (platform<0) {
             ageDistributionResult = ageAndSexDistributionRepository.getAgeDistributionWithAllPlatform(beginTime,endTime);
         }else{
             ageDistributionResult = ageAndSexDistributionRepository.getAgeDistributionSinglePlatform(beginTime,endTime,platform );
         }
 
+        List<Object[]> ageGroupList = new LinkedList<>();
+
         if(Optional.ofNullable(ageDistributionResult)
             .filter(l -> l.size() >0).isPresent()){
             BigDecimal totalCount = BigDecimal.ZERO;
-            BigDecimal ageGroupOneCount = BigDecimal.ZERO;
-            BigDecimal ageGroupTwoCount = BigDecimal.ZERO;
-            BigDecimal ageGroupThreeCount = BigDecimal.ZERO;
-            BigDecimal ageGroupFourCount = BigDecimal.ZERO;
-            BigDecimal ageGroupFiveCount = BigDecimal.ZERO;
-
 
             for(Object[] o : ageDistributionResult){
                 String ageGroup = Optional.ofNullable(o[0])
@@ -119,53 +117,12 @@ public class AgeAndSexDistributionService {
 
                 if(ageGroup != null){
                     totalCount =  totalCount.add(count);
-                    if(ageGroup.equalsIgnoreCase(CommonConstants.AGE_GROUP_LEVEL_ONE)){
-                        ageGroupOneCount = count;
-                    }else if(ageGroup.equalsIgnoreCase(CommonConstants.AGE_GROUP_LEVEL_TWO)){
-                        ageGroupTwoCount = count;
-                    }else if(ageGroup.equalsIgnoreCase(CommonConstants.AGE_GROUP_LEVEL_THREE)){
-                        ageGroupThreeCount = count;
-                    }else if(ageGroup.equalsIgnoreCase(CommonConstants.AGE_GROUP_LEVEL_FOUR)){
-                        ageGroupFourCount = count;
-                    }else if(ageGroup.equalsIgnoreCase(CommonConstants.AGE_GROUP_LEVEL_FIVE)){
-                        ageGroupFiveCount = count;
-                    }
+                    ageGroupList.add(new Object[]{ageGroup,count.intValue()});
                 }
             }
-
-            Double ageGroupOnePercentage = 0.0;
-            Double ageGroupTwoPercentage = 0.0;
-            Double ageGroupThreePercentage = 0.0;
-            Double ageGroupFourPercentage = 0.0;
-            Double ageGroupFivePercentage = 0.0;
-            if(totalCount.doubleValue() >0){
-                ageGroupOnePercentage = ageGroupOneCount.doubleValue()/totalCount.doubleValue();
-                ageGroupTwoPercentage = ageGroupTwoCount.doubleValue()/totalCount.doubleValue();
-                ageGroupThreePercentage = ageGroupThreeCount.doubleValue()/totalCount.doubleValue();
-                ageGroupFourPercentage = ageGroupFourCount.doubleValue()/totalCount.doubleValue();
-                ageGroupFivePercentage = ageGroupFiveCount.doubleValue()/totalCount.doubleValue();
-            }
-            try {
-                JSONObject ageGroupOneObject = new JSONObject();
-                ageGroupOneObject.put(CommonConstants.AGE_GROUP_LEVEL_ONE,ageGroupOnePercentage);
-                JSONObject ageGroupTwoObject = new JSONObject();
-                ageGroupTwoObject.put(CommonConstants.AGE_GROUP_LEVEL_TWO,ageGroupTwoPercentage);
-                JSONObject ageGroupThreeObject = new JSONObject();
-                ageGroupThreeObject.put(CommonConstants.AGE_GROUP_LEVEL_THREE,ageGroupThreePercentage);
-                JSONObject ageGroupFourObject = new JSONObject();
-                ageGroupFourObject.put(CommonConstants.AGE_GROUP_LEVEL_FOUR,ageGroupFourPercentage);
-                JSONObject ageGroupFiveObject = new JSONObject();
-                ageGroupFiveObject.put(CommonConstants.AGE_GROUP_LEVEL_FIVE,ageGroupFivePercentage);
-                ageDistributionArray.put(ageGroupOneObject);
-                ageDistributionArray.put(ageGroupTwoObject);
-                ageDistributionArray.put(ageGroupThreeObject);
-                ageDistributionArray.put(ageGroupFourObject);
-                ageDistributionArray.put(ageGroupFiveObject);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
         }
-        return ageDistributionArray.toString();
+
+        return JsonStringBuilder.buildPieJsonString(ageGroupList);
     }
 
 

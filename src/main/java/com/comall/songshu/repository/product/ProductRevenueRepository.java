@@ -259,7 +259,7 @@ public interface ProductRevenueRepository extends JpaRepository<Author,Long> {
 //    AND e.times BETWEEN '2016-05-11 00:00:00' AND '2017-05-11 00:00:00';
     @Query(value = "SELECT COUNT(DISTINCT e.distinct_id)  FROM songshu_shence_events e " +
         "WHERE e.event = '$pageview' " +
-        "AND (e.referrer like ?3 OR e.referrer like ?4 OR e.referrer like ?5 OR e.referrer like ?6 OR e.referrer like ?7 )" +
+        "AND (e.url like ?3 OR e.url like ?4 OR e.url like ?5 OR e.url like ?6 OR e.url like ?7 )" +
         "AND e.times BETWEEN ?1 AND ?2 ", nativeQuery = true)
     Integer getProductPageVisitorsAllPlatform(Timestamp beginTime, Timestamp endTime
         ,String categoriesProductLike,String indexProductLike,String cartLike,String userProductLike,String integralProductLike);
@@ -286,7 +286,7 @@ public interface ProductRevenueRepository extends JpaRepository<Author,Long> {
 //    AND e.times BETWEEN '2016-05-11 00:00:00' AND '2017-05-11 00:00:00' AND e.platform ='ios';
     @Query(value = "SELECT COUNT(DISTINCT e.distinct_id)  FROM songshu_shence_events e " +
         "WHERE e.event = '$pageview' " +
-        "AND (e.referrer like ?4 OR e.referrer like ?5 OR e.referrer like ?6 OR e.referrer like ?7 OR e.referrer like ?8 )" +
+        "AND (e.url like ?4 OR e.url like ?5 OR e.url like ?6 OR e.url like ?7 OR e.url like ?8 )" +
         "AND e.times BETWEEN ?1 AND ?2 AND  e.platform =?3", nativeQuery = true)
     Integer getProductPageVisitorsSinglePlatform(Timestamp beginTime, Timestamp endTime,String plateFormName
         ,String categoriesProductLike,String indexProductLike,String cartLike,String userProductLike,String integralProductLike);

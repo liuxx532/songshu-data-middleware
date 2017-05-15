@@ -47,11 +47,11 @@ public class NewRegisterCountService {
             Integer weChatResult = Optional.ofNullable(getNewRegisterCountWithSinglePlatform(3,startTime,endTime)).orElse(0);
             Integer wapResult = Optional.ofNullable(getNewRegisterCountWithSinglePlatform(5,startTime,endTime)).orElse(0);
             Integer othersResult = Optional.ofNullable(getNewRegisterCountWithOthersPlatform(startTime,endTime)).orElse(0);
-            list.add(new Object[]{TransferUtil.CHANNEL_ANDROID,androidResult});
-            list.add(new Object[]{TransferUtil.CHANNEL_IOS,iosResult});
-            list.add(new Object[]{TransferUtil.CHANNEL_WECHAT,weChatResult});
-            list.add(new Object[]{TransferUtil.CHANNEL_WAP,wapResult});
-            list.add(new Object[]{TransferUtil.CHANNEL_OTHERS,othersResult});
+            list.add(new Object[]{TransferUtil.getPlatFormName(TransferUtil.CHANNEL_ANDROID),androidResult});
+            list.add(new Object[]{TransferUtil.getPlatFormName(TransferUtil.CHANNEL_IOS),iosResult});
+            list.add(new Object[]{TransferUtil.getPlatFormName(TransferUtil.CHANNEL_WECHAT),weChatResult});
+            list.add(new Object[]{TransferUtil.getPlatFormName(TransferUtil.CHANNEL_WAP),wapResult});
+            list.add(new Object[]{TransferUtil.getPlatFormName(TransferUtil.CHANNEL_OTHERS),othersResult});
         }else {
             Integer platformResult = Optional.ofNullable(getNewRegisterCountWithSinglePlatform(platform,startTime,endTime)).orElse(0);
             log.info("platformResult",platformResult);
