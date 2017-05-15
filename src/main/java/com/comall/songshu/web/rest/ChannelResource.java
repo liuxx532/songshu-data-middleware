@@ -199,7 +199,7 @@ public class ChannelResource {
                     case "ChannelGrossMarginRate":
                         return channelGrossMarginRateService.getChannelGrossMarginRate(target,platform,beginTime,endTime,chainBeginTime,chainEndTime);
                     case "ChannelConsumerCount":
-                        return channelConsumerCountService.getChannelConsumerRevenue(target,platform,beginTime,endTime,chainBeginTime,chainEndTime);
+                        return channelConsumerCountService.getChannelConsumerRevenue(target,platform,channelName,beginTime,endTime,chainBeginTime,chainEndTime);
                     case "ChannelPageInfo":
                         return channelPageInfoService.getChannelPageInfo(target,platform,beginTime,endTime);
                     default:

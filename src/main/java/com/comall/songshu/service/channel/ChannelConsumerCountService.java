@@ -22,20 +22,31 @@ public class ChannelConsumerCountService {
     private ChannelConsumerCountRepository channelConsumerCountRepository;
 
 
-    public String getChannelConsumerRevenue(String target,String platformName, Timestamp beginTime,Timestamp endTime,Timestamp chainBeginTime,Timestamp chainEndTime) {
+    public String getChannelConsumerRevenue(String target,String platformName,String channelName, Timestamp beginTime,Timestamp endTime,Timestamp chainBeginTime,Timestamp chainEndTime) {
 
 
         int platform = TransferUtil.getPlatform(platformName);
+        boolean isChannelNameEmpty = channelName == null || channelName == "";
         Double channelConsumerResult;
         Double chainChannelConsumerResult;
 
         if (platform<0){//全部
-            channelConsumerResult = channelConsumerCountRepository.getChannelConsumerCountWithAllPlatform(beginTime,endTime);
-            chainChannelConsumerResult = channelConsumerCountRepository.getChannelConsumerCountWithAllPlatform(chainBeginTime,chainEndTime);
+            if(isChannelNameEmpty){
+                channelConsumerResult = channelConsumerCountRepository.getChannelConsumerCountWithAllPlatformAllChannel(beginTime,endTime);
+                chainChannelConsumerResult = channelConsumerCountRepository.getChannelConsumerCountWithAllPlatformAllChannel(chainBeginTime,chainEndTime);
+            }else{
+                channelConsumerResult = channelConsumerCountRepository.getChannelConsumerCountWithAllPlatformSingleChannel(beginTime,endTime,channelName);
+                chainChannelConsumerResult = channelConsumerCountRepository.getChannelConsumerCountWithAllPlatformSingleChannel(chainBeginTime,chainEndTime,channelName);
+            }
 
         }else {
-            channelConsumerResult = channelConsumerCountRepository.getChannelConsumerCountSinglePlatform(beginTime,endTime,platform);
-            chainChannelConsumerResult = channelConsumerCountRepository.getChannelConsumerCountSinglePlatform(beginTime,endTime,platform);
+            if(isChannelNameEmpty){
+                channelConsumerResult = channelConsumerCountRepository.getChannelConsumerCountSinglePlatformAllChannel(beginTime,endTime,platform);
+                chainChannelConsumerResult = channelConsumerCountRepository.getChannelConsumerCountSinglePlatformAllChannel(beginTime,endTime,platform);
+            }else{
+                channelConsumerResult = channelConsumerCountRepository.getChannelConsumerCountSinglePlatformSingleChannel(beginTime,endTime,platform,channelName);
+                chainChannelConsumerResult = channelConsumerCountRepository.getChannelConsumerCountSinglePlatformSingleChannel(chainBeginTime,chainEndTime,platform,channelName);
+            }
         }
 
         Double channelConsumer = Optional.ofNullable(channelConsumerResult).orElse(0.00);
