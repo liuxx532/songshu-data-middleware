@@ -15,33 +15,9 @@ import java.util.List;
  **/
 public interface ChannelPageInfoRepository extends JpaRepository<Author,Long> {
 
-    /**
-     * 渠道下载安装量（全平台）
-     * @param beginTime
-     * @param endTime
-     * @return
-     */
-//  SELECT  count(1)  FROM songshu_shence_events e WHERE e.event ='AppInstall' AND e.times BETWEEN '2016-01-01 00:00:00' AND '2017-02-01 00:00:00'  AND e.os = 'iOS' ;
-    @Query(value = " SELECT  count(1)  FROM songshu_shence_events e WHERE e.event ='AppInstall' " +
-        "AND e.times BETWEEN ?1 AND ?2  ", nativeQuery = true)
-    Integer getChannelInstallInfoWithAllPlatform(Timestamp beginTime, Timestamp endTime);
-
 
     /**
-     *  渠道下载安装量（单平台）
-     * @param beginTime
-     * @param endTime
-     * @param os
-     * @return
-     */
-    //SELECT  count(1)  FROM songshu_shence_events e WHERE e.event ='AppInstall' AND e.times BETWEEN '2016-01-01 00:00:00' AND '2017-02-01 00:00:00'  AND e.os = 'iOS' ;
-    @Query(value = " SELECT  count(1)  FROM songshu_shence_events e WHERE e.event ='AppInstall' " +
-        "AND e.times BETWEEN ?1 AND ?2  AND e.os = ?3  ", nativeQuery = true)
-    Integer getChannelInstallInfoWithSinglePlatform(Timestamp beginTime, Timestamp endTime,String os);
-
-
-    /**
-     * 渠道下载量及注册用户数（全平台）
+     * 渠道下载量及注册用户数（全app平台）
      * @param beginTime
      * @param endTime
      * @return
@@ -59,7 +35,7 @@ public interface ChannelPageInfoRepository extends JpaRepository<Author,Long> {
 //             ELSE 'yingyongbao'
 //             END  AS utm_source,e.os
 //             FROM songshu_shence_events e WHERE e.event ='AppInstall' AND e.times BETWEEN '2016-01-01 00:00:00' AND '2017-02-01 00:00:00'
-//             )base
+//             AND  e.os IN ('iOS','Android'))base
 //    GROUP BY base.utm_source)install
 //    LEFT JOIN
 //        (SELECT COUNT(DISTINCT base.memberId) AS memberCount , base.utm_source FROM
@@ -74,7 +50,7 @@ public interface ChannelPageInfoRepository extends JpaRepository<Author,Long> {
 //             END  AS utm_source
 //             from songshu_cs_member mem
 //             LEFT JOIN songshu_shence_users u  ON u.second_id = mem."id"
-//             where  mem."regTime" BETWEEN '2016-01-01 00:00:00' AND '2017-02-01 00:00:00')base
+//             where  mem."regTime" BETWEEN '2016-01-01 00:00:00' AND '2017-02-01 00:00:00' and mem."multipleChannelsId" IN (1,2))base
 //    GROUP BY base.utm_source)reg
 //    ON reg.utm_source = install.utm_source
 //    ORDER BY install.memberCount DESC,reg.memberCount DESC;
@@ -91,7 +67,7 @@ public interface ChannelPageInfoRepository extends JpaRepository<Author,Long> {
         "             ELSE 'yingyongbao' " +
         "             END  AS utm_source,e.os " +
         "         FROM songshu_shence_events e WHERE e.event ='AppInstall' AND e.times BETWEEN ?1 AND ?2 " +
-        "         )base " +
+        "         AND  e.os IN ('iOS','Android'))base " +
         "    GROUP BY base.utm_source)install " +
         "    LEFT JOIN " +
         "    (SELECT COUNT(DISTINCT base.memberId) AS memberCount , base.utm_source FROM " +
@@ -106,14 +82,14 @@ public interface ChannelPageInfoRepository extends JpaRepository<Author,Long> {
         "                END  AS utm_source " +
         "         FROM songshu_cs_member mem " +
         "             LEFT JOIN songshu_shence_users u  ON u.second_id = mem.\"id\" " +
-        "         WHERE  mem.\"regTime\" BETWEEN ?1 AND ?2)base " +
+        "         WHERE  mem.\"regTime\" BETWEEN ?1 AND ?2 and mem.\"multipleChannelsId\" IN (1,2))base " +
         "    GROUP BY base.utm_source)reg " +
         "    ON reg.utm_source = install.utm_source " +
         "ORDER BY install.memberCount DESC,reg.memberCount DESC", nativeQuery = true)
-    List<Object[]> getChannelPageInfoWithAllPlatform(Timestamp beginTime, Timestamp endTime);
+    List<Object[]> getChannelPageInfoWithAllAppPlatform(Timestamp beginTime, Timestamp endTime);
 
     /**
-     * 渠道下载量及注册用户数（单平台）
+     * 渠道下载量及注册用户数（单app平台）
      * @param beginTime
      * @param endTime
      * @param os
@@ -184,11 +160,11 @@ public interface ChannelPageInfoRepository extends JpaRepository<Author,Long> {
         "    GROUP BY base.utm_source)reg " +
         "    ON reg.utm_source = install.utm_source " +
         "ORDER BY install.memberCount DESC,reg.memberCount DESC", nativeQuery = true)
-    List<Object[]> getChannelPageInfoWithSinglePlatform(Timestamp beginTime, Timestamp endTime,String os, Integer platform);
+    List<Object[]> getChannelPageInfoWithSingleAppPlatform(Timestamp beginTime, Timestamp endTime,String os, Integer platform);
 
 
     /**
-     * 渠道注册用户数（全平台）
+     * 渠道注册用户数（非app平台（全））
      * @param beginTime
      * @param endTime
      * @return
@@ -206,7 +182,7 @@ public interface ChannelPageInfoRepository extends JpaRepository<Author,Long> {
 //             END  AS utm_source
 //             from songshu_cs_member mem
 //             LEFT JOIN songshu_shence_users u  ON u.second_id = mem."id"
-//             where  mem."regTime" BETWEEN '2016-01-01 00:00:00' AND '2017-02-01 00:00:00' and mem."multipleChannelsId" = 1)base
+//             where  mem."regTime" BETWEEN '2016-01-01 00:00:00' AND '2017-02-01 00:00:00' and mem."multipleChannelsId" NOT IN (1,2))base
 //    GROUP BY base.utm_source)reg ORDER BY reg.memberCount DESC
     @Query(value = "SELECT upper(reg.utm_source) AS advSource ,0 AS installCount,COALESCE(reg.memberCount,0) AS regCount FROM " +
         "    (SELECT COUNT(DISTINCT base.memberId) AS memberCount , base.utm_source FROM " +
@@ -221,13 +197,13 @@ public interface ChannelPageInfoRepository extends JpaRepository<Author,Long> {
         "                END  AS utm_source " +
         "         from songshu_cs_member mem " +
         "             LEFT JOIN songshu_shence_users u  ON u.second_id = mem.\"id\" " +
-        "         where  mem.\"regTime\" BETWEEN ?1 AND ?2 )base " +
+        "         where  mem.\"regTime\" BETWEEN ?1 AND ?2 and mem.\"multipleChannelsId\" NOT IN (1,2))base " +
         "    GROUP BY base.utm_source)reg ORDER BY reg.memberCount DESC", nativeQuery = true)
-    List<Object[]> getChannelRegisterInfoWithAllPlatform(Timestamp beginTime, Timestamp endTime);
+    List<Object[]> getChannelRegisterInfoWithAllWebPlatform(Timestamp beginTime, Timestamp endTime);
 
 
     /**
-     * 渠道注册用户数（单平台）
+     * 渠道注册用户数（非app平台（单））
      * @param beginTime
      * @param endTime
      * @param platform
@@ -263,5 +239,5 @@ public interface ChannelPageInfoRepository extends JpaRepository<Author,Long> {
         "             LEFT JOIN songshu_shence_users u  ON u.second_id = mem.\"id\" " +
         "         where  mem.\"regTime\" BETWEEN ?1 AND ?2 and mem.\"multipleChannelsId\" = ?3)base " +
         "    GROUP BY base.utm_source)reg ORDER BY reg.memberCount DESC", nativeQuery = true)
-    List<Object[]> getChannelRegisterInfoWithSinglePlatform(Timestamp beginTime, Timestamp endTime,Integer platform);
+    List<Object[]> getChannelRegisterInfoWithSingleWebPlatform(Timestamp beginTime, Timestamp endTime,Integer platform);
 }
