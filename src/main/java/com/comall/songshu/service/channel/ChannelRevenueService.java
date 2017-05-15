@@ -30,18 +30,20 @@ public class ChannelRevenueService {
         boolean isChannelNameEmpty = channelName == null || channelName == "";
 
         if (platform<0){
-            if(!isChannelNameEmpty){
+            if(isChannelNameEmpty){
                 revenueResult = channelRevenueRepository.getChannelRevenueWithAllPlatformAllChannel(beginTime,endTime);
                 chainRevenueResult = channelRevenueRepository.getChannelRevenueWithAllPlatformAllChannel(chainBeginTime,chainEndTime);
             }else{
-
+                revenueResult = channelRevenueRepository.getChannelRevenueWithAllPlatformSingleChannel(beginTime,endTime,channelName);
+                chainRevenueResult = channelRevenueRepository.getChannelRevenueWithAllPlatformSingleChannel(chainBeginTime,chainEndTime,channelName);
             }
         }else {
-            if(!isChannelNameEmpty){
+            if(isChannelNameEmpty){
                 revenueResult = channelRevenueRepository.getChannelRevenueWithSinglePlatformAllChannel(platform,beginTime,endTime);
                 chainRevenueResult = channelRevenueRepository.getChannelRevenueWithSinglePlatformAllChannel(platform,chainBeginTime,chainEndTime);
             }else{
-
+                revenueResult = channelRevenueRepository.getChannelRevenueWithSinglePlatformSingleChannel(platform,beginTime,endTime,channelName);
+                chainRevenueResult = channelRevenueRepository.getChannelRevenueWithSinglePlatformSingleChannel(platform,chainBeginTime,chainEndTime,channelName);
             }
         }
 
