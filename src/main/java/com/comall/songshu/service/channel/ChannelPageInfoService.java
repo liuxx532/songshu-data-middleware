@@ -31,32 +31,21 @@ public class ChannelPageInfoService {
         long currentMills = System.currentTimeMillis();
         int platform = TransferUtil.getPlatform(platformName);
         String os = TransferUtil.getSensorsOS(platform);
-        JSONArray channelPageInfoArray =  new JSONArray();
-        Integer channelInstallCount;
-        List<Object[]> channelPageInfoResult;
 
+        //最终返回值
+        List<Object[]> channelPageInfoResult = new ArrayList<>();
+        //app返回值（ios和android）
+        List<Object[]> channelPageInfoAppResult = null;
+        //非app返回值（微信和wap）
+        List<Object[]> channelPageInfoWebResult = null;
 
         if (platform<0) {
-            channelInstallCount = channelPageInfoRepository.getChannelInstallInfoWithAllPlatform(beginTime,endTime);
-        }else{
-            channelInstallCount = channelPageInfoRepository.getChannelInstallInfoWithSinglePlatform(beginTime,endTime,os);
-
-        }
-
-        if(Optional.ofNullable(channelInstallCount)
-            .filter(c -> c>0).isPresent()){
-            if (platform<0) {
-                channelPageInfoResult = channelPageInfoRepository.getChannelPageInfoWithAllPlatform(beginTime,endTime);
-            }else{
-                channelPageInfoResult = channelPageInfoRepository.getChannelPageInfoWithSinglePlatform(beginTime,endTime,os,platform);
-            }
-
-        }else{
-            if (platform<0) {
-                channelPageInfoResult = channelPageInfoRepository.getChannelRegisterInfoWithAllPlatform(beginTime,endTime);
-            }else{
-                channelPageInfoResult = channelPageInfoRepository.getChannelRegisterInfoWithSinglePlatform(beginTime,endTime,platform);
-            }
+            channelPageInfoAppResult = channelPageInfoRepository.getChannelPageInfoWithAllAppPlatform(beginTime,endTime);
+            channelPageInfoWebResult = channelPageInfoRepository.getChannelRegisterInfoWithAllWebPlatform(beginTime,endTime);
+        }else if(platform == TransferUtil.CHANNEL_ANDROID || platform == TransferUtil.CHANNEL_IOS){
+            channelPageInfoAppResult = channelPageInfoRepository.getChannelPageInfoWithSingleAppPlatform(beginTime,endTime,os,platform);
+        }else if(platform == TransferUtil.CHANNEL_WAP || platform == TransferUtil.CHANNEL_WECHAT){
+            channelPageInfoWebResult = channelPageInfoRepository.getChannelRegisterInfoWithSingleWebPlatform(beginTime,endTime,platform);
         }
 
 
@@ -73,6 +62,16 @@ public class ChannelPageInfoService {
         JSONArray channelPageInfoDataPointArray =  new JSONArray();
         List<JSONObject> channelPageInfoList = new LinkedList<>();
 
+        if(Optional.ofNullable(channelPageInfoAppResult)
+            .filter(c -> c.size()>0).isPresent()){
+            channelPageInfoResult.addAll(channelPageInfoAppResult);
+        }
+
+        if(Optional.ofNullable(channelPageInfoWebResult)
+            .filter(c -> c.size()>0).isPresent()){
+            channelPageInfoResult.addAll(channelPageInfoWebResult);
+        }
+
         if(Optional.ofNullable(channelPageInfoResult)
             .filter(c -> c.size()>0).isPresent()){
             for(Object[] o : channelPageInfoResult){
@@ -88,6 +87,7 @@ public class ChannelPageInfoService {
                 }
             }
         }
+
 
         channelPageInfoDataPointArray.put(channelPageInfoList);
         channelPageInfoDataPointArray.put(currentMills);
