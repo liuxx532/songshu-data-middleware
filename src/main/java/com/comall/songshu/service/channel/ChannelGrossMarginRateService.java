@@ -28,21 +28,32 @@ public class ChannelGrossMarginRateService {
     private ChannelGrossMarginRateRepository channelGrossMarginRateRepository;
 
 
-    public String  getChannelGrossMarginRate(String target,String platformName, Timestamp beginTime,Timestamp endTime,Timestamp chainBeginTime,Timestamp chainEndTime) {
+    public String  getChannelGrossMarginRate(String target,String platformName,String channelName, Timestamp beginTime,Timestamp endTime,Timestamp chainBeginTime,Timestamp chainEndTime) {
 
         int platform = TransferUtil.getPlatform(platformName);
+        boolean isChannelNameEmpty = channelName == null || channelName == "";
 
         //毛利率 = （销售额 - 商品成本）／ 销售额 * 100%
         //注：这里毛利率先不用乘以100%
-        Double grossMarginRateResult;
-        Double chainGrossMarginRateResult;
+        Double grossMarginRateResult = null;
+        Double chainGrossMarginRateResult = null;
 
         if (platform<0){
-              grossMarginRateResult = channelGrossMarginRateRepository.getChannelCrossMarginWithAllPlatform(beginTime,endTime);
-              chainGrossMarginRateResult  = channelGrossMarginRateRepository.getChannelCrossMarginWithAllPlatform(chainBeginTime,chainEndTime);
+            if(isChannelNameEmpty){
+                grossMarginRateResult = channelGrossMarginRateRepository.getChannelCrossMarginWithAllPlatformAllChannel(beginTime,endTime);
+                chainGrossMarginRateResult  = channelGrossMarginRateRepository.getChannelCrossMarginWithAllPlatformAllChannel(chainBeginTime,chainEndTime);
+            }else{
+                grossMarginRateResult = channelGrossMarginRateRepository.getChannelCrossMarginWithAllPlatformSingleChannel(beginTime,endTime,channelName);
+                chainGrossMarginRateResult = channelGrossMarginRateRepository.getChannelCrossMarginWithAllPlatformSingleChannel(chainBeginTime,chainEndTime,channelName);
+            }
         }else {
-              grossMarginRateResult = channelGrossMarginRateRepository.getChannelCrossMarginWithSinglePlatform(beginTime,endTime,platform);
-              chainGrossMarginRateResult  = channelGrossMarginRateRepository.getChannelCrossMarginWithSinglePlatform(chainBeginTime,chainEndTime,platform);
+            if(isChannelNameEmpty){
+                grossMarginRateResult = channelGrossMarginRateRepository.getChannelCrossMarginWithSinglePlatformAllChannel(beginTime,endTime,platform);
+                chainGrossMarginRateResult  = channelGrossMarginRateRepository.getChannelCrossMarginWithSinglePlatformAllChannel(chainBeginTime,chainEndTime,platform);
+            }else{
+                grossMarginRateResult = channelGrossMarginRateRepository.getChannelCrossMarginWithSinglePlatformSingleChannel(beginTime,endTime,platform,channelName);
+                chainGrossMarginRateResult = channelGrossMarginRateRepository.getChannelCrossMarginWithSinglePlatformSingleChannel(chainBeginTime,chainEndTime,platform,channelName);
+            }
         }
 
         Double grossMarginRate = Optional.ofNullable(grossMarginRateResult).orElse(0.00);

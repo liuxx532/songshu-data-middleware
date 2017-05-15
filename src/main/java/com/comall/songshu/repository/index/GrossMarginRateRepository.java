@@ -13,36 +13,6 @@ import java.util.List;
 // 毛利率 = (销售额 - 商品成本） / 销售额 * 100%
 public interface GrossMarginRateRepository extends JpaRepository<Author,Long> {
 
-    // 获取商品成本
-//SQL:
-//SELECT SUM(item."ActualRefundMoney")
-// FROM songshu_cs_order oo INNER JOIN songshu_cs_order_payable op ON op."OrderId" = oo."Id"
-// INNER JOIN songshu_cs_payment_record r ON op."MergePaymentId" = r."MergePaymentNo"
-// INNER JOIN songshu_cs_refund_item item ON item."PaymentRecordId" = r."Id"
-// WHERE r."PaymentModeType" = 2 AND item. "Status" = 5 AND item."MoneyType" = 1 AND item."RefundType" = 1 AND oo."orderType" IN(0, 1)
-// AND item."LastModifyTime" BETWEEN ? AND ? AND oo."Channel" IN(0, 1, 2, 3, 5)
-
-
-// 获取商品成本
-
-    @Query(value = "SELECT SUM(cg.\"CostPrice\" * coi.\"Quantity\") " +
-        "FROM( SELECT DISTINCT co.\"Id\" FROM( SELECT * FROM songshu_cs_payment_record " +
-        "WHERE \"PaymentModeType\"= 2 AND \"PaidTime\" BETWEEN ?1 AND ?2)cpr " +
-        "LEFT JOIN songshu_cs_order co ON cpr.\"MergePaymentNo\" = co.\"OrderNumber\" " +
-        "INNER JOIN songshu_cs_order_payable cop ON co.\"Id\" = cop.\"OrderId\" WHERE cop.\"PaymentStatus\" = 1 " +
-        "AND co.\"orderType\" IN(0, 1) AND co.\"OrderStatus\" NOT IN (6,7) AND co.\"Channel\" IN (0, 1, 2, 3, 5) )coo " +
-        "INNER JOIN songshu_cs_order_item coi ON coo.\"Id\" = coi.\"OrderId\" " +
-        "INNER JOIN songshu_cs_goods cg ON cg.\"Id\" = coi.\"GoodsId\"", nativeQuery = true)
-    Double getProductCostWithAllPlatform(Timestamp beginTime, Timestamp endTime);
-    @Query(value = "SELECT SUM(cg.\"CostPrice\" * coi.\"Quantity\") " +
-        "FROM( SELECT DISTINCT co.\"Id\" FROM( SELECT * FROM songshu_cs_payment_record " +
-        "WHERE \"PaymentModeType\"= 2 AND \"PaidTime\" BETWEEN ?2 AND ?3)cpr " +
-        "LEFT JOIN songshu_cs_order co ON cpr.\"MergePaymentNo\" = co.\"OrderNumber\" " +
-        "INNER JOIN songshu_cs_order_payable cop ON co.\"Id\" = cop.\"OrderId\" WHERE cop.\"PaymentStatus\" = 1 " +
-        "AND co.\"orderType\" IN(0, 1) AND co.\"OrderStatus\" NOT IN (6,7) AND co.\"Channel\" =?1 )coo " +
-        "INNER JOIN songshu_cs_order_item coi ON coo.\"Id\" = coi.\"OrderId\" " +
-        "INNER JOIN songshu_cs_goods cg ON cg.\"Id\" = coi.\"GoodsId\"", nativeQuery = true)
-    Double getProductCostWithSinglePlatform(Integer platform, Timestamp beginTime, Timestamp endTime);
 
 //SQL:
     //SELECT( grossmargin.AfterFoldingPrice - grossmargin.referCost)/ grossmargin.AfterFoldingPrice AS goodsGrossMargin
