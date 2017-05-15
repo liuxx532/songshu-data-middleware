@@ -39,7 +39,7 @@ public class ChannelOrderCountService {
                 chainOrderCountResult = channelOrderCountRepository.getChannelOrderCountWithAllPlatformAllChannel(chainBeginTime,chainEndTime);
             }else{
                 orderCountResult = channelOrderCountRepository.getChannelOrderCountWithAllPlatformSingleChannel(beginTime,endTime,channelName);
-                chainOrderCountResult = channelOrderCountRepository.getChannelOrderCountWithAllPlatformSingleChannel(beginTime,endTime,channelName);
+                chainOrderCountResult = channelOrderCountRepository.getChannelOrderCountWithAllPlatformSingleChannel(chainBeginTime,chainEndTime,channelName);
             }
         }else {
             if(isChannelNameEmpty){

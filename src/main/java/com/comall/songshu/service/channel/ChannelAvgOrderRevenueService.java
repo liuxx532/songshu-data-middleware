@@ -25,20 +25,31 @@ public class ChannelAvgOrderRevenueService {
     private ChannelAvgOrderRevenueRepository channelAvgOrderRevenueRepository;
 
 
-    public String getChannelAvgOrderRevenue(String target,String platformName, Timestamp beginTime,Timestamp endTime,Timestamp chainBeginTime,Timestamp chainEndTime) {
+    public String getChannelAvgOrderRevenue(String target,String platformName,String channelName, Timestamp beginTime,Timestamp endTime,Timestamp chainBeginTime,Timestamp chainEndTime) {
 
 
         int platform = TransferUtil.getPlatform(platformName);
-        Double avgOrderRevenueResult;
-        Double chainAvgOrderRevenueResult;
+        boolean isChannelNameEmpty = channelName == null || channelName == "";
+        Double avgOrderRevenueResult = null;
+        Double chainAvgOrderRevenueResult = null;
 
         if (platform<0){//全部
-            avgOrderRevenueResult = channelAvgOrderRevenueRepository.getChannelAvgRevenueWithAllPlatform(beginTime,endTime);
-            chainAvgOrderRevenueResult = channelAvgOrderRevenueRepository.getChannelAvgRevenueWithAllPlatform(chainBeginTime,chainEndTime);
+            if(isChannelNameEmpty){
+                avgOrderRevenueResult = channelAvgOrderRevenueRepository.getChannelAvgRevenueWithAllPlatformAllChannel(beginTime,endTime);
+                chainAvgOrderRevenueResult = channelAvgOrderRevenueRepository.getChannelAvgRevenueWithAllPlatformAllChannel(chainBeginTime,chainEndTime);
+            }else{
+                avgOrderRevenueResult = channelAvgOrderRevenueRepository.getChannelAvgRevenueWithAllPlatformSingleChannel(beginTime,endTime,channelName);
+                chainAvgOrderRevenueResult = channelAvgOrderRevenueRepository.getChannelAvgRevenueWithAllPlatformSingleChannel(chainBeginTime,chainEndTime,channelName);
+            }
 
         }else {
-            avgOrderRevenueResult = channelAvgOrderRevenueRepository.getChannelAvgRevenueWithSinglePlatform(platform,beginTime,endTime);
-            chainAvgOrderRevenueResult = channelAvgOrderRevenueRepository.getChannelAvgRevenueWithSinglePlatform(platform,beginTime,endTime);
+            if(isChannelNameEmpty){
+                avgOrderRevenueResult = channelAvgOrderRevenueRepository.getChannelAvgRevenueWithSinglePlatformAllChannel(platform,beginTime,endTime);
+                chainAvgOrderRevenueResult = channelAvgOrderRevenueRepository.getChannelAvgRevenueWithSinglePlatformAllChannel(platform,chainBeginTime,chainEndTime);
+            }else{
+                avgOrderRevenueResult = channelAvgOrderRevenueRepository.getChannelAvgRevenueWithSinglePlatformSingleChannel(platform,beginTime,endTime,channelName);
+                chainAvgOrderRevenueResult = channelAvgOrderRevenueRepository.getChannelAvgRevenueWithSinglePlatformSingleChannel(platform,chainBeginTime,chainEndTime,channelName);
+            }
         }
 
         Double avgOrderRevenue = Optional.ofNullable(avgOrderRevenueResult).orElse(0.00);

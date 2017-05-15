@@ -193,7 +193,7 @@ public class ChannelResource {
                     case "ChannelOrderCount":
                         return channelOrderCountService.getChannelOrderCount(target,platform,channelName,beginTime,endTime,chainBeginTime,chainEndTime);
                     case "ChannelAvgOrderRevenue":
-                        return channelAvgOrderRevenueService.getChannelAvgOrderRevenue(target,platform,beginTime,endTime,chainBeginTime,chainEndTime);
+                        return channelAvgOrderRevenueService.getChannelAvgOrderRevenue(target,platform,channelName,beginTime,endTime,chainBeginTime,chainEndTime);
                     case "ChannelUniqueVisitors":
                         return channelUniqueVisitorsService.getChannelUniqueVisitors(target,platform,beginTime,endTime,chainBeginTime,chainEndTime);
                     case "ChannelGrossMarginRate":
