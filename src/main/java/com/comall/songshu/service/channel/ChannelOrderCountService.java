@@ -25,19 +25,30 @@ public class ChannelOrderCountService {
         return channelOrderCountRepository.findAll().toArray();
     }
 
-    public String  getChannelOrderCount(String target,String platformName, Timestamp beginTime,Timestamp endTime,Timestamp chainBeginTime,Timestamp chainEndTime) {
+    public String  getChannelOrderCount(String target,String platformName,String channelName,Timestamp beginTime,Timestamp endTime,Timestamp chainBeginTime,Timestamp chainEndTime) {
 
         int platform = TransferUtil.getPlatform(platformName);
+        boolean isChannelNameEmpty = channelName == null || channelName == "";
 
-        Double orderCountResult;
-        Double chainOrderCountResult;
+        Double orderCountResult = null;
+        Double chainOrderCountResult = null;
 
         if (platform<0){
-            orderCountResult = channelOrderCountRepository.getChannelOrderCountWithAllPlatform(beginTime,endTime);
-            chainOrderCountResult = channelOrderCountRepository.getChannelOrderCountWithAllPlatform(chainBeginTime,chainEndTime);
+            if(isChannelNameEmpty){
+                orderCountResult = channelOrderCountRepository.getChannelOrderCountWithAllPlatformAllChannel(beginTime,endTime);
+                chainOrderCountResult = channelOrderCountRepository.getChannelOrderCountWithAllPlatformAllChannel(chainBeginTime,chainEndTime);
+            }else{
+                orderCountResult = channelOrderCountRepository.getChannelOrderCountWithAllPlatformSingleChannel(beginTime,endTime,channelName);
+                chainOrderCountResult = channelOrderCountRepository.getChannelOrderCountWithAllPlatformSingleChannel(beginTime,endTime,channelName);
+            }
         }else {
-            orderCountResult = channelOrderCountRepository.getChannelOrderCountWithSinglePlatform(platform,beginTime,endTime);
-            chainOrderCountResult = channelOrderCountRepository.getChannelOrderCountWithSinglePlatform(platform,chainBeginTime,chainEndTime);
+            if(isChannelNameEmpty){
+                orderCountResult = channelOrderCountRepository.getChannelOrderCountWithSinglePlatformAllChannel(platform,beginTime,endTime);
+                chainOrderCountResult = channelOrderCountRepository.getChannelOrderCountWithSinglePlatformAllChannel(platform,chainBeginTime,chainEndTime);
+            }else{
+                orderCountResult = channelOrderCountRepository.getChannelOrderCountWithSinglePlatformSingleChannel(platform,beginTime,endTime,channelName);
+                chainOrderCountResult = channelOrderCountRepository.getChannelOrderCountWithSinglePlatformSingleChannel(platform,chainBeginTime,chainEndTime,channelName);
+            }
         }
 
         Double orderCount = Optional.ofNullable(orderCountResult).orElse(0.00);
