@@ -1,7 +1,9 @@
 package com.comall.songshu.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
+import com.comall.songshu.constants.CommonConstants;
 import com.comall.songshu.constants.TrendConstants;
+import com.comall.songshu.service.FakeDataService;
 import com.comall.songshu.service.member.ChannelRegisterMemberService;
 import com.comall.songshu.service.member.MemberDetailService;
 import com.comall.songshu.service.member.MemberFunnelService;
@@ -33,6 +35,9 @@ import java.util.Optional;
 public class MemberResource {
 
     private final Logger log = LoggerFactory.getLogger(MemberResource.class);
+
+    @Autowired
+    private FakeDataService fakeDataService;
 
     @Autowired
     private MemberShareService memberShareService;
@@ -125,6 +130,13 @@ public class MemberResource {
 
             if (beginTime != null && endTime!= null
                 && target != null && platform != null){
+
+                if(CommonConstants.isFake){
+                    String result = fakeDataService.getFakeData(target);
+                    if(result != null){
+                        return result;
+                    }
+                }
 
                 switch (target) {
                     // 单个指标
