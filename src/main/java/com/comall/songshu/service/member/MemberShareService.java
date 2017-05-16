@@ -31,17 +31,17 @@ public class MemberShareService {
         Integer shareRegisterCount = 0;
         if (platform<0) {
             //TODO 填入对应的事件字段名
-            shareProductCount = memberShareRepository.getMemberShareWithAllPlatformByName("事件名字段，需要改", beginTime, endTime);
-            shareOrderCount = memberShareRepository.getMemberShareWithAllPlatformByName("事件名字段，需要改", beginTime, endTime);
-            shareSpecialPageCount = memberShareRepository.getMemberShareWithAllPlatformByName("事件名字段，需要改", beginTime, endTime);
-            shareRegisterCount = memberShareRepository.getMemberShareWithAllPlatformByName("事件名字段，需要改", beginTime, endTime);
+            shareProductCount = memberShareRepository.getMemberShareWithAllPlatformByName("对应事件名称", beginTime, endTime);
+            shareOrderCount = memberShareRepository.getMemberShareWithAllPlatformByName("对应事件名称", beginTime, endTime);
+            shareSpecialPageCount = memberShareRepository.getMemberShareWithAllPlatformByName("对应事件名称", beginTime, endTime);
+            shareRegisterCount = memberShareRepository.getMemberShareWithAllPlatformByName("对应事件名称", beginTime, endTime);
 
         }else{
             //TODO 填入对应的事件字段名
-            shareProductCount = memberShareRepository.getMemberShareWithSinglePlatformByName("事件名字段，需要改", beginTime, endTime,platformName);
-            shareOrderCount = memberShareRepository.getMemberShareWithSinglePlatformByName("事件名字段，需要改", beginTime, endTime,platformName);
-            shareSpecialPageCount = memberShareRepository.getMemberShareWithSinglePlatformByName("事件名字段，需要改", beginTime, endTime,platformName);
-            shareRegisterCount = memberShareRepository.getMemberShareWithSinglePlatformByName("事件名字段，需要改", beginTime, endTime,platformName);
+            shareProductCount = memberShareRepository.getMemberShareWithSinglePlatformByName("对应事件名称", beginTime, endTime,platformName);
+            shareOrderCount = memberShareRepository.getMemberShareWithSinglePlatformByName("对应事件名称", beginTime, endTime,platformName);
+            shareSpecialPageCount = memberShareRepository.getMemberShareWithSinglePlatformByName("对应事件名称", beginTime, endTime,platformName);
+            shareRegisterCount = memberShareRepository.getMemberShareWithSinglePlatformByName("对应事件名称", beginTime, endTime,platformName);
         }
 
         //TODO 组装数据
@@ -59,17 +59,17 @@ public class MemberShareService {
         List<Object[]> shareRegisterCount;
         if (platform<0) {
             //TODO 填入对应的事件字段名
-            shareProductCount = memberShareRepository.getMemberShareTrendWithAllPlatformByName("事件名字段，需要改", beginTime, endTime,interval);
-            shareOrderCount = memberShareRepository.getMemberShareTrendWithAllPlatformByName("事件名字段，需要改", beginTime, endTime,interval);
-            shareSpecialPageCount = memberShareRepository.getMemberShareTrendWithAllPlatformByName("事件名字段，需要改", beginTime, endTime,interval);
-            shareRegisterCount = memberShareRepository.getMemberShareTrendWithAllPlatformByName("事件名字段，需要改", beginTime, endTime,interval);
+            shareProductCount = memberShareRepository.getMemberShareTrendWithAllPlatformByName("对应事件名称", beginTime, endTime,interval);
+            shareOrderCount = memberShareRepository.getMemberShareTrendWithAllPlatformByName("对应事件名称", beginTime, endTime,interval);
+            shareSpecialPageCount = memberShareRepository.getMemberShareTrendWithAllPlatformByName("对应事件名称", beginTime, endTime,interval);
+            shareRegisterCount = memberShareRepository.getMemberShareTrendWithAllPlatformByName("对应事件名称", beginTime, endTime,interval);
 
         }else{
             //TODO 填入对应的事件字段名
-            shareProductCount = memberShareRepository.getMemberShareTrendWithSinglePlatformByName("事件名字段，需要改", beginTime, endTime,platformName,interval);
-            shareOrderCount = memberShareRepository.getMemberShareTrendWithSinglePlatformByName("事件名字段，需要改", beginTime, endTime,platformName,interval);
-            shareSpecialPageCount = memberShareRepository.getMemberShareTrendWithSinglePlatformByName("事件名字段，需要改", beginTime, endTime,platformName,interval);
-            shareRegisterCount = memberShareRepository.getMemberShareTrendWithSinglePlatformByName("事件名字段，需要改", beginTime, endTime,platformName,interval);
+            shareProductCount = memberShareRepository.getMemberShareTrendWithSinglePlatformByName("对应事件名称", beginTime, endTime,platformName,interval);
+            shareOrderCount = memberShareRepository.getMemberShareTrendWithSinglePlatformByName("对应事件名称", beginTime, endTime,platformName,interval);
+            shareSpecialPageCount = memberShareRepository.getMemberShareTrendWithSinglePlatformByName("对应事件名称", beginTime, endTime,platformName,interval);
+            shareRegisterCount = memberShareRepository.getMemberShareTrendWithSinglePlatformByName("对应事件名称", beginTime, endTime,platformName,interval);
         }
 
         //TODO 组装数据
