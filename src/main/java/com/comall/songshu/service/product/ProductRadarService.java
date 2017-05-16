@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.math.MathContext;
 import java.sql.Timestamp;
 import java.util.*;
 
@@ -27,7 +28,6 @@ public class ProductRadarService {
         int platform = TransferUtil.getPlatform(platformName);
 
         List<Object[]> productRadarResult;
-        List<Object[]> productRadarAddResult = new ArrayList<>();
 
         if (platform < 0) {
             productRadarResult = productRadarRepository.getProductRadarWithAllPlatform(beginTime, endTime);
@@ -36,19 +36,16 @@ public class ProductRadarService {
         }
         List<JSONObject> productRadarList = new LinkedList<>();
         if (productRadarResult != null) {
-            //只要前十
-            if (productRadarResult.size() > 10) {
-                productRadarAddResult = productRadarResult.subList(0, 10);
-            }else{
-                productRadarAddResult = productRadarResult;
-            }
-            for (Object[] o : productRadarAddResult) {
+
+            for (Object[] o : productRadarResult) {
                 String categoryName = (String) o[0];
                 JSONObject productRadarObject = new JSONObject();
                 if (excludeCategoryNames == null || !excludeCategoryNames.contains(categoryName)) {
                     try {
+
+                        Double grossRate =  new BigDecimal(o[4].toString()).multiply(new BigDecimal(100)).setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue();
                         productRadarObject.put("name", categoryName);
-                        productRadarObject.put("value", new Object[]{o[1], o[2], o[3], o[4], o[5]});
+                        productRadarObject.put("value", new Object[]{o[1], o[2], o[3],  grossRate, o[5]});
                         productRadarList.add(productRadarObject);
                     } catch (JSONException e) {
                         e.printStackTrace();

@@ -42,19 +42,21 @@ public class ProductCategoryRankService {
 
         if(productCategoryRankResult != null){
             //计算品类总销售额
-            for (Object[] objarr: productCategoryRankResult) {
-                totalAmount = totalAmount.add((BigDecimal) objarr[1]);
+            for (Object[] o: productCategoryRankResult) {
+                totalAmount = totalAmount.add((BigDecimal) o[1]);
             }
             //加入销售额占比
-            for (Object[] objarr: productCategoryRankResult) {
-                Object[] objects = Arrays.copyOf(objarr,objarr.length);
-                objects[1] = ((BigDecimal) objarr[1]).divide(totalAmount, 2, BigDecimal.ROUND_HALF_UP);
-                productCategoryRankAddResult.add(objects);
+            for (Object[] o: productCategoryRankResult) {
+                Double rankRate = 0.0;
+                if(totalAmount.doubleValue() >0){
+                    rankRate = ((BigDecimal) o[1]).doubleValue()/totalAmount.doubleValue();
+                }
+                productCategoryRankAddResult.add(new Object[]{o[0],rankRate});
             }
             //只要前十
-            if(productCategoryRankAddResult.size() > 10){
-                productCategoryRankAddResult = productCategoryRankAddResult.subList(0,10);
-            }
+//            if(productCategoryRankAddResult.size() > 10){
+//                productCategoryRankAddResult = productCategoryRankAddResult.subList(0,10);
+//            }
         }
 
         return buildJson(productCategoryRankAddResult,target);
@@ -76,17 +78,21 @@ public class ProductCategoryRankService {
 
         //数据
         for (Object[] item : src) {
-            Map<String,String> dateItem = new LinkedHashMap<>();
-            dateItem.put(TitleConstants.CATEGORY_NAME, item[0].toString());
-            dateItem.put(TitleConstants.REVENUE_RATE, item[1].toString());
-            dataPoint.add(dateItem);
+            JSONObject productCategoryData = new JSONObject();
+            try {
+                productCategoryData.put(TitleConstants.CATEGORY_NAME, item[0]);
+                productCategoryData.put(TitleConstants.REVENUE_RATE, item[1]);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            dataPoint.add(productCategoryData);
         }
         dataPointParent.put(dataPoint);
         dataPointParent.put(currentMills);
 
         dataPointsArray.put(dataPointParent);
         dataPointsArray.put(titleDataPoint);
-        //TODO 返回数据拼装
+
         return JsonStringBuilder.buildCommonJsonString(target,dataPointsArray,"");
     }
 }
