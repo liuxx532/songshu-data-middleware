@@ -105,6 +105,30 @@ public class JsonStringBuilder {
         return null;
     }
 
+    public static  String buildTrendJsonString(List<String> targetNames,List<Object[]>... trends) {
+
+        if (trends != null && targetNames != null && (targetNames.size() == trends.length)) {
+            JSONArray resultArray = new JSONArray();
+            try {
+                for (int i = 0; i < trends.length; i++) {
+                    JSONArray dataPointsArray = convertTrendList2Array(trends[i]);
+
+                    JSONObject currentResult = new JSONObject();
+                    currentResult.put("target",targetNames.get(i));
+                    currentResult.put("datapoints",dataPointsArray);
+                    currentResult.put("columnName","");
+                    resultArray.put(currentResult);
+                }
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return resultArray.toString();
+        }
+
+        return null;
+    }
+
     /**
      * 将趋势图list对象转换为array
      * @param objList
