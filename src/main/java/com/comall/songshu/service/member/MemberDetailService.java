@@ -31,6 +31,7 @@ public class MemberDetailService {
 
 
         int platform = TransferUtil.getPlatform(platformName);
+        String os = TransferUtil.getSensorsOS(platform);
         List<Object[] > memberDetailResult;
         //访客数
         Double uniqueVisitorCount;
@@ -69,10 +70,8 @@ public class MemberDetailService {
             newRegisterCount = memberDetailRepository.getMemberRegisterCountSinglePlatform(beginTime,endTime,platform);
             logonConsumeRate = memberDetailRepository.getLogonConsumeRateSinglePlatform(beginTime,endTime,platform);
             repeatPurchaseCount = memberDetailRepository.getRepeatPurchaseRateSinglePlatform(beginTime,endTime,platform);
-            if(platform == TransferUtil.CHANNEL_IOS){
-                openTimes = memberDetailRepository.getOpenTimesIosPlatform(beginTime,endTime);
-            }else if (platform == TransferUtil.CHANNEL_ANDROID){
-                openTimes = memberDetailRepository.getOpenTimesSinglePlatform(beginTime,endTime,platformName);
+            if(platform == TransferUtil.CHANNEL_IOS || platform == TransferUtil.CHANNEL_ANDROID){
+                openTimes = memberDetailRepository.getOpenTimesSinglePlatform(beginTime,endTime,os,platformName);
             }else{
                 openTimes = 0;
             }
