@@ -49,7 +49,7 @@ public class ProductLinkedSalesService {
                 if (platform < 0) {//全部
                     productLinkedSalesResult = productLinkedSalesRepository.getProductLinkedSalesAllPlatform(beginTime, endTime, topCount, productId);
                 } else {
-                    productLinkedSalesResult = productLinkedSalesRepository.getProductLinkedSalesAllPlatform(beginTime, endTime, topCount, productId);
+                    productLinkedSalesResult = productLinkedSalesRepository.getProductLinkedSalesSinglePlatform(beginTime, endTime,platform,topCount, productId);
                 }
                 if (productLinkedSalesResult != null) {
                     for (Object[] ol : productLinkedSalesResult) {
