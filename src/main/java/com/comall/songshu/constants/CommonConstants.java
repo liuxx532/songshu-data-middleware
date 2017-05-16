@@ -13,6 +13,11 @@ public class CommonConstants {
     public static boolean isFake = true;
 
 
+    /**
+     * 图片域名
+     */
+    public static String picUrl = "http://pic10.cdn.3songshu.com:81/assets/upload";
+
     /**sex性别*/
     /**
      * 男

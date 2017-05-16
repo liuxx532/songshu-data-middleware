@@ -1,15 +1,17 @@
 package com.comall.songshu.service.product;
 
+import com.comall.songshu.constants.CommonConstants;
 import com.comall.songshu.repository.product.ProductLinkedSalesRepository;
+import com.comall.songshu.web.rest.util.JsonStringBuilder;
 import com.comall.songshu.web.rest.util.TransferUtil;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 关联商品销售统计
@@ -29,28 +31,60 @@ public class ProductLinkedSalesService {
         int platform = TransferUtil.getPlatform(platformName);
         //存放排面靠前几的商品集合（父集）
         List<Object[]> productSalesResult;
-        //存放关联商品集合（子集）
-        Map<Integer,List<Object[]>> linkedSalesMap = new HashMap<>();
-        if (platform<0){//全部
-            productSalesResult =  productLinkedSalesRepository.getProductSalesAllPlatform(beginTime,endTime,topCount);
-            if(productSalesResult != null){
-                for(Object[] o : productSalesResult){
-                    Integer productId = (Integer) o[0];
-                    List<Object[]> productLinkedSalesResult = productLinkedSalesRepository.getProductLinkedSalesAllPlatform(beginTime,endTime,topCount,productId);
-                    linkedSalesMap.put(productId,productLinkedSalesResult);
+        List<Object[]> productLinkedSalesResult;
+        if (platform < 0) {//全部
+            productSalesResult = productLinkedSalesRepository.getProductSalesAllPlatform(beginTime, endTime, topCount);
+        } else {
+            productSalesResult = productLinkedSalesRepository.getProductSalesSinglePlatform(beginTime, endTime, platform, topCount);
+        }
+
+        List<JSONObject> productLinkedList = new LinkedList<>();
+        if (productSalesResult != null) {
+
+            for (Object[] o : productSalesResult) {
+                JSONObject productLinkedJsonObject = new JSONObject();
+                List<JSONObject> singleProductLinkedList = new LinkedList<>();
+                singleProductLinkedList.add(assembleJSONObject(o));
+                Integer productId = (Integer) o[0];
+                if (platform < 0) {//全部
+                    productLinkedSalesResult = productLinkedSalesRepository.getProductLinkedSalesAllPlatform(beginTime, endTime, topCount, productId);
+                } else {
+                    productLinkedSalesResult = productLinkedSalesRepository.getProductLinkedSalesAllPlatform(beginTime, endTime, topCount, productId);
                 }
-            }
-        }else {
-            productSalesResult =  productLinkedSalesRepository.getProductSalesSinglePlatform(beginTime,endTime,platform,topCount);
-            if(productSalesResult != null){
-                for(Object[] o : productSalesResult){
-                    Integer productId = (Integer) o[0];
-                    List<Object[]> productLinkedSalesResult = productLinkedSalesRepository.getProductLinkedSalesSinglePlatform(beginTime,endTime,topCount,topCount,productId);
-                    linkedSalesMap.put(productId,productLinkedSalesResult);
+                if (productLinkedSalesResult != null) {
+                    for (Object[] ol : productLinkedSalesResult) {
+                        singleProductLinkedList.add(assembleJSONObject(ol));
+                    }
                 }
+                try {
+                    productLinkedJsonObject.put("arrayData", singleProductLinkedList);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                productLinkedList.add(productLinkedJsonObject);
             }
         }
 
-        return productSalesResult.toString();
+        return new JSONArray(productLinkedList).toString();
+    }
+
+
+    private JSONObject assembleJSONObject(Object[] o){
+        JSONObject jsonObject = null;
+        if(Optional.ofNullable(o)
+            .filter(l -> l.length >=3)
+            .isPresent()){
+            Integer productId = (Integer) o[0];
+            jsonObject = new JSONObject();
+            String picUrl = productLinkedSalesRepository.getProductPicUrl(productId);
+            try {
+                jsonObject.put("name",o[1]);
+                jsonObject.put("img", CommonConstants.picUrl+picUrl);
+                jsonObject.put("sales",o[2]);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return jsonObject;
     }
 }
