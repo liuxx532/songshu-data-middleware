@@ -141,7 +141,7 @@ public class MemberResource {
 
                     //漏斗
                     case "MemberFunnel" :
-                        return memberFunnelService.getMemberFunnel(target,"待定",platform,beginTime,endTime);
+                        return memberFunnelService.getMemberFunnel(target,platform,beginTime,endTime);
                     default:
                         throw new IllegalArgumentException("target=" + target);
                 }

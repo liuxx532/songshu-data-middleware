@@ -1,6 +1,7 @@
 package com.comall.songshu.web.rest.util;
 
 import java.sql.Timestamp;
+import java.util.Optional;
 
 /**
  * Created by lgx on 17/4/11.
@@ -27,6 +28,10 @@ public  class TransferUtil {
      * 其他
      */
     public static int CHANNEL_OTHERS = 0;
+    /**
+     * 全部
+     */
+    public static int CHANNEL_ALL = -1;
 
     /**
      *
@@ -49,7 +54,7 @@ public  class TransferUtil {
             case "-":
                 return CHANNEL_OTHERS ;
             default:
-                return -1;
+                return CHANNEL_ALL;
 
         }
 
@@ -102,4 +107,6 @@ public  class TransferUtil {
         }
         return sensorsOS;
     }
+
+
 }
