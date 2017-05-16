@@ -144,10 +144,8 @@ public class ProductResource {
                         return productRevenueService.getProductRevenue(target,platform,beginTime,endTime,20);
                     case "ProductLinkedSales":
                         return productLinkedSalesService.getProductLinkedSales(target,platform,beginTime,endTime,3);
-
-                     //TODO 由于需要传入被过滤的品类ID，但是不知道前端字段具体怎么传，先待定
-//                    case "ProductRadar":
-//                        return
+                   case "ProductRadar":
+                        return productRadarService.getProductRadar(platform,null,beginTime,endTime);
                     case "ProductCategoryRank":
                         return productCategoryRankService.getProductCategoryRank(target,platform,beginTime,endTime);
                     default:

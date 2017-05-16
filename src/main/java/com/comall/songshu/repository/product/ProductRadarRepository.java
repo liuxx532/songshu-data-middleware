@@ -25,8 +25,8 @@ public interface ProductRadarRepository  extends JpaRepository<Author,Long> {
     // INNER JOIN songshu_cs_category c ON p."CategoryId" = c."Id" WHERE c."Id" != 1 GROUP BY c."Name" ,c."Id" ORDER BY tamount DESC) tcom;
 
     @Query(value = "SELECT tcom.tname AS ttname, COALESCE(tcom.tamount,0) AS ttamount , " +
-        "COALESCE(tcom.tquantity,0) AS ttquantity, COALESCE(tcom.tcost,0) AS ttcost, COALESCE(tcom.tproductnum,0) AS ttproductnum, " +
-        "COALESCE(((tcom.tamount-tcom.tcost)/tcom.tamount),0) as ttgross ,tcom.tId " +
+        "COALESCE(tcom.tquantity,0) AS ttquantity, COALESCE(tcom.tcost,0) AS ttcost, " +
+        "COALESCE(((tcom.tamount-tcom.tcost)/tcom.tamount),0) as ttgross ,COALESCE(tcom.tproductnum,0) AS ttproductnum " +
         "FROM( SELECT c.\"Name\" AS tname, sum(i.\"AfterFoldingPrice\") AS tamount, " +
         "sum(i.\"Quantity\") AS tquantity, sum(i.\"ReferCost\"*i.\"Quantity\") AS tcost, count(DISTINCT i.\"ProductId\") as tproductnum ,c.\"Id\" AS tId " +
         "FROM (SELECT o.* FROM songshu_cs_order o JOIN (SELECT DISTINCT \"MergePaymentNo\" " +
@@ -39,8 +39,8 @@ public interface ProductRadarRepository  extends JpaRepository<Author,Long> {
     List<Object[]> getProductRadarWithAllPlatform(Timestamp beginTime, Timestamp endTime);
 
     @Query(value = "SELECT tcom.tname AS ttname, COALESCE(tcom.tamount,0) AS ttamount , " +
-        "COALESCE(tcom.tquantity,0) AS ttquantity, COALESCE(tcom.tcost,0) AS ttcost, COALESCE(tcom.tproductnum,0) AS ttproductnum, " +
-        "COALESCE(((tcom.tamount-tcom.tcost)/tcom.tamount),0) as tgross ,tcom.tId " +
+        "COALESCE(tcom.tquantity,0) AS ttquantity, COALESCE(tcom.tcost,0) AS ttcost, " +
+        "COALESCE(((tcom.tamount-tcom.tcost)/tcom.tamount),0) as tgross , COALESCE(tcom.tproductnum,0) AS ttproductnum " +
         "FROM( SELECT c.\"Name\" AS tname, sum(i.\"AfterFoldingPrice\") AS tamount, " +
         "sum(i.\"Quantity\") AS tquantity, sum(i.\"ReferCost\"*i.\"Quantity\") AS tcost, count(DISTINCT i.\"ProductId\") as tproductnum ,c.\"Id\" AS tId " +
         "FROM (SELECT o.* FROM songshu_cs_order o JOIN (SELECT DISTINCT \"MergePaymentNo\" " +
