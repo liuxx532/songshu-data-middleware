@@ -77,7 +77,7 @@ public class ProductRevenueService {
                     String categoriesProductLike ="#/tabs/categories/productInfo?productId="+productId+"%";
                     String cartLike ="#/tabs/cart/productInfo?productId="+productId+"%";
                     String userProductLike ="#/tabs/user/productInfo?productId="+productId+"%";
-                    String integralProductLike ="#/tabs/integral/productInfo?productId="+productId+"%";
+                    String integralProductLike ="#/tabs/integral/integralInfo?id="+productId+"&type=0%";
                     System.out.println("===productId==="+productId+"===beginTime==="+beginTime+"===endTime==="+endTime+"==productCode=="+productCode);
                     //加入购物车数
                     Integer addCartTimes;

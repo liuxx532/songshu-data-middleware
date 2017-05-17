@@ -202,7 +202,7 @@ public interface ProductRevenueRepository extends JpaRepository<Author,Long> {
 //        OR e.referrer like '#/tabs/cart/productInfo?productId=100100436%'
 //        OR e.referrer like '#/tabs/index/productInfo?productId=100100436%'
 //        OR e.referrer like '#/tabs/user/productInfo?productId=100100436%'
-//        OR e.referrer like '#/tabs/integral/productInfo?productId=100100436%')
+//        OR e.referrer like '#/tabs/integral/integralInfo?id=100100436&type=0%')
 //    AND e.times BETWEEN '2016-05-11 00:00:00' AND '2017-05-11 00:00:00';
     @Query(value = "SELECT COUNT(DISTINCT e.distinct_id)  FROM songshu_shence_events e " +
         "WHERE e.event = '$pageview' " +
@@ -229,7 +229,7 @@ public interface ProductRevenueRepository extends JpaRepository<Author,Long> {
 //        OR e.referrer like '#/tabs/cart/productInfo?productId=100100436%'
 //        OR e.referrer like '#/tabs/index/productInfo?productId=100100436%'
 //        OR e.referrer like '#/tabs/user/productInfo?productId=100100436%'
-//        OR e.referrer like '#/tabs/integral/productInfo?productId=100100436%')
+//        OR e.referrer like '#/tabs/integral/integralInfo?id=100100436&type=0%')
 //    AND e.times BETWEEN '2016-05-11 00:00:00' AND '2017-05-11 00:00:00' AND e.platform ='ios';
     @Query(value = "SELECT COUNT(DISTINCT e.distinct_id)  FROM songshu_shence_events e " +
         "WHERE e.event = '$pageview' " +
@@ -255,7 +255,7 @@ public interface ProductRevenueRepository extends JpaRepository<Author,Long> {
 //        OR e.url like '#/tabs/cart/productInfo?productId=100100436%'
 //        OR e.url like '#/tabs/index/productInfo?productId=100100436%'
 //        OR e.url like '#/tabs/user/productInfo?productId=100100436%'
-//        OR e.url like '#/tabs/integral/productInfo?productId=100100436%')
+//        OR e.url like '#/tabs/integral/integralInfo?id=100100436&type=0%')
 //    AND e.times BETWEEN '2016-05-11 00:00:00' AND '2017-05-11 00:00:00';
     @Query(value = "SELECT COUNT(DISTINCT e.distinct_id)  FROM songshu_shence_events e " +
         "WHERE e.event = '$pageview' " +
@@ -282,7 +282,7 @@ public interface ProductRevenueRepository extends JpaRepository<Author,Long> {
 //        OR e.url like '#/tabs/cart/productInfo?productId=100100436%'
 //        OR e.url like '#/tabs/index/productInfo?productId=100100436%'
 //        OR e.url like '#/tabs/user/productInfo?productId=100100436%'
-//        OR e.url like '#/tabs/integral/productInfo?productId=100100436%')
+//        OR e.url like '#/tabs/integral/integralInfo?id=100100436&type=0%')
 //    AND e.times BETWEEN '2016-05-11 00:00:00' AND '2017-05-11 00:00:00' AND e.platform ='ios';
     @Query(value = "SELECT COUNT(DISTINCT e.distinct_id)  FROM songshu_shence_events e " +
         "WHERE e.event = '$pageview' " +

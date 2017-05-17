@@ -50,7 +50,7 @@ public interface MemberFunnelRepository  extends JpaRepository<Author,Long> {
 //        OR e.url like '#/tabs/cart/productInfo%'
 //        OR e.url like '#/tabs/index/productInfo%'
 //        OR e.url like '#/tabs/user/productInfo%'
-//        OR e.url like '#/tabs/integral/productInfo%')
+//        OR e.url like '#/tabs/integral/integralInfo%')
 //    AND e.times BETWEEN '2016-05-11 00:00:00' AND '2017-05-11 00:00:00'  ;
     @Query(value = "SELECT COUNT(DISTINCT e.distinct_id)  FROM songshu_shence_events e  " +
         "WHERE e.event = '$pageview'  " +
@@ -58,7 +58,7 @@ public interface MemberFunnelRepository  extends JpaRepository<Author,Long> {
         "OR e.url LIKE '#/tabs/cart/productInfo%'  " +
         "OR e.url LIKE '#/tabs/index/productInfo%'  " +
         "OR e.url LIKE '#/tabs/user/productInfo%'  " +
-        "OR e.url LIKE '#/tabs/integral/productInfo%')  " +
+        "OR e.url LIKE '#/tabs/integral/integralInfo%')  " +
         "AND e.times BETWEEN ?1 AND ?2 ", nativeQuery = true)
     Integer getMemberFunnelProductDetailWithAllPlatformForVisitor(Timestamp beginTime, Timestamp endTime);
 
@@ -76,7 +76,7 @@ public interface MemberFunnelRepository  extends JpaRepository<Author,Long> {
         "OR e.url LIKE '#/tabs/cart/productInfo%'  " +
         "OR e.url LIKE '#/tabs/index/productInfo%'  " +
         "OR e.url LIKE '#/tabs/user/productInfo%'  " +
-        "OR e.url LIKE '#/tabs/integral/productInfo%')  " +
+        "OR e.url LIKE '#/tabs/integral/integralInfo%')  " +
         "AND e.times BETWEEN ?1 AND ?2 AND e.platform = ?3 ", nativeQuery = true)
     Integer getMemberFunnelProductDetailWithSinglePlatformForVisitor(Timestamp beginTime, Timestamp endTime, String platform);
 
@@ -209,7 +209,7 @@ public interface MemberFunnelRepository  extends JpaRepository<Author,Long> {
 //        OR e.url like '#/tabs/cart/productInfo%'
 //        OR e.url like '#/tabs/index/productInfo%'
 //        OR e.url like '#/tabs/user/productInfo%'
-//        OR e.url like '#/tabs/integral/productInfo%')
+//        OR e.url like '#/tabs/integral/integralInfo%')
 //    AND e.times BETWEEN '2016-05-11 00:00:00' AND '2017-05-11 00:00:00' AND e.platform ='ios')pageView
 //    INNER JOIN
 //        (SELECT DISTINCT e.distinct_id as memberId FROM songshu_shence_events e
@@ -223,7 +223,7 @@ public interface MemberFunnelRepository  extends JpaRepository<Author,Long> {
         "OR e.url LIKE '#/tabs/cart/productInfo%'  " +
         "OR e.url LIKE '#/tabs/index/productInfo%'  " +
         "OR e.url LIKE '#/tabs/user/productInfo%'  " +
-        "OR e.url LIKE '#/tabs/integral/productInfo%')  " +
+        "OR e.url LIKE '#/tabs/integral/integralInfo%')  " +
         "AND e.times BETWEEN ?1 AND ?2 )pageView  " +
         "INNER JOIN  " +
         "(SELECT DISTINCT e.distinct_id AS memberId FROM songshu_shence_events e  " +
@@ -246,7 +246,7 @@ public interface MemberFunnelRepository  extends JpaRepository<Author,Long> {
         "OR e.url LIKE '#/tabs/cart/productInfo%'  " +
         "OR e.url LIKE '#/tabs/index/productInfo%'  " +
         "OR e.url LIKE '#/tabs/user/productInfo%'  " +
-        "OR e.url LIKE '#/tabs/integral/productInfo%')  " +
+        "OR e.url LIKE '#/tabs/integral/integralInfo%')  " +
         "AND e.times BETWEEN ?1 AND ?2 AND e.platform = ?3 )pageView  " +
         "INNER JOIN  " +
         "(SELECT DISTINCT e.distinct_id AS memberId FROM songshu_shence_events e  " +
