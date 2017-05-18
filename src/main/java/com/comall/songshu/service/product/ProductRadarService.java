@@ -23,7 +23,7 @@ public class ProductRadarService {
     @Autowired
     private ProductRadarRepository productRadarRepository;
 
-    public String getProductRadar(String platformName,List<String> excludeCategoryNames, Timestamp beginTime, Timestamp endTime) {
+    public String getProductRadar(String platformName, Timestamp beginTime, Timestamp endTime) {
 
         int platform = TransferUtil.getPlatform(platformName);
 
@@ -40,16 +40,15 @@ public class ProductRadarService {
             for (Object[] o : productRadarResult) {
                 String categoryName = (String) o[0];
                 JSONObject productRadarObject = new JSONObject();
-                if (excludeCategoryNames == null || !excludeCategoryNames.contains(categoryName)) {
-                    try {
+                try {
 
-                        Double grossRate =  new BigDecimal(o[4].toString()).multiply(new BigDecimal(100)).setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue();
-                        productRadarObject.put("name", categoryName);
-                        productRadarObject.put("value", new Object[]{o[1], o[2], o[3],  grossRate, o[5]});
-                        productRadarList.add(productRadarObject);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
+                    Double grossRate =  new BigDecimal(o[4].toString()).multiply(new BigDecimal(100)).setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue();
+                    productRadarObject.put("name", categoryName);
+                    //销售额，销售数量，商品成本，毛利率，包含商品数
+                    productRadarObject.put("value", new Object[]{o[1], o[2], o[3],  grossRate, o[5]});
+                    productRadarList.add(productRadarObject);
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
             }
         }
