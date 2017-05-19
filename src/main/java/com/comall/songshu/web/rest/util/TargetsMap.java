@@ -133,4 +133,23 @@ public class TargetsMap {
         channelTargetNames.put("ChannelPageInfo", "渠道分页页面");
         return channelTargetNames;
     }
+    static Map<String,String> mockTargets = new HashMap<>();
+
+    public static Map<String,String> mockTargets() {
+        mockTargets.put("用户A自定义数据","userA");
+        mockTargets.put("用户B自定义数据","userB");
+        mockTargets.put("用户C自定义数据","userC");
+        mockTargets.put("用户D自定义数据","userD");
+        return mockTargets;
+    }
+
+    static Map<String,String> mockTargetNames = new HashMap<>();
+
+    public static Map<String,String> mockTargetNames() {
+        mockTargetNames.put("userA", "用户A自定义数据");
+        mockTargetNames.put("userB", "用户B自定义数据");
+        mockTargetNames.put("userC", "用户C自定义数据");
+        mockTargetNames.put("userD", "用户D自定义数据");
+        return mockTargetNames;
+    }
 }
