@@ -71,13 +71,13 @@ public class ProductRevenueService {
                 JSONObject productRevenue;
                 try {
                     productRevenue = new JSONObject();
-                    Integer productId = (Integer)o[0];
-                    String productCode = (String)o[2];
+                    Integer productId = (Integer)o[6];
+                    String productCode = (String)o[7];
                     String indexProductLike ="#/tabs/index/productInfo?productId="+productId+"%";
                     String categoriesProductLike ="#/tabs/categories/productInfo?productId="+productId+"%";
                     String cartLike ="#/tabs/cart/productInfo?productId="+productId+"%";
                     String userProductLike ="#/tabs/user/productInfo?productId="+productId+"%";
-                    String integralProductLike ="#/tabs/integral/productInfo?productId="+productId+"%";
+                    String integralProductLike ="#/tabs/integral/integralInfo?id="+productId+"&type=0%";
                     System.out.println("===productId==="+productId+"===beginTime==="+beginTime+"===endTime==="+endTime+"==productCode=="+productCode);
                     //加入购物车数
                     Integer addCartTimes;
@@ -120,12 +120,12 @@ public class ProductRevenueService {
                         .orElse(0.0);
 
                     productRevenue.put(TitleConstants.RANK,rank);
-                    productRevenue.put(TitleConstants.CATEGORY_NAME,o[3]);
-                    productRevenue.put(TitleConstants.PRODUCT_NAME,o[4]);
-                    productRevenue.put(TitleConstants.REVENUE,o[5]);
-                    productRevenue.put(TitleConstants.GOODS_COST,o[6]);
-                    productRevenue.put(TitleConstants.ORDER_COUNT,o[7]);
-                    productRevenue.put(TitleConstants.GROSSMARIN_RATE,o[8]);
+                    productRevenue.put(TitleConstants.CATEGORY_NAME,o[0]);
+                    productRevenue.put(TitleConstants.PRODUCT_NAME,o[1]);
+                    productRevenue.put(TitleConstants.REVENUE,o[2]);
+                    productRevenue.put(TitleConstants.GOODS_COST,o[3]);
+                    productRevenue.put(TitleConstants.ORDER_COUNT,o[4]);
+                    productRevenue.put(TitleConstants.GROSSMARIN_RATE,o[5]);
                     productRevenue.put(TitleConstants.UNIQUE_VISITOR,productPageVisitors);
                     productRevenue.put(TitleConstants.ADD2CART_TIMES,addCartTimes);
                     productRevenue.put(TitleConstants.COLLECTION_COUNT,collectionCount);

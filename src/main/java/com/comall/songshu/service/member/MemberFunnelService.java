@@ -20,22 +20,16 @@ public class MemberFunnelService {
 
     /**
      * @param target
-     * @param visitorOrRegisterFlag 访客或注册用户标示
      * @param platformName
      * @param beginTime
      * @param endTime
      * @return
      */
-    public String getMemberFunnel( String target,String visitorOrRegisterFlag, String platformName, Timestamp beginTime, Timestamp endTime){
-
+    public String getMemberFunnel( String target, String platformName, Timestamp beginTime, Timestamp endTime){
         String result = null;
-
         //TODO 访客这个文字可能要改
-        if(visitorOrRegisterFlag.equals("访客")){
-            result = getMemberFunnelForVisitor(target,platformName,beginTime,endTime);
-        }else{
-            result = getMemberFunnelForRegister(target,platformName,beginTime,endTime);
-        }
+        getMemberFunnelForVisitor(target,platformName,beginTime,endTime);
+        getMemberFunnelForRegister(target,platformName,beginTime,endTime);
 
         return result;
     }
@@ -50,25 +44,28 @@ public class MemberFunnelService {
      */
     private String getMemberFunnelForVisitor(String target, String platformName, Timestamp beginTime, Timestamp endTime){
         int platform = TransferUtil.getPlatform(platformName);
+        if(platform != TransferUtil.CHANNEL_IOS || platform == TransferUtil.CHANNEL_ANDROID){
+            platform = TransferUtil.CHANNEL_ALL;
+        }
+        String os = TransferUtil.getSensorsOS(platform);
+        Integer openTimes;
+        Integer productDetail;
+        Integer addCard;
+        Integer createOrder;
+        Integer payOrder;
 
-        Integer openTimes = 0;
-        Integer productDetail = 0;
-        Integer addCard = 0;
-        Integer createOrder = 0;
-        Integer payOrder = 0;
-
-        if (platform<0) {
+        if (platform == TransferUtil.CHANNEL_ALL) {
             openTimes = memberFunnelRepository.getMemberFunnelOpenTimesWithAllPlatformForVisitor(beginTime, endTime);
             productDetail = memberFunnelRepository.getMemberFunnelProductDetailWithAllPlatformForVisitor(beginTime, endTime);
             addCard = memberFunnelRepository.getMemberFunnelAddCardWithAllPlatformForVisitor(beginTime, endTime);
             createOrder = memberFunnelRepository.getMemberFunnelCreateOrderWithAllPlatformForVisitor(beginTime, endTime);
             payOrder = memberFunnelRepository.getMemberFunnelPayOrderWithAllPlatformForVisitor(beginTime, endTime);
         }else {
-            openTimes = memberFunnelRepository.getMemberFunnelOpenTimesWithSinglePlatformForVisitor(beginTime, endTime, platform);
-            productDetail = memberFunnelRepository.getMemberFunnelProductDetailWithSinglePlatformForVisitor(beginTime, endTime, platform);
-            addCard = memberFunnelRepository.getMemberFunnelAddCardWithSinglePlatformForVisitor(beginTime, endTime, platform);
-            createOrder = memberFunnelRepository.getMemberFunnelCreateOrderWithSinglePlatformForVisitor(beginTime, endTime, platform);
-            payOrder = memberFunnelRepository.getMemberFunnelPayOrderWithSinglePlatformForVisitor(beginTime, endTime, platform);
+            openTimes = memberFunnelRepository.getMemberFunnelOpenTimesWithSinglePlatformForVisitor(beginTime, endTime,os,platformName);
+            productDetail = memberFunnelRepository.getMemberFunnelProductDetailWithSinglePlatformForVisitor(beginTime, endTime,platformName);
+            addCard = memberFunnelRepository.getMemberFunnelAddCardWithSinglePlatformForVisitor(beginTime, endTime, platformName);
+            createOrder = memberFunnelRepository.getMemberFunnelCreateOrderWithSinglePlatformForVisitor(beginTime, endTime, platformName);
+            payOrder = memberFunnelRepository.getMemberFunnelPayOrderWithSinglePlatformForVisitor(beginTime, endTime, platformName);
         }
 
         BigDecimal openTimesB = new BigDecimal(openTimes);
@@ -83,7 +80,11 @@ public class MemberFunnelService {
         BigDecimal createOrderScale = createOrderB.divide(addCardB, 2, BigDecimal.ROUND_HALF_UP);
         BigDecimal payOrderScale = payOrderB.divide(createOrderB, 2, BigDecimal.ROUND_HALF_UP);
 
-
+        System.out.println("openTimesScale:"+openTimesScale);
+        System.out.println("productDetailScale:"+productDetailScale);
+        System.out.println("addCardScale:"+addCardScale);
+        System.out.println("createOrderScale:"+createOrderScale);
+        System.out.println("payOrderScale:"+payOrderScale);
         //TODO 返回具体的数据格式
         return null;
     }
@@ -97,12 +98,15 @@ public class MemberFunnelService {
      */
     private String getMemberFunnelForRegister(String target, String platformName, Timestamp beginTime, Timestamp endTime){
         int platform = TransferUtil.getPlatform(platformName);
-
-        Integer openTimes = 0;
-        Integer productDetail = 0;
-        Integer addCard = 0;
-        Integer createOrder = 0;
-        Integer payOrder = 0;
+        if(platform != TransferUtil.CHANNEL_IOS || platform == TransferUtil.CHANNEL_ANDROID){
+            platform = TransferUtil.CHANNEL_ALL;
+        }
+        String os = TransferUtil.getSensorsOS(platform);
+        Integer openTimes;
+        Integer productDetail;
+        Integer addCard ;
+        Integer createOrder;
+        Integer payOrder;
 
         if (platform<0) {
             openTimes = memberFunnelRepository.getMemberFunnelOpenTimesWithAllPlatformForRegister(beginTime, endTime);
@@ -111,11 +115,11 @@ public class MemberFunnelService {
             createOrder = memberFunnelRepository.getMemberFunnelCreateOrderWithAllPlatformForRegister(beginTime, endTime);
             payOrder = memberFunnelRepository.getMemberFunnelPayOrderWithAllPlatformForRegister(beginTime, endTime);
         }else {
-            openTimes = memberFunnelRepository.getMemberFunnelOpenTimesWithSinglePlatformForRegister(beginTime, endTime, platform);
-            productDetail = memberFunnelRepository.getMemberFunnelProductDetailWithSinglePlatformForRegister(beginTime, endTime, platform);
-            addCard = memberFunnelRepository.getMemberFunnelAddCardWithSinglePlatformForRegister(beginTime, endTime, platform);
-            createOrder = memberFunnelRepository.getMemberFunnelCreateOrderWithSinglePlatformForRegister(beginTime, endTime, platform);
-            payOrder = memberFunnelRepository.getMemberFunnelPayOrderWithSinglePlatformForRegister(beginTime, endTime, platform);
+            openTimes = memberFunnelRepository.getMemberFunnelOpenTimesWithSinglePlatformForRegister(beginTime, endTime,os, platformName);
+            productDetail = memberFunnelRepository.getMemberFunnelProductDetailWithSinglePlatformForRegister(beginTime, endTime, platformName);
+            addCard = memberFunnelRepository.getMemberFunnelAddCardWithSinglePlatformForRegister(beginTime, endTime, platformName);
+            createOrder = memberFunnelRepository.getMemberFunnelCreateOrderWithSinglePlatformForRegister(beginTime, endTime, platformName);
+            payOrder = memberFunnelRepository.getMemberFunnelPayOrderWithSinglePlatformForRegister(beginTime, endTime, platformName);
         }
 
         BigDecimal openTimesB = new BigDecimal(openTimes);
@@ -129,7 +133,11 @@ public class MemberFunnelService {
         BigDecimal addCardScale = addCardB.divide(productDetailB, 2, BigDecimal.ROUND_HALF_UP);
         BigDecimal createOrderScale = createOrderB.divide(addCardB, 2, BigDecimal.ROUND_HALF_UP);
         BigDecimal payOrderScale = payOrderB.divide(createOrderB, 2, BigDecimal.ROUND_HALF_UP);
-
+        System.out.println("openTimesScale:"+openTimesScale);
+        System.out.println("productDetailScale:"+productDetailScale);
+        System.out.println("addCardScale:"+addCardScale);
+        System.out.println("createOrderScale:"+createOrderScale);
+        System.out.println("payOrderScale:"+payOrderScale);
 
         //TODO 返回具体的数据格式
         return null;

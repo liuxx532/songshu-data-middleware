@@ -145,7 +145,7 @@ public class ProductResource {
                     case "ProductLinkedSales":
                         return productLinkedSalesService.getProductLinkedSales(target,platform,beginTime,endTime,3);
                    case "ProductRadar":
-                        return productRadarService.getProductRadar(platform,null,beginTime,endTime);
+                        return productRadarService.getProductRadar(platform,beginTime,endTime);
                     case "ProductCategoryRank":
                         return productCategoryRankService.getProductCategoryRank(target,platform,beginTime,endTime);
                     default:

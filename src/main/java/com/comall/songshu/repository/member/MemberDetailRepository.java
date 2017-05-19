@@ -192,30 +192,21 @@ public interface MemberDetailRepository extends JpaRepository<Author,Long> {
         "AND e.times BETWEEN ?1 AND ?2 ", nativeQuery = true)
     Integer getOpenTimesAllPlatform(Timestamp beginTime, Timestamp endTime);
 
+
     /**
-     * 启动次数（单平台 非ios）
+     * 启动次数
      * @param beginTime
      * @param endTime
+     * @param os
      * @param plateFormName
      * @return
      */
 //    SELECT count(1) FROM songshu_shence_events e WHERE e.event ='AppLaunch' AND (e.os ='android' OR e.platform ='android')
 //    AND e.times BETWEEN '2016-05-11 00:00:00' AND '2017-05-11 00:00:00';
-    @Query(value = "SELECT count(1) FROM songshu_shence_events e WHERE e.event ='AppLaunch' AND (e.os =?3 OR e.platform =?3) " +
+    @Query(value = "SELECT count(1) FROM songshu_shence_events e WHERE e.event ='AppLaunch' AND (e.os =?3 OR e.platform =?4) " +
         "AND e.times BETWEEN ?1 AND ?2 ", nativeQuery = true)
-    Integer getOpenTimesSinglePlatform(Timestamp beginTime, Timestamp endTime, String plateFormName);
+    Integer getOpenTimesSinglePlatform(Timestamp beginTime, Timestamp endTime,String os, String plateFormName);
 
-    /**
-     * 启动次数（单平台 ios）
-     * @param beginTime
-     * @param endTime
-     * @return
-     */
-//    SELECT count(1) FROM songshu_shence_events e WHERE e.event ='AppLaunch' AND (e.os ='iOS' OR e.platform ='ios')
-//    AND e.times BETWEEN '2016-05-11 00:00:00' AND '2017-05-11 00:00:00';
-    @Query(value = "SELECT count(1) FROM songshu_shence_events e WHERE e.event ='AppLaunch' AND (e.os ='iOS' OR e.platform ='ios')  " +
-        "AND e.times BETWEEN ?1 AND ?2 ", nativeQuery = true)
-    Integer getOpenTimesIosPlatform(Timestamp beginTime, Timestamp endTime);
 
     /**
      * 访问时长（全平台）
