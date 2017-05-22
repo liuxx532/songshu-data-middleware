@@ -83,7 +83,7 @@ public class JsonStringBuilder {
             JSONArray resultArray = new JSONArray();
             try {
                 JSONArray dataPointsCurrentArray = convertTrendList2Array(currentTrend);
-                JSONArray dataPointsChainArray = convertTrendList2Array(chainTrend);
+                JSONArray dataPointsChainArray = convertChainTrendList2Array(chainTrend,currentTrend);
 
                 JSONObject currentResult = new JSONObject();
                 currentResult.put("target","当前");
@@ -105,6 +105,12 @@ public class JsonStringBuilder {
         return null;
     }
 
+    /**
+     * 趋势图（非环比图）
+     * @param targetNames
+     * @param trends
+     * @return
+     */
     public static  String buildTrendJsonString(List<String> targetNames,List<Object[]>... trends) {
 
         if (trends != null && targetNames != null && (targetNames.size() == trends.length)) {
@@ -142,6 +148,28 @@ public class JsonStringBuilder {
             array.put(objects[2]);
             array.put(endTime.getTime());
             arrays.put(array);
+        }
+        return arrays;
+    }
+    /**
+     * 将趋势图list对象转换为array(环比数据转换)
+     * 环比返回的数据时间轴当前时间时间轴一致
+     * @param chainList 环比数据
+     * @param currentList 当前数据
+     * @return
+     */
+    public static JSONArray convertChainTrendList2Array(List<Object[]> chainList,List<Object[]> currentList){
+        JSONArray arrays = new JSONArray();
+        int chainSize = chainList.size();
+        int currentSize = currentList.size();
+        if(chainSize > 0 && chainSize == currentSize){
+            for(int i=0;i<chainSize;i++){
+                JSONArray array = new JSONArray();
+                Timestamp endTime = (Timestamp) currentList.get(i)[1];
+                array.put(chainList.get(i)[2]);
+                array.put(endTime.getTime());
+                arrays.put(array);
+            }
         }
         return arrays;
     }

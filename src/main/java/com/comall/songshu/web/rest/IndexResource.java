@@ -3,6 +3,7 @@ package com.comall.songshu.web.rest;
 import com.codahale.metrics.annotation.Timed;
 import com.comall.songshu.constants.TrendConstants;
 import com.comall.songshu.service.index.*;
+import com.comall.songshu.web.rest.util.AssembleUtil;
 import com.comall.songshu.web.rest.util.ServiceUtil;
 import com.comall.songshu.web.rest.util.TargetsMap;
 import org.joda.time.DateTime;
@@ -97,47 +98,14 @@ public class IndexResource {
                  toTimeStr = (String)range.get("to");
             }
 
-
+            Map<String,Timestamp> dateMap = AssembleUtil.assemblerDateMap(fromTimeStr,toTimeStr);
             //开始时间
-            Timestamp beginTime = null;
+            Timestamp beginTime = dateMap.get("beginTime");
             //结束时间
-            Timestamp endTime = null;
+            Timestamp endTime = dateMap.get("endTime");
             //环比时间
-            Timestamp chainBeginTime = null;
-            Timestamp chainEndTime = null;
-
-            if(fromTimeStr != null && toTimeStr != null){
-                beginTime = Optional.of(fromTimeStr)
-                    .map(String::trim)
-                    .filter(s -> s.length() >0)
-                    .map(v -> ServiceUtil.getInstance().parseTimestamp(v))
-                    .orElse(null);
-                endTime = Optional.of(toTimeStr)
-                    .map(String::trim)
-                    .filter(s -> s.length() >0)
-                    .map( s -> ServiceUtil.getInstance().parseTimestamp(s))
-                    .orElse(null);
-                //环比时间
-                String[] chainCreateTime = ServiceUtil.getInstance().getChainIndexDateTime(fromTimeStr,toTimeStr);
-                if(chainCreateTime != null){
-                    chainBeginTime = Optional.of(chainCreateTime)
-                        .filter( array -> array.length >0)
-                        .map( a -> a[0])
-                        .map(String::trim)
-                        .filter(s -> s.length() >0)
-                        .map( s -> DateTime.parse(s))
-                        .map( d-> Timestamp.valueOf(d.toString(dateTimeFormat)))
-                        .orElse(null);
-                    chainEndTime = Optional.of(chainCreateTime)
-                        .filter( array -> array.length >1)
-                        .map( a -> a[1])
-                        .map(String::trim)
-                        .filter(s -> s.length() >0)
-                        .map( s -> DateTime.parse(s))
-                        .map( d-> Timestamp.valueOf(d.toString(dateTimeFormat)))
-                        .orElse(null);
-                }
-            }
+            Timestamp chainBeginTime = dateMap.get("chainBeginTime");
+            Timestamp chainEndTime = dateMap.get("chainEndTime");
 
 
             //指标中文名称

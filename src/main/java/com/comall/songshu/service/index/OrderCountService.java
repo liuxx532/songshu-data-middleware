@@ -71,8 +71,8 @@ public class OrderCountService {
             currentOrderCountResult = orderCountRepository.getOrderCountTrendWithAllPlatform(beginTime, endTime, interValue);
             chainOrderCountResult = orderCountRepository.getOrderCountTrendWithAllPlatform(chainBeginTime, chainEndTime, interValue);
         }else {//单个平台
-            currentOrderCountResult = orderCountRepository.getOrderCounTrendtWithSinglePlatform(platform, beginTime, endTime, interValue);
-            chainOrderCountResult = orderCountRepository.getOrderCounTrendtWithSinglePlatform(platform, chainBeginTime, chainEndTime, interValue);
+            currentOrderCountResult = orderCountRepository.getOrderCountTrendWithSinglePlatform(platform, beginTime, endTime, interValue);
+            chainOrderCountResult = orderCountRepository.getOrderCountTrendWithSinglePlatform(platform, chainBeginTime, chainEndTime, interValue);
         }
 
         List<Object[]> currentOrderCount = Optional.ofNullable(currentOrderCountResult).orElse(null);
