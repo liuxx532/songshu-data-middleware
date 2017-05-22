@@ -290,7 +290,7 @@ public class JsonStringBuilder {
 
             for (Object[] o : list ){
 
-                String targetName = (String)o[0];
+                String targetName = o[0].toString();
 
                 if(targetName != null){
                     try {

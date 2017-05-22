@@ -103,3 +103,8 @@ SELECT grossmargin.stime, grossmargin.etime, COALESCE(((grossmargin.AfterFolding
                 ON (coo.MPaidTime < tss.etime AND coo.MPaidTime >= tss.stime)
     )base GROUP BY base.stime, base.etime ORDER BY base.stime
 )grossmargin;
+-- 统计时间段内，新注册成功的用户数 对应 NewRegisterCountRepository 注册用户数
+SELECT count(id) as tc
+FROM songshu_cs_member
+WHERE "regTime" BETWEEN ?2 AND ?3
+AND "multipleChannelsId" = ?1;
