@@ -18,16 +18,16 @@ public class RegionRankService {
     @Autowired
     private RegionRankRepository regionRankRepository;
 
-    public String getRegionRank(String target, String platformName, Timestamp beginTime, Timestamp endTime){
+    public String getRegionRank(String target, String platformName, Timestamp beginTime, Timestamp endTime,Integer topCount){
 
         int platform = TransferUtil.getPlatform(platformName);
 
-        List<Object[]> regionRank = null;
+        List<Object[]> regionRank;
 
         if (platform<0) {
-            regionRank = regionRankRepository.getRegionRankWithAllPlatform(beginTime,endTime);
+            regionRank = regionRankRepository.getRegionRankWithAllPlatform(beginTime,endTime,topCount);
         }else{
-            regionRank = regionRankRepository.getRegionRankWithSinglePlatform(beginTime,endTime,platformName);
+            regionRank = regionRankRepository.getRegionRankWithSinglePlatform(beginTime,endTime,platformName,topCount);
         }
 
         return JsonStringBuilder.buildRankJsonString(regionRank);

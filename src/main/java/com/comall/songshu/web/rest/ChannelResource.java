@@ -149,9 +149,9 @@ public class ChannelResource {
                     case "VisitDeepDistribution":
                         return visitDeepDistributionService.getVisitDeepDistribution(target,platform,beginTime,endTime);
                     case "ManufacturerRank":
-                        return manufacturerRankService.getManufacturerRank(target,platform,beginTime,endTime);
+                        return manufacturerRankService.getManufacturerRank(target,platform,beginTime,endTime,10);
                     case "RegionRank":
-                        return regionRankService.getRegionRank(target,platform,beginTime,endTime);
+                        return regionRankService.getRegionRank(target,platform,beginTime,endTime,10);
                     case "AgeDistribution":
                         return ageAndSexDistributionService.getAgeDistribution(target,platform,beginTime,endTime);
                     case "SexDistribution":

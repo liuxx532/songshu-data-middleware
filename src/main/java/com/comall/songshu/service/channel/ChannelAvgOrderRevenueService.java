@@ -1,17 +1,14 @@
 package com.comall.songshu.service.channel;
 
 import com.comall.songshu.repository.channel.ChannelAvgOrderRevenueRepository;
-import com.comall.songshu.repository.index.AvgOrderRevenueRepository;
 import com.comall.songshu.web.rest.util.AssembleUtil;
 import com.comall.songshu.web.rest.util.JsonStringBuilder;
-import com.comall.songshu.web.rest.util.ServiceUtil;
 import com.comall.songshu.web.rest.util.TransferUtil;
 import com.comall.songshu.web.rest.vm.TopStat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
-import java.util.List;
 import java.util.Optional;
 
 /**

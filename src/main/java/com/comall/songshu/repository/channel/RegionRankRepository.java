@@ -13,27 +13,32 @@ import java.util.List;
  */
 public interface RegionRankRepository  extends JpaRepository<Author,Long> {
 
-    //SQL
-    //SELECT se.city, COUNT(DISTINCT se.distinct_id) AS tcount
-    // FROM songshu_shence_events se WHERE se.times
-    // BETWEEN '2015-01-01 00:00:00' AND '2017-04-30 00:00:00' AND se.city
-    // IS NOT NULL AND se.city != '未知' GROUP BY se.city ORDER BY tcount DESC LIMIT 10;
+    /**
+     * 地区排行（全平台）
+     * @param beginTime
+     * @param endTime
+     * @param topCount
+     * @return
+     */
+    @Query(value = "SELECT se.city, COUNT(DISTINCT se.distinct_id) AS tcount\n" +
+        "FROM songshu_shence_events se\n" +
+        "WHERE se.event = '$pageview' AND se.times BETWEEN ?1 AND ?2\n" +
+        "AND se.city IS NOT NULL AND se.city != '未知'\n" +
+        "GROUP BY se.city ORDER BY tcount DESC LIMIT ?3", nativeQuery = true)
+    List<Object[]> getRegionRankWithAllPlatform(Timestamp beginTime, Timestamp endTime,Integer topCount);
 
-    @Query(value = "SELECT se.city, COALESCE(COUNT(DISTINCT se.distinct_id),0) AS tcount " +
-        "FROM songshu_shence_events se WHERE se.times " +
-        "BETWEEN ?1 AND ?2 AND se.city IS NOT NULL " +
-        "AND se.city != '未知' GROUP BY se.city ORDER BY tcount DESC LIMIT 10;", nativeQuery = true)
-    List<Object[]> getRegionRankWithAllPlatform(Timestamp beginTime, Timestamp endTime);
-
-    //SQL
-    //SELECT se.city, COUNT(DISTINCT se.distinct_id) AS tcount
-    // FROM songshu_shence_events se WHERE se.times
-    // BETWEEN '2015-01-01 00:00:00' AND '2017-04-30 00:00:00' AND se.platform = 'android'
-    // AND se.city IS NOT NULL AND se.city != '未知' GROUP BY se.city ORDER BY tcount DESC LIMIT 10;
-
-    @Query(value = "SELECT se.city, COALESCE(COUNT(DISTINCT se.distinct_id),0) AS tcount " +
-        "FROM songshu_shence_events se WHERE se.times BETWEEN ?1 AND ?2 " +
-        "AND se.platform = ?3 AND se.city IS NOT NULL AND se.city != '未知' " +
-        "GROUP BY se.city ORDER BY tcount DESC LIMIT 10;", nativeQuery = true)
-    List<Object[]> getRegionRankWithSinglePlatform(Timestamp beginTime, Timestamp endTime,String platformName);
+    /**
+     * 地区排行（单平台）
+     * @param beginTime
+     * @param endTime
+     * @param platformName
+     * @param topCount
+     * @return
+     */
+    @Query(value = "SELECT se.city, COUNT(DISTINCT se.distinct_id) AS tcount\n" +
+        "FROM songshu_shence_events se\n" +
+        "WHERE se.event = '$pageview' AND se.times BETWEEN ?1 AND ?2\n" +
+        "AND se.platform = ?3 AND se.city IS NOT NULL AND se.city != '未知'\n" +
+        "GROUP BY se.city ORDER BY tcount DESC LIMIT ?4", nativeQuery = true)
+    List<Object[]> getRegionRankWithSinglePlatform(Timestamp beginTime, Timestamp endTime,String platformName,Integer topCount);
 }
