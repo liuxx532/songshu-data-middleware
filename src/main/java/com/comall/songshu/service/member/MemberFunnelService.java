@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 会员漏斗Service
@@ -55,17 +57,19 @@ public class MemberFunnelService {
         Integer payOrder;
 
         if (platform == TransferUtil.CHANNEL_ALL) {
-            openTimes = memberFunnelRepository.getMemberFunnelOpenTimesWithAllPlatformForVisitor(beginTime, endTime);
-            productDetail = memberFunnelRepository.getMemberFunnelProductDetailWithAllPlatformForVisitor(beginTime, endTime);
-            addCard = memberFunnelRepository.getMemberFunnelAddCardWithAllPlatformForVisitor(beginTime, endTime);
-            createOrder = memberFunnelRepository.getMemberFunnelCreateOrderWithAllPlatformForVisitor(beginTime, endTime);
-            payOrder = memberFunnelRepository.getMemberFunnelPayOrderWithAllPlatformForVisitor(beginTime, endTime);
+            List<Integer[]> queryResult = memberFunnelRepository.getMemberFunnelWithAllPlatformForVisitor(beginTime, endTime);
+            openTimes = queryResult.get(0)[0];
+            productDetail = queryResult.get(0)[1];
+            addCard = queryResult.get(0)[2];
+            createOrder = queryResult.get(0)[3];
+            payOrder = queryResult.get(0)[4];
         }else {
-            openTimes = memberFunnelRepository.getMemberFunnelOpenTimesWithSinglePlatformForVisitor(beginTime, endTime,os,platformName);
-            productDetail = memberFunnelRepository.getMemberFunnelProductDetailWithSinglePlatformForVisitor(beginTime, endTime,platformName);
-            addCard = memberFunnelRepository.getMemberFunnelAddCardWithSinglePlatformForVisitor(beginTime, endTime, platformName);
-            createOrder = memberFunnelRepository.getMemberFunnelCreateOrderWithSinglePlatformForVisitor(beginTime, endTime, platformName);
-            payOrder = memberFunnelRepository.getMemberFunnelPayOrderWithSinglePlatformForVisitor(beginTime, endTime, platformName);
+            List<Integer[]> queryResult = memberFunnelRepository.getMemberFunnelWithSinglePlatformForVisitor(beginTime,endTime,os,platformName);
+            openTimes = queryResult.get(0)[0];
+            productDetail = queryResult.get(0)[1];
+            addCard = queryResult.get(0)[2];
+            createOrder = queryResult.get(0)[3];
+            payOrder = queryResult.get(0)[4];
         }
 
         BigDecimal openTimesB = new BigDecimal(openTimes);
@@ -109,17 +113,19 @@ public class MemberFunnelService {
         Integer payOrder;
 
         if (platform<0) {
-            openTimes = memberFunnelRepository.getMemberFunnelOpenTimesWithAllPlatformForRegister(beginTime, endTime);
-            productDetail = memberFunnelRepository.getMemberFunnelProductDetailWithAllPlatformForRegister(beginTime, endTime);
-            addCard = memberFunnelRepository.getMemberFunnelAddCardWithAllPlatformForRegister(beginTime, endTime);
-            createOrder = memberFunnelRepository.getMemberFunnelCreateOrderWithAllPlatformForRegister(beginTime, endTime);
-            payOrder = memberFunnelRepository.getMemberFunnelPayOrderWithAllPlatformForRegister(beginTime, endTime);
+            List<Integer[]> queryResult = memberFunnelRepository.getMemberFunnelWithAllPlatformForRegister(beginTime, endTime);
+            openTimes = queryResult.get(0)[0];
+            productDetail = queryResult.get(0)[1];
+            addCard = queryResult.get(0)[2];
+            createOrder = queryResult.get(0)[3];
+            payOrder = queryResult.get(0)[4];
         }else {
-            openTimes = memberFunnelRepository.getMemberFunnelOpenTimesWithSinglePlatformForRegister(beginTime, endTime,os, platformName);
-            productDetail = memberFunnelRepository.getMemberFunnelProductDetailWithSinglePlatformForRegister(beginTime, endTime, platformName);
-            addCard = memberFunnelRepository.getMemberFunnelAddCardWithSinglePlatformForRegister(beginTime, endTime, platformName);
-            createOrder = memberFunnelRepository.getMemberFunnelCreateOrderWithSinglePlatformForRegister(beginTime, endTime, platformName);
-            payOrder = memberFunnelRepository.getMemberFunnelPayOrderWithSinglePlatformForRegister(beginTime, endTime, platformName);
+            List<Integer[]> queryResult = memberFunnelRepository.getMemberFunnelWithSinglePlatformForRegister(beginTime,endTime,os,platformName);
+            openTimes = queryResult.get(0)[0];
+            productDetail = queryResult.get(0)[1];
+            addCard = queryResult.get(0)[2];
+            createOrder = queryResult.get(0)[3];
+            payOrder = queryResult.get(0)[4];
         }
 
         BigDecimal openTimesB = new BigDecimal(openTimes);
