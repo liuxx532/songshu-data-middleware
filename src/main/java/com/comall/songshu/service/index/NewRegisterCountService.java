@@ -55,7 +55,7 @@ public class NewRegisterCountService {
         }else {
             Integer platformResult = Optional.ofNullable(getNewRegisterCountWithSinglePlatform(platform,startTime,endTime)).orElse(0);
             log.info("platformResult",platformResult);
-            list.add(new Object[]{platform,platformResult});
+            list.add(new Object[]{TransferUtil.getPlatFormName(platform),platformResult});
         }
         log.info("list",list);
         return JsonStringBuilder.buildPieJsonString(list);
