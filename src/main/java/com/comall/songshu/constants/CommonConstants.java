@@ -1,5 +1,8 @@
 package com.comall.songshu.constants;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * 常用变量
  *
@@ -78,5 +81,22 @@ public class CommonConstants {
      */
     public static final String VISIT_DEEP_LEVEL_SIX  = ">41";
 
+
+    /**
+     * 无用渠道过滤
+     */
+    public static List<String> channelFilter = new ArrayList<>();
+    static {
+        channelFilter.add("TEST");
+        channelFilter.add("CHANNEL_10");
+        channelFilter.add("NEWTEST");
+        channelFilter.add("PREPRODUCTION");
+        channelFilter.add("PRODUCTION");
+        channelFilter.add("PRODUCTIONDEBUG");
+        channelFilter.add("WH-TSD001");
+        channelFilter.add("WH-TSD002");
+        channelFilter.add("WH-TSD003");
+
+    }
 
 }

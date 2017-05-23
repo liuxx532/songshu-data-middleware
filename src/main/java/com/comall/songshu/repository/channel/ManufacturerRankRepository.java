@@ -13,18 +13,32 @@ import java.util.List;
  */
 public interface ManufacturerRankRepository  extends JpaRepository<Author,Long> {
 
-    //SQL
-    //SELECT count(DISTINCT se.distinct_id) AS tcount, upper(se.manufacturer) AS tmanufacturer
-    // FROM songshu_shence_events se WHERE se.times BETWEEN '2017-04-29 00:00:00' AND '2017-04-30 00:00:00'
-    // AND se.manufacturer IS NOT NULL GROUP BY upper(se.manufacturer) ORDER BY tcount DESC LIMIT 10;
+    /**
+     * 机型分布排行(全平台)
+     * @param beginTime
+     * @param endTime
+     * @param topCount
+     * @return
+     */
+    @Query(value = "SELECT UPPER(se.manufacturer) AS tmanufacturer,COUNT(DISTINCT se.distinct_id) AS tcount " +
+        "FROM songshu_shence_events se " +
+        "WHERE se.event = '$pageview' AND se.times BETWEEN ?1 AND ?2 " +
+        "AND se.manufacturer IS NOT NULL AND  UPPER(se.manufacturer) NOT LIKE 'ITOOLSAVM%'" +
+        "GROUP BY UPPER(se.manufacturer) ORDER BY tcount DESC LIMIT ?3", nativeQuery = true)
+    List<Object[]> getManufacturerRankWithAllPlatform(Timestamp beginTime, Timestamp endTime,Integer topCount);
 
-    @Query(value = "SELECT upper(se.manufacturer) AS tmanufacturer,count(DISTINCT se.distinct_id) AS tcount  " +
-        "FROM songshu_shence_events se WHERE se.times BETWEEN ?1 AND ?2 " +
-        "AND se.manufacturer IS NOT NULL GROUP BY upper(se.manufacturer) ORDER BY tcount DESC LIMIT 10;", nativeQuery = true)
-    List<Object[]> getManufacturerRankWithAllPlatform(Timestamp beginTime, Timestamp endTime);
-
-    @Query(value = "SELECT upper(se.manufacturer) AS tmanufacturer,count(DISTINCT se.distinct_id) AS tcount  " +
-        "FROM songshu_shence_events se WHERE se.times BETWEEN ?1 AND ?2 AND se.platform = ?3 " +
-        "AND se.manufacturer IS NOT NULL GROUP BY upper(se.manufacturer) ORDER BY tcount DESC LIMIT 10;", nativeQuery = true)
-    List<Object[]> getManufacturerRankWithSinglePlatform(Timestamp beginTime, Timestamp endTime,String platformName);
+    /**
+     * 机型分布排行（单平台）
+     * @param beginTime
+     * @param endTime
+     * @param platformName
+     * @param topCount
+     * @return
+     */
+    @Query(value = "SELECT UPPER(se.manufacturer) AS tmanufacturer,COUNT(DISTINCT se.distinct_id) AS tcount " +
+        "FROM songshu_shence_events se " +
+        "WHERE se.event = '$pageview' AND se.times BETWEEN ?1 AND ?2 " +
+        "AND se.platform = ?3 AND se.manufacturer IS NOT NULL AND  UPPER(se.manufacturer) NOT LIKE 'ITOOLSAVM%'" +
+        "GROUP BY UPPER(se.manufacturer) ORDER BY tcount DESC LIMIT ?4", nativeQuery = true)
+    List<Object[]> getManufacturerRankWithSinglePlatform(Timestamp beginTime, Timestamp endTime,String platformName,Integer topCount);
 }

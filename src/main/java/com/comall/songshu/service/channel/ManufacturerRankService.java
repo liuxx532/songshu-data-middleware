@@ -18,16 +18,16 @@ public class ManufacturerRankService {
     @Autowired
     private ManufacturerRankRepository manufacturerRankRepository;
 
-    public String getManufacturerRank(String target, String platformName, Timestamp beginTime, Timestamp endTime){
+    public String getManufacturerRank(String target, String platformName, Timestamp beginTime, Timestamp endTime,Integer topCount){
 
         int platform = TransferUtil.getPlatform(platformName);
 
-        List<Object[]> manufacturerRank = null;
+        List<Object[]> manufacturerRank;
 
         if (platform<0) {
-            manufacturerRank = manufacturerRankRepository.getManufacturerRankWithAllPlatform(beginTime,endTime);
+            manufacturerRank = manufacturerRankRepository.getManufacturerRankWithAllPlatform(beginTime,endTime,topCount);
         }else{
-            manufacturerRank = manufacturerRankRepository.getManufacturerRankWithSinglePlatform(beginTime,endTime,platformName);
+            manufacturerRank = manufacturerRankRepository.getManufacturerRankWithSinglePlatform(beginTime,endTime,platformName,topCount);
         }
 
         return JsonStringBuilder.buildRankJsonString(manufacturerRank);

@@ -1,5 +1,6 @@
 package com.comall.songshu.service.channel;
 
+import com.comall.songshu.constants.CommonConstants;
 import com.comall.songshu.constants.TitleConstants;
 import com.comall.songshu.repository.channel.ChannelPageInfoRepository;
 import com.comall.songshu.web.rest.util.JsonStringBuilder;
@@ -75,6 +76,10 @@ public class ChannelPageInfoService {
         if(Optional.ofNullable(channelPageInfoResult)
             .filter(c -> c.size()>0).isPresent()){
             for(Object[] o : channelPageInfoResult){
+                String channelName = (String) o[0];
+                if(CommonConstants.channelFilter.contains(channelName)){
+                    continue;
+                }
                 JSONObject channelPageInfo;
                 try {
                     channelPageInfo = new JSONObject();

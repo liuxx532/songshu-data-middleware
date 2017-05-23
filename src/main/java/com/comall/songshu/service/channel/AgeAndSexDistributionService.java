@@ -4,6 +4,7 @@ import com.comall.songshu.constants.CommonConstants;
 import com.comall.songshu.repository.channel.AgeAndSexDistributionRepository;
 import com.comall.songshu.web.rest.util.JsonStringBuilder;
 import com.comall.songshu.web.rest.util.TransferUtil;
+import com.sun.xml.internal.bind.v2.TODO;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -35,6 +36,7 @@ public class AgeAndSexDistributionService {
         int platform = TransferUtil.getPlatform(platformName);
         List<Object[]> sexDistributionResult;
         JSONArray sexDistributionArray =  new JSONArray();
+        List<Object[]> sexGroupList = new LinkedList<>();
         if (platform<0) {
             sexDistributionResult = ageAndSexDistributionRepository.getSexDistributionWithAllPlatform(beginTime,endTime);
         }else{
@@ -60,9 +62,9 @@ public class AgeAndSexDistributionService {
                 if(sex != null){
                     totalCount =  totalCount.add(count);
                     if(sex.equalsIgnoreCase(CommonConstants.SEX_MALE)){
-                        maleCount = count;
+                        maleCount = maleCount.add(count);
                     }else {
-                        femaleCount = count;
+                        femaleCount = femaleCount.add(count);
                     }
                 }
 
@@ -74,6 +76,7 @@ public class AgeAndSexDistributionService {
                 malePercentage = maleCount.doubleValue()/totalCount.doubleValue();
                 femalePercentage = femaleCount.doubleValue()/totalCount.doubleValue();
             }
+
             try {
                 JSONObject maleObject = new JSONObject();
                 maleObject.put(CommonConstants.SEX_MALE,malePercentage);
@@ -81,11 +84,17 @@ public class AgeAndSexDistributionService {
                 femaleObject.put(CommonConstants.SEX_FEMALE,femalePercentage);
                 sexDistributionArray.put(maleObject);
                 sexDistributionArray.put(femaleObject);
+
+
+                sexGroupList.add(new Object[]{CommonConstants.SEX_MALE,maleCount.intValue()});
+                sexGroupList.add(new Object[]{CommonConstants.SEX_FEMALE,femaleCount.intValue()});
+
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
-        return sexDistributionArray.toString();
+        //TODO 临时用饼状图数据结构提交 后续需要修改
+        return JsonStringBuilder.buildPieJsonString(sexGroupList);
     }
 
     public String getAgeDistribution(String target, String platformName, Timestamp beginTime, Timestamp endTime){
