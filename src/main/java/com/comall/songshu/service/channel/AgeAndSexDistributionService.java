@@ -4,7 +4,6 @@ import com.comall.songshu.constants.CommonConstants;
 import com.comall.songshu.repository.channel.AgeAndSexDistributionRepository;
 import com.comall.songshu.web.rest.util.JsonStringBuilder;
 import com.comall.songshu.web.rest.util.TransferUtil;
-import com.sun.xml.internal.bind.v2.TODO;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -12,9 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
