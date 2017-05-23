@@ -109,5 +109,73 @@ FROM songshu_cs_order_item i
 WHERE op."PaymentStatus" = 1 AND o."orderType" IN (0, 1) AND o."OrderStatus" NOT IN (6, 7) AND i."ProductId" = 100100590
 AND prr.paidTime BETWEEN '2016-06-01 00:00:00' AND '2016-08-01 00:00:00';
 
+-- 退出率：统计时间段内，从该页退出的访客数÷进入该页的访客数的百分比
+-- 退出商品页面访客数： 指进入到该商品页面后退出应用的用户数 对应 ProductRevenueRepository 退出商品页面访客数
+--TODO 需要前端埋点后添加
 
+-- 统计时间段内，所有访问过该商品页面的的人数（去重）ProductRevenueRepository 商品页面访客数
+SELECT COUNT(DISTINCT e.distinct_id)  FROM songshu_shence_events e
+WHERE e.event = '$pageview'
+AND (e.url like '#/tabs/categories/productInfo?productId=100100436%'
+    OR e.url like '#/tabs/cart/productInfo?productId=100100436%'
+    OR e.url like '#/tabs/index/productInfo?productId=100100436%'
+    OR e.url like '#/tabs/user/productInfo?productId=100100436%'
+    OR e.url like '#/tabs/integral/integralInfo?id=100100436&type=0%')
+AND e.times BETWEEN '2016-05-11 00:00:00' AND '2017-05-11 00:00:00';
 
+-- 统计时间段内所有已支付订单（不包含已取消/已关闭状态），销售数量最多的商品 对应 ProductLinkedSalesRepository 商品销售量TOP
+SELECT p."Id" AS productId, p."Name" AS productName, base.salesCount AS salesCount FROM
+    (SELECT i."ProductId"  AS productId, SUM(i."Quantity") AS salesCount
+     FROM songshu_cs_order_item i
+         INNER JOIN songshu_cs_order o ON o."Id" = i."OrderId"
+         INNER JOIN songshu_cs_order_payable op ON op."OrderId" = o."Id"
+         INNER JOIN (SELECT DISTINCT t."MergePaymentNo" FROM
+             (SELECT pr."MergePaymentNo", MAX(pr."PaidTime") AS paidTime
+                           FROM (SELECT * FROM songshu_cs_payment_record
+                                 WHERE "PaymentModeType" = 2 AND "PaidTime" BETWEEN (CAST('2016-06-01 00:00:00' AS TIMESTAMP) - INTERVAL '1 D')
+                                 AND (CAST('2016-08-01 00:00:00' AS TIMESTAMP) + INTERVAL '1 D')) pr
+                           GROUP BY "MergePaymentNo") t
+                     WHERE  t.paidTime BETWEEN '2016-06-01 00:00:00' AND '2016-08-01 00:00:00') cpr
+             ON cpr."MergePaymentNo" = op."MergePaymentId"
+     WHERE op."PaymentStatus" = 1 AND o."orderType" IN (0, 1) AND o."OrderStatus" NOT IN (6, 7)
+     GROUP BY i."ProductId"
+     ORDER BY salesCount DESC
+     LIMIT 3) base
+    INNER JOIN songshu_cs_product p ON p."Id" = base.productId
+ORDER BY base.salesCount DESC
+LIMIT 3;
+
+-- 统计时间段内所有已支付订单（不包含已取消/已关闭状态），销售数量最多的商品搭配 对应 ProductLinkedSalesRepository 商品销售量搭配TOP
+SELECT p."Id" AS productId, p."Name" AS productName, base.salesCount AS salesCount FROM
+    (SELECT i."ProductId" AS productId, SUM(i."Quantity") AS salesCount FROM songshu_cs_order_item i
+         INNER JOIN songshu_cs_order o ON o."Id" = i."OrderId"
+         INNER JOIN songshu_cs_order_payable op ON op."OrderId" = o."Id"
+         INNER JOIN (SELECT DISTINCT t."MergePaymentNo" FROM
+            (SELECT pr."MergePaymentNo",  MAX(pr."PaidTime") AS paidTime FROM
+                (SELECT * FROM songshu_cs_payment_record WHERE "PaymentModeType" = 2 AND "PaidTime"
+                 BETWEEN (CAST('2016-06-01 00:00:00' AS TIMESTAMP) - INTERVAL '1 D')
+                 AND (CAST('2016-08-01 00:00:00' AS TIMESTAMP) + INTERVAL '1 D')) pr GROUP BY "MergePaymentNo") t
+                 WHERE t.paidTime BETWEEN '2016-06-01 00:00:00' AND '2016-08-01 00:00:00') cpr
+                 ON cpr."MergePaymentNo" = op."MergePaymentId"
+                 WHERE op."PaymentStatus" = 1 AND o."orderType" IN (0, 1) AND o."OrderStatus" NOT IN (6, 7)
+                 AND o."Id" IN (SELECT DISTINCT (scoi."OrderId") FROM songshu_cs_order_item scoi
+                              INNER JOIN songshu_cs_order co ON co."Id" = scoi."OrderId"
+                              INNER JOIN songshu_cs_order_payable cop ON cop."OrderId" = co."Id"
+                              INNER JOIN (SELECT pr."MergePaymentNo", MAX(pr."PaidTime") AS paidTime FROM
+             (SELECT * FROM songshu_cs_payment_record WHERE "PaymentModeType" = 2 AND "PaidTime"
+              BETWEEN (CAST('2016-06-01 00:00:00' AS TIMESTAMP) - INTERVAL '1 D')
+              AND ( CAST('2016-08-01 00:00:00' AS TIMESTAMP) + INTERVAL '1 D')) pr
+              GROUP BY "MergePaymentNo") cpr ON cpr."MergePaymentNo" = cop."MergePaymentId"
+              WHERE cop."PaymentStatus" = 1 AND co."orderType" IN (0, 1) AND co."OrderStatus" NOT IN (6, 7) AND cpr.paidTime
+              BETWEEN '2016-06-01 00:00:00' AND '2016-08-01 00:00:00' AND scoi."ProductId" = 100100436)
+              AND i."ProductId" != 100100436
+     GROUP BY i."ProductId"
+     ORDER BY salesCount DESC
+     LIMIT 3) base
+    INNER JOIN songshu_cs_product p ON p."Id" = base.productId
+ORDER BY base.salesCount DESC
+LIMIT 3;
+
+-- 获取商品图片地址 对应 ProductLinkedSalesRepository 商品图片地址
+SELECT  CONCAT('/',pic."Location",'/',pic."Digest",pic."Extension") AS picUrl FROM  songshu_cs_product_picture pp
+INNER JOIN songshu_cs_picture pic ON pic."Id" = pp."pictureId" WHERE pp."productId" = ?1 ORDER BY pic."Id" ASC  LIMIT 1;

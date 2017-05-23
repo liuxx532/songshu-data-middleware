@@ -191,14 +191,7 @@ public interface ProductRevenueRepository extends JpaRepository<Author,Long> {
      * @param integralProductLike
      * @return
      */
-//    SELECT COUNT(DISTINCT e.distinct_id)  FROM songshu_shence_events e
-//    WHERE e.event = '$pageview'
-//    AND (e.referrer like '#/tabs/categories/productInfo?productId=100100436%'
-//        OR e.referrer like '#/tabs/cart/productInfo?productId=100100436%'
-//        OR e.referrer like '#/tabs/index/productInfo?productId=100100436%'
-//        OR e.referrer like '#/tabs/user/productInfo?productId=100100436%'
-//        OR e.referrer like '#/tabs/integral/integralInfo?id=100100436&type=0%')
-//    AND e.times BETWEEN '2016-05-11 00:00:00' AND '2017-05-11 00:00:00';
+    //TODO SQL和需求不一致需要前端埋点后修改
     @Query(value = "SELECT COUNT(DISTINCT e.distinct_id)  FROM songshu_shence_events e " +
         "WHERE e.event = '$pageview' " +
         "AND (e.referrer like ?3 OR e.referrer like ?4 OR e.referrer like ?5 OR e.referrer like ?6 OR e.referrer like ?7 )" +
@@ -218,14 +211,7 @@ public interface ProductRevenueRepository extends JpaRepository<Author,Long> {
      * @param integralProductLike
      * @return
      */
-//    SELECT COUNT(DISTINCT e.distinct_id)  FROM songshu_shence_events e
-//    WHERE e.event = '$pageview'
-//    AND (e.referrer like '#/tabs/categories/productInfo?productId=100100436%'
-//        OR e.referrer like '#/tabs/cart/productInfo?productId=100100436%'
-//        OR e.referrer like '#/tabs/index/productInfo?productId=100100436%'
-//        OR e.referrer like '#/tabs/user/productInfo?productId=100100436%'
-//        OR e.referrer like '#/tabs/integral/integralInfo?id=100100436&type=0%')
-//    AND e.times BETWEEN '2016-05-11 00:00:00' AND '2017-05-11 00:00:00' AND e.platform ='ios';
+    //TODO SQL和需求不一致需要前端埋点后修改
     @Query(value = "SELECT COUNT(DISTINCT e.distinct_id)  FROM songshu_shence_events e " +
         "WHERE e.event = '$pageview' " +
         "AND (e.referrer like ?4 OR e.referrer like ?5 OR e.referrer like ?6 OR e.referrer like ?7 OR e.referrer like ?8 )" +
@@ -244,14 +230,6 @@ public interface ProductRevenueRepository extends JpaRepository<Author,Long> {
      * @param integralProductLike
      * @return
      */
-//    SELECT COUNT(DISTINCT e.distinct_id)  FROM songshu_shence_events e
-//    WHERE e.event = '$pageview'
-//    AND (e.url like '#/tabs/categories/productInfo?productId=100100436%'
-//        OR e.url like '#/tabs/cart/productInfo?productId=100100436%'
-//        OR e.url like '#/tabs/index/productInfo?productId=100100436%'
-//        OR e.url like '#/tabs/user/productInfo?productId=100100436%'
-//        OR e.url like '#/tabs/integral/integralInfo?id=100100436&type=0%')
-//    AND e.times BETWEEN '2016-05-11 00:00:00' AND '2017-05-11 00:00:00';
     @Query(value = "SELECT COUNT(DISTINCT e.distinct_id)  FROM songshu_shence_events e " +
         "WHERE e.event = '$pageview' " +
         "AND (e.url like ?3 OR e.url like ?4 OR e.url like ?5 OR e.url like ?6 OR e.url like ?7 )" +
@@ -271,14 +249,6 @@ public interface ProductRevenueRepository extends JpaRepository<Author,Long> {
      * @param integralProductLike
      * @return
      */
-//    SELECT COUNT(DISTINCT e.distinct_id)  FROM songshu_shence_events e
-//    WHERE e.event = '$pageview'
-//    AND (e.url like '#/tabs/categories/productInfo?productId=100100436%'
-//        OR e.url like '#/tabs/cart/productInfo?productId=100100436%'
-//        OR e.url like '#/tabs/index/productInfo?productId=100100436%'
-//        OR e.url like '#/tabs/user/productInfo?productId=100100436%'
-//        OR e.url like '#/tabs/integral/integralInfo?id=100100436&type=0%')
-//    AND e.times BETWEEN '2016-05-11 00:00:00' AND '2017-05-11 00:00:00' AND e.platform ='ios';
     @Query(value = "SELECT COUNT(DISTINCT e.distinct_id)  FROM songshu_shence_events e " +
         "WHERE e.event = '$pageview' " +
         "AND (e.url like ?4 OR e.url like ?5 OR e.url like ?6 OR e.url like ?7 OR e.url like ?8 )" +
