@@ -63,7 +63,7 @@ AND o."MemberId" IN (
                     HAVING min(o."OrderCreateTime") < '2016-06-01 00:00:00');
 
 -- 时间段内 毛利率 =（销售额-商品成本)÷销售额*100% 对应 GrossMarginRateRepository 毛利率
-SELECT COALESCE((grossmargin.AfterFoldingPrice - grossmargin.referCost)/ grossmargin.AfterFoldingPrice,0) AS goodsGrossMargin FROM
+SELECT COALESCE((grossmargin.AfterFoldingPrice - grossmargin.referCost)/ (CASE WHEN grossmargin.AfterFoldingPrice = 0 THEN null ELSE grossmargin.AfterFoldingPrice END),0) AS goodsGrossMargin FROM
 (SELECT SUM(base."Quantity" * base.cost)AS referCost, SUM(base."AfterFoldingPrice")AS AfterFoldingPrice  FROM
     (SELECT coi."Quantity",CASE WHEN COALESCE(coi."ReferCost",0) =0 THEN g."CostPrice" ELSE coi."ReferCost" END AS cost,coi."AfterFoldingPrice"
      FROM  songshu_cs_order o
@@ -79,7 +79,7 @@ SELECT COALESCE((grossmargin.AfterFoldingPrice - grossmargin.referCost)/ grossma
 )grossmargin;
 
 -- 时间段内 毛利率 =（销售额-商品成本)÷销售额*100% 对应 GrossMarginRateRepository 毛利率趋势
-SELECT grossmargin.stime, grossmargin.etime, COALESCE(((grossmargin.AfterFoldingPrice - grossmargin.referCost)/ (grossmargin.AfterFoldingPrice)),0) AS goodsGrossMargin FROM
+SELECT grossmargin.stime, grossmargin.etime, COALESCE(((grossmargin.AfterFoldingPrice - grossmargin.referCost)/ (CASE WHEN grossmargin.AfterFoldingPrice = 0 THEN null ELSE grossmargin.AfterFoldingPrice END)),0) AS goodsGrossMargin FROM
 ( SELECT SUM(base."Quantity" * base.cost)AS referCost, SUM(base."AfterFoldingPrice")AS AfterFoldingPrice, base.stime, base.etime FROM
     (SELECT  coi."Quantity",coi."AfterFoldingPrice",CASE WHEN coi."ReferCost" = 0 THEN g."CostPrice" ELSE coi."ReferCost" END  AS cost,tss.stime,tss.etime
      FROM (SELECT DISTINCT oo."Id", cpr.paidTime

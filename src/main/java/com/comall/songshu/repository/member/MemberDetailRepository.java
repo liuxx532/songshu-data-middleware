@@ -79,7 +79,7 @@ public interface MemberDetailRepository extends JpaRepository<Author,Long> {
      * @param endTime
      * @return
      */
-    @Query(value = "SELECT COALESCE(sum(main.pay) / sum(main.register), 0) AS consumeTransferRate FROM " +
+    @Query(value = "SELECT COALESCE(sum(main.pay) / (CASE WHEN sum(main.register) = 0 THEN null ELSE sum(main.register) END), 0) AS consumeTransferRate FROM " +
         "    (SELECT MAX(CASE type WHEN 'pay' THEN memberCount ELSE 0 END) pay, " +
         "            MAX(CASE type WHEN 'register' THEN memberCount ELSE 0 END) register FROM " +
         "         (SELECT count(DISTINCT o.\"MemberId\") AS memberCount, 'pay' AS type, '1' AS date FROM songshu_cs_order o " +
@@ -108,7 +108,7 @@ public interface MemberDetailRepository extends JpaRepository<Author,Long> {
      * @param plateForm
      * @return
      */
-    @Query(value = "SELECT COALESCE(sum(main.pay) / sum(main.register), 0) AS consumeTransferRate FROM " +
+    @Query(value = "SELECT COALESCE(sum(main.pay) / (CASE WHEN sum(main.register) = 0 THEN null ELSE sum(main.register) END), 0) AS consumeTransferRate FROM " +
         "    (SELECT MAX(CASE type WHEN 'pay' THEN memberCount ELSE 0 END) pay, " +
         "            MAX(CASE type WHEN 'register' THEN memberCount ELSE 0 END) register FROM " +
         "         (SELECT count(DISTINCT o.\"MemberId\") AS memberCount, 'pay' AS type, '1' AS date FROM songshu_cs_order o " +

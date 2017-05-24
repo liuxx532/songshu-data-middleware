@@ -291,7 +291,7 @@ WHERE  op. "PaymentStatus" = 1 AND  o. "orderType" in(0,1) AND  o. "OrderStatus"
 AND pr.paidTime BETWEEN '2016-06-01 00:00:00' AND '2016-08-01 00:00:00';
 
 -- 统计时间段内，注册并消费的用户数占比（去重）公式：注册并消费的用户数÷注册用户数*100% 对应 MemberDetailRepository 注册消费转化率
-SELECT COALESCE(sum(main.pay) / sum(main.register), 0) AS consumeTransferRate FROM
+SELECT COALESCE(sum(main.pay) / (CASE WHEN sum(main.register) = 0 THEN null ELSE sum(main.register) END), 0) AS consumeTransferRate FROM
     (SELECT MAX(CASE type WHEN 'pay' THEN memberCount ELSE 0 END) pay,
             MAX(CASE type WHEN 'register' THEN memberCount ELSE 0 END) register FROM
          (SELECT count(DISTINCT o."MemberId") AS memberCount, 'pay' AS type, '1' AS date FROM songshu_cs_order o

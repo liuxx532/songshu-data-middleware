@@ -196,7 +196,7 @@ WHERE o."OrderStatus" NOT IN (6, 7) AND op."PaymentStatus" = 1
 AND  cpr.paidTime BETWEEN '2017-02-01 00:00:00' AND '2017-08-01 00:00:00' AND o."Channel" = 2 AND tsource.utm_source= 'APPLESTORE';
 
 -- 指定时间内渠道毛利率（全渠道）  对应 ChannelGrossMarginRateRepository  全渠道毛利率
-SELECT COALESCE((grossmargin.AfterFoldingPrice - grossmargin.referCost)/ grossmargin.AfterFoldingPrice,0.0) AS goodsGrossMargin
+SELECT COALESCE((grossmargin.AfterFoldingPrice - grossmargin.referCost)/ (CASE WHEN grossmargin.AfterFoldingPrice = 0 THEN null ELSE grossmargin.AfterFoldingPrice END),0.0) AS goodsGrossMargin
 FROM(SELECT SUM(base."Quantity"* base.cost)AS referCost, SUM(base."AfterFoldingPrice")AS AfterFoldingPrice
      FROM(SELECT  coi."Quantity",CASE WHEN COALESCE(coi."ReferCost",0) =0 THEN g."CostPrice" ELSE coi."ReferCost" END  AS cost,coi."AfterFoldingPrice"
           FROM songshu_cs_order_item coi
@@ -213,7 +213,7 @@ FROM(SELECT SUM(base."Quantity"* base.cost)AS referCost, SUM(base."AfterFoldingP
 )grossmargin;
 
 -- 指定时间内渠道毛利率（单渠道）  对应 ChannelGrossMarginRateRepository  单渠道毛利率
-SELECT COALESCE((grossmargin.AfterFoldingPrice - grossmargin.referCost)/ grossmargin.AfterFoldingPrice,0.0) AS goodsGrossMargin
+SELECT COALESCE((grossmargin.AfterFoldingPrice - grossmargin.referCost)/ (CASE WHEN grossmargin.AfterFoldingPrice = 0 THEN null ELSE grossmargin.AfterFoldingPrice END),0.0) AS goodsGrossMargin
 FROM(SELECT SUM(base."Quantity"* base.cost)AS referCost, SUM(base."AfterFoldingPrice")AS AfterFoldingPrice
      FROM(SELECT  coi."Quantity",CASE WHEN COALESCE(coi."ReferCost",0) =0 THEN g."CostPrice" ELSE coi."ReferCost" END  AS cost,coi."AfterFoldingPrice"
           FROM songshu_cs_order_item coi

@@ -20,7 +20,7 @@ public interface ChannelGrossMarginRateRepository extends JpaRepository<Author,L
      * @param endTime
      * @return
      */
-    @Query(value = "SELECT COALESCE((grossmargin.AfterFoldingPrice - grossmargin.referCost)/ grossmargin.AfterFoldingPrice,0.0) AS goodsGrossMargin " +
+    @Query(value = "SELECT COALESCE((grossmargin.AfterFoldingPrice - grossmargin.referCost)/ (CASE WHEN grossmargin.AfterFoldingPrice = 0 THEN null ELSE grossmargin.AfterFoldingPrice END),0.0) AS goodsGrossMargin " +
         "FROM(SELECT SUM(base.\"Quantity\"* base.cost)AS referCost, SUM(base.\"AfterFoldingPrice\")AS AfterFoldingPrice " +
         "     FROM(SELECT  coi.\"Quantity\",CASE WHEN COALESCE(coi.\"ReferCost\",0) =0 THEN g.\"CostPrice\" ELSE coi.\"ReferCost\" END  AS cost,coi.\"AfterFoldingPrice\" " +
         "          FROM songshu_cs_order_item coi " +
@@ -44,7 +44,7 @@ public interface ChannelGrossMarginRateRepository extends JpaRepository<Author,L
      * @param platform
      * @return
      */
-    @Query(value = "SELECT COALESCE((grossmargin.AfterFoldingPrice - grossmargin.referCost)/ grossmargin.AfterFoldingPrice,0.0) AS goodsGrossMargin " +
+    @Query(value = "SELECT COALESCE((grossmargin.AfterFoldingPrice - grossmargin.referCost)/ (CASE WHEN grossmargin.AfterFoldingPrice = 0 THEN null ELSE grossmargin.AfterFoldingPrice END),0.0) AS goodsGrossMargin " +
         "FROM(SELECT SUM(base.\"Quantity\"* base.cost)AS referCost, SUM(base.\"AfterFoldingPrice\")AS AfterFoldingPrice " +
         "     FROM(SELECT  coi.\"Quantity\",CASE WHEN COALESCE(coi.\"ReferCost\",0) =0 THEN g.\"CostPrice\" ELSE coi.\"ReferCost\" END  AS cost,coi.\"AfterFoldingPrice\" " +
         "          FROM songshu_cs_order_item coi " +
@@ -68,7 +68,7 @@ public interface ChannelGrossMarginRateRepository extends JpaRepository<Author,L
      * @param channelName
      * @return
      */
-    @Query(value = "SELECT COALESCE((grossmargin.AfterFoldingPrice - grossmargin.referCost)/ grossmargin.AfterFoldingPrice,0.0) AS goodsGrossMargin " +
+    @Query(value = "SELECT COALESCE((grossmargin.AfterFoldingPrice - grossmargin.referCost)/ (CASE WHEN grossmargin.AfterFoldingPrice = 0 THEN null ELSE grossmargin.AfterFoldingPrice END),0.0) AS goodsGrossMargin " +
         "FROM(SELECT SUM(base.\"Quantity\"* base.cost)AS referCost, SUM(base.\"AfterFoldingPrice\")AS AfterFoldingPrice " +
         "     FROM(SELECT  coi.\"Quantity\",CASE WHEN COALESCE(coi.\"ReferCost\",0) =0 THEN g.\"CostPrice\" ELSE coi.\"ReferCost\" END  AS cost,coi.\"AfterFoldingPrice\" " +
         "          FROM songshu_cs_order_item coi " +
@@ -102,7 +102,7 @@ public interface ChannelGrossMarginRateRepository extends JpaRepository<Author,L
      * @param channelName
      * @return
      */
-    @Query(value = "SELECT COALESCE((grossmargin.AfterFoldingPrice - grossmargin.referCost)/ grossmargin.AfterFoldingPrice,0.0) AS goodsGrossMargin " +
+    @Query(value = "SELECT COALESCE((grossmargin.AfterFoldingPrice - grossmargin.referCost)/ (CASE WHEN grossmargin.AfterFoldingPrice = 0 THEN null ELSE grossmargin.AfterFoldingPrice END),0.0) AS goodsGrossMargin " +
         "FROM(SELECT SUM(base.\"Quantity\"* base.cost)AS referCost, SUM(base.\"AfterFoldingPrice\")AS AfterFoldingPrice " +
         "     FROM(SELECT  coi.\"Quantity\",CASE WHEN COALESCE(coi.\"ReferCost\",0) =0 THEN g.\"CostPrice\" ELSE coi.\"ReferCost\" END  AS cost,coi.\"AfterFoldingPrice\" " +
         "          FROM songshu_cs_order_item coi " +
