@@ -56,8 +56,8 @@ public class FakeResource {
             //指标中文名称
             JSONArray targets = (JSONArray)obj.get("targets");
             JSONObject targetJsonObj = (JSONObject)targets.get(0);
-            String target =  (String)targetJsonObj.get("target");
-
+            String targetName =  (String)targetJsonObj.get("target");
+            String target = TargetsMap.fakeTargets().get(targetName);
             String result = fakeDataService.getFakeData(target);
             if(result != null){
                 return result;
