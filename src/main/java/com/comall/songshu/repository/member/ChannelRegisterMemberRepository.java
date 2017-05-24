@@ -16,21 +16,13 @@ import java.util.List;
 public interface ChannelRegisterMemberRepository extends JpaRepository<Author,Long>{
 
 
-
-//    SELECT COUNT(DISTINCT base.memberId) AS memberCount , upper(base.utm_source) FROM
-//        (SELECT mem."id" AS memberId,
-//         CASE
-//             WHEN mem."multipleChannelsId" = 1 AND u.utm_source IS NOT NULL THEN u.utm_source
-//             WHEN mem."multipleChannelsId" = 1 AND u.utm_source IS NULL THEN 'yingyongbao'
-//             WHEN mem."multipleChannelsId" = 2 THEN 'appstore'
-//             WHEN mem."multipleChannelsId" = 3 THEN 'weixin'
-//             WHEN mem."multipleChannelsId" = 5 THEN 'wap'
-//             ELSE 'wap'
-//             END  AS utm_source
-//             FROM songshu_cs_member mem
-//             LEFT JOIN songshu_shence_users u  ON u.second_id = mem."id"
-//             WHERE  mem."regTime" BETWEEN '2016-01-01 00:00:00' AND '2016-02-01 00:00:00' )base
-//    GROUP BY base.utm_source ORDER BY memberCount DESC LIMIT  10
+    /**
+     * 渠道注册用户（全平台）
+     * @param beginTime
+     * @param endTime
+     * @param topCount
+     * @return
+     */
     @Query(value = "    SELECT COUNT(DISTINCT base.memberId) AS memberCount , upper(base.utm_source) FROM " +
         "        (SELECT mem.\"id\" AS memberId, " +
         "         CASE " +
@@ -47,21 +39,14 @@ public interface ChannelRegisterMemberRepository extends JpaRepository<Author,Lo
         "    GROUP BY base.utm_source ORDER BY memberCount DESC LIMIT  ?3", nativeQuery = true)
     List<Object[]> getChannelMemberRegisterCountAllPlatform(Timestamp beginTime, Timestamp endTime, Integer topCount);
 
-
-//    SELECT COUNT(DISTINCT base.memberId) AS memberCount , upper(base.utm_source) FROM
-//        (SELECT mem."id" AS memberId,
-//         CASE
-//             WHEN mem."multipleChannelsId" = 1 AND u.utm_source IS NOT NULL THEN u.utm_source
-//             WHEN mem."multipleChannelsId" = 1 AND u.utm_source IS NULL THEN 'yingyongbao'
-//             WHEN mem."multipleChannelsId" = 2 THEN 'appstore'
-//             WHEN mem."multipleChannelsId" = 3 THEN 'weixin'
-//             WHEN mem."multipleChannelsId" = 5 THEN 'wap'
-//             ELSE 'wap'
-//             END  AS utm_source
-//             FROM songshu_cs_member mem
-//             LEFT JOIN songshu_shence_users u  ON u.second_id = mem."id"
-//             WHERE  mem."regTime" BETWEEN '2016-01-01 00:00:00' AND '2016-02-01 00:00:00' AND mem."multipleChannelsId" = 1)base
-//    GROUP BY base.utm_source ORDER BY memberCount DESC LIMIT  10
+    /**
+     * 渠道注册用户（单平台）
+     * @param beginTime
+     * @param endTime
+     * @param plateForm
+     * @param topCount
+     * @return
+     */
     @Query(value = "SELECT COUNT(DISTINCT base.memberId) AS memberCount , upper(base.utm_source) FROM " +
         " (SELECT mem.\"id\" AS memberId, " +
         "        CASE " +

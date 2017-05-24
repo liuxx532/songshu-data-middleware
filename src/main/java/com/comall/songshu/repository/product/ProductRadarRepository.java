@@ -20,7 +20,7 @@ public interface ProductRadarRepository  extends JpaRepository<Author,Long> {
      * @return
      */
     @Query(value = "SELECT main.categoryName, COALESCE(main.revenue,0) AS revenue,COALESCE(main.saleNum,0) AS saleNum, COALESCE(main.cost,0) AS cost," +
-        "COALESCE((main.revenue-main.cost)/main.revenue,0) as gross ,COALESCE(main.productCount,0) AS productCount " +
+        "COALESCE((main.revenue-main.cost)/(CASE WHEN main.revenue = 0 THEN null ELSE main.revenue END),0) as gross ,COALESCE(main.productCount,0) AS productCount " +
         "FROM(SELECT base.categoryName, sum(base.\"AfterFoldingPrice\") AS revenue,sum(base.\"Quantity\") as saleNum, sum(base.cost*base.\"Quantity\") AS cost," +
         "          count(DISTINCT base.\"ProductId\") as productCount ,base.categoryId" +
         "  FROM(SELECT c.\"Name\" as categoryName,i.\"AfterFoldingPrice\",i.\"Quantity\",i.\"ProductId\",c.\"Id\" AS categoryId" +
@@ -54,7 +54,7 @@ public interface ProductRadarRepository  extends JpaRepository<Author,Long> {
      * @return
      */
     @Query(value = "SELECT main.categoryName, COALESCE(main.revenue,0) AS revenue,COALESCE(main.saleNum,0) AS saleNum, COALESCE(main.cost,0) AS cost," +
-        "COALESCE((main.revenue-main.cost)/main.revenue,0) as gross ,COALESCE(main.productCount,0) AS productCount " +
+        "COALESCE((main.revenue-main.cost)/(CASE WHEN main.revenue = 0 THEN null ELSE main.revenue END),0) as gross ,COALESCE(main.productCount,0) AS productCount " +
         "FROM(SELECT base.categoryName, sum(base.\"AfterFoldingPrice\") AS revenue,sum(base.\"Quantity\") as saleNum, sum(base.cost*base.\"Quantity\") AS cost," +
         "          count(DISTINCT base.\"ProductId\") as productCount ,base.categoryId" +
         "  FROM(SELECT c.\"Name\" as categoryName,i.\"AfterFoldingPrice\",i.\"Quantity\",i.\"ProductId\",c.\"Id\" AS categoryId" +

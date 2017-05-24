@@ -26,7 +26,7 @@ public interface ProductRevenueRepository extends JpaRepository<Author,Long> {
     @Query(value = "SELECT c.\"Name\" AS categoryName,p.\"Name\" AS productName,main.revenue,main.cost,main.salesCount," +
         "    main.grossMaringRate,p.\"Id\" AS productId,p.\"Code\" AS productCode FROM" +
         "    (SELECT calbase.\"ProductId\",calbase.revenue,calbase.cost,calbase.salesCount," +
-        "         COALESCE((calbase.revenue - calbase.cost) / calbase.revenue, 0) AS grossMaringRate FROM" +
+        "         COALESCE((calbase.revenue - calbase.cost) / (CASE WHEN calbase.revenue = 0 THEN null ELSE calbase.revenue END), 0) AS grossMaringRate FROM" +
         "         (SELECT base.\"ProductId\",COALESCE(SUM(base.\"AfterFoldingPrice\"), 0) AS revenue,count(DISTINCT base.orderId) AS salesCount," +
         "              COALESCE(SUM(base.cost * base.\"Quantity\"), 0) AS cost FROM" +
         "             (SELECT g.\"ProductId\",g.\"Id\" AS goodsId,i.\"Quantity\", CASE WHEN COALESCE(i.\"ReferCost\", 0) = 0 THEN g.\"CostPrice\" ELSE i.\"ReferCost\" END AS cost," +
@@ -64,7 +64,7 @@ public interface ProductRevenueRepository extends JpaRepository<Author,Long> {
     @Query(value = "SELECT c.\"Name\" AS categoryName,p.\"Name\" AS productName,main.revenue,main.cost,main.salesCount," +
         "    main.grossMaringRate,p.\"Id\" AS productId,p.\"Code\" AS productCode FROM" +
         "    (SELECT calbase.\"ProductId\",calbase.revenue,calbase.cost,calbase.salesCount," +
-        "         COALESCE((calbase.revenue - calbase.cost) / calbase.revenue, 0) AS grossMaringRate FROM" +
+        "         COALESCE((calbase.revenue - calbase.cost) / (CASE WHEN calbase.revenue = 0 THEN null ELSE calbase.revenue END), 0) AS grossMaringRate FROM" +
         "         (SELECT base.\"ProductId\",COALESCE(SUM(base.\"AfterFoldingPrice\"), 0) AS revenue,count(DISTINCT base.orderId) AS salesCount," +
         "              COALESCE(SUM(base.cost * base.\"Quantity\"), 0) AS cost FROM" +
         "             (SELECT g.\"ProductId\",g.\"Id\" AS goodsId,i.\"Quantity\", CASE WHEN COALESCE(i.\"ReferCost\", 0) = 0 THEN g.\"CostPrice\" ELSE i.\"ReferCost\" END AS cost," +

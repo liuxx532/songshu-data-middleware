@@ -10,7 +10,7 @@ GROUP BY "MergePaymentNo", "PaymentModeType";
 
 
 SELECT main.categoryName, COALESCE(main.revenue,0) AS revenue,COALESCE(main.saleNum,0) AS saleNum, COALESCE(main.cost,0) AS cost,
-COALESCE((main.revenue-main.cost)/main.revenue,0) as gross ,COALESCE(main.productCount,0) AS productCount
+COALESCE((main.revenue-main.cost)/(CASE WHEN main.revenue = 0 THEN null ELSE main.revenue END),0) as gross ,COALESCE(main.productCount,0) AS productCount
 FROM(SELECT base.categoryName, sum(base."AfterFoldingPrice") AS revenue,sum(base."Quantity") as saleNum, sum(base.cost*base."Quantity") AS cost,
           count(DISTINCT base."ProductId") as productCount ,base.categoryId
   FROM(SELECT c."Name" as categoryName,i."AfterFoldingPrice",i."Quantity",i."ProductId",c."Id" AS categoryId
@@ -63,7 +63,7 @@ WHERE c."Id" != 1 GROUP BY c."Name" ORDER BY tamount DESC) tcom;
 SELECT c."Name" AS categoryName,p."Name" AS productName,main.revenue,main.cost,main.salesCount,
     main.grossMaringRate,p."Id" AS productId,p."Code" AS productCode FROM
     (SELECT calbase."ProductId",calbase.revenue,calbase.cost,calbase.salesCount,
-         COALESCE((calbase.revenue - calbase.cost) / calbase.revenue, 0) AS grossMaringRate FROM
+         COALESCE((calbase.revenue - calbase.cost) / (CASE WHEN calbase.revenue = 0 THEN null ELSE calbase.revenue END), 0) AS grossMaringRate FROM
          (SELECT base."ProductId",COALESCE(SUM(base."AfterFoldingPrice"), 0) AS revenue,count(DISTINCT base.orderId) AS salesCount,
               COALESCE(SUM(base.cost * base."Quantity"), 0) AS cost FROM
              (SELECT g."ProductId",g."Id" AS goodsId,i."Quantity", CASE WHEN COALESCE(i."ReferCost", 0) = 0 THEN g."CostPrice" ELSE i."ReferCost" END AS cost,
