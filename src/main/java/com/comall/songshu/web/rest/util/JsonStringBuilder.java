@@ -10,6 +10,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -339,5 +340,40 @@ public class JsonStringBuilder {
             }
         }
         return  resultArray.toString();
+    }
+
+    /**
+     * 封装横向柱状图josn
+     * @param list (list构成 0_name,1_value)
+     * @param tagValue 标记值
+     * @param needReverse 是否需要反序，目前图标上不支持配置排序
+     * @return
+     */
+    public static  String buildHistogramPanelJsonString(List<Object[]> list,String tagValue,Boolean needReverse){
+        JSONObject result = new JSONObject();
+
+        try {
+            JSONArray dataArray = new JSONArray();
+            if(Optional.ofNullable(list)
+                .filter(l -> l.size() >0)
+                .isPresent()){
+                if (needReverse){
+                    Collections.reverse(list);
+                }
+                for (Object[] o : list ){
+
+                    JSONObject data = new JSONObject();
+                    data.put("name",o[0]);
+                    data.put("value",o[1]);
+                    dataArray.put(data);
+                }
+            }
+            result.put("tagValue",tagValue);
+            result.put("items",dataArray);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return  result.toString();
     }
 }

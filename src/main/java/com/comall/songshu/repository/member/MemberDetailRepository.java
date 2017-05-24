@@ -135,8 +135,8 @@ public interface MemberDetailRepository extends JpaRepository<Author,Long> {
      * @param endTime
      * @return
      */
-    @Query(value = "SELECT count(DISTINCT (n.\"MemberId\")) AS rebuyMemberCount FROM " +
-        "    (SELECT DISTINCT (o.\"MemberId\") FROM songshu_cs_order o " +
+    @Query(value = "SELECT count(DISTINCT (n.memberId)) AS rebuyMemberCount FROM " +
+        "    (SELECT DISTINCT (o.\"MemberId\") AS memberId FROM songshu_cs_order o " +
         "         INNER JOIN songshu_cs_order_payable op ON op.\"OrderId\" = o.\"Id\" " +
         "         INNER JOIN (SELECT pr.\"MergePaymentNo\", MAX(pr.\"PaidTime\") AS paidTime FROM " +
         "            (SELECT * FROM songshu_cs_payment_record WHERE \"PaymentModeType\" = 2 " +
@@ -145,7 +145,7 @@ public interface MemberDetailRepository extends JpaRepository<Author,Long> {
         "             GROUP BY \"MergePaymentNo\") prr ON prr.\"MergePaymentNo\" = op.\"MergePaymentId\" " +
         "         WHERE op.\"PaymentStatus\" = 1 AND o.\"orderType\" IN (0, 1) AND o.\"OrderStatus\" NOT IN (6, 7) " +
         "         AND prr.paidTime BETWEEN ?1 AND ?2  ) n " +
-        "WHERE n.\"MemberId\" IN " +
+        "WHERE n.memberId IN " +
         "      (SELECT DISTINCT (o.\"MemberId\") FROM songshu_cs_order o " +
         "           INNER JOIN songshu_cs_order_payable op ON op.\"OrderId\" = o.\"Id\" " +
         "           INNER JOIN (SELECT \"MergePaymentNo\",  MAX(\"PaidTime\") AS paidTime FROM songshu_cs_payment_record  " +
@@ -162,8 +162,8 @@ public interface MemberDetailRepository extends JpaRepository<Author,Long> {
      * @param plateForm
      * @return
      */
-    @Query(value = "SELECT count(DISTINCT (n.\"MemberId\")) AS rebuyMemberCount FROM " +
-        "    (SELECT DISTINCT (o.\"MemberId\") FROM songshu_cs_order o " +
+    @Query(value = "SELECT count(DISTINCT (n.memberId)) AS rebuyMemberCount FROM " +
+        "    (SELECT DISTINCT (o.\"MemberId\") AS memberId FROM songshu_cs_order o " +
         "         INNER JOIN songshu_cs_order_payable op ON op.\"OrderId\" = o.\"Id\" " +
         "         INNER JOIN (SELECT pr.\"MergePaymentNo\", MAX(pr.\"PaidTime\") AS paidTime FROM " +
         "            (SELECT * FROM songshu_cs_payment_record WHERE \"PaymentModeType\" = 2 " +
@@ -172,7 +172,7 @@ public interface MemberDetailRepository extends JpaRepository<Author,Long> {
         "             GROUP BY \"MergePaymentNo\") prr ON prr.\"MergePaymentNo\" = op.\"MergePaymentId\" " +
         "         WHERE op.\"PaymentStatus\" = 1 AND o.\"orderType\" IN (0, 1) AND o.\"OrderStatus\" NOT IN (6, 7) " +
         "         AND prr.paidTime BETWEEN ?1 AND ?2 AND o.\"Channel\" = ?3 ) n " +
-        "WHERE n.\"MemberId\" IN " +
+        "WHERE n.memberId IN " +
         "      (SELECT DISTINCT (o.\"MemberId\") FROM songshu_cs_order o " +
         "           INNER JOIN songshu_cs_order_payable op ON op.\"OrderId\" = o.\"Id\" " +
         "           INNER JOIN (SELECT \"MergePaymentNo\",  MAX(\"PaidTime\") AS paidTime FROM songshu_cs_payment_record  " +

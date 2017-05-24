@@ -30,6 +30,6 @@ public class RegionRankService {
             regionRank = regionRankRepository.getRegionRankWithSinglePlatform(beginTime,endTime,platformName,topCount);
         }
 
-        return JsonStringBuilder.buildRankJsonString(regionRank);
+        return JsonStringBuilder.buildHistogramPanelJsonString(regionRank,"地区人数",true);
     }
 }

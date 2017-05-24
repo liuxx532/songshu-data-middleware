@@ -76,7 +76,7 @@ public interface AgeAndSexDistributionRepository extends JpaRepository<Author,Lo
         "              ,COUNT(DISTINCT(m.id)) as memberCount " +
         "              FROM  songshu_cs_member m " +
         "              INNER JOIN songshu_cs_member_info info ON info.\"memberId\" = m.id " +
-        "              WHERE m.\"regTime\"  BETWEEN ?1 AND ?2 " +
+        "              WHERE m.\"regTime\"  BETWEEN ?1 AND ?2  AND info.birthday IS NOT NULL " +
         "              GROUP BY age ORDER BY age ASC " +
         "            ) birthInfo " +
         ")ageGroupInfo " +
@@ -109,7 +109,7 @@ public interface AgeAndSexDistributionRepository extends JpaRepository<Author,Lo
         "              ,COUNT(DISTINCT(m.id)) as memberCount " +
         "              FROM  songshu_cs_member m " +
         "              INNER JOIN songshu_cs_member_info info ON info.\"memberId\" = m.id " +
-        "              WHERE m.\"regTime\"  BETWEEN ?1 AND ?2 AND m.\"multipleChannelsId\" = ?3 " +
+        "              WHERE m.\"regTime\"  BETWEEN ?1 AND ?2 AND m.\"multipleChannelsId\" = ?3  AND info.birthday IS NOT NULL " +
         "              GROUP BY age ORDER BY age ASC " +
         "            ) birthInfo " +
         ")ageGroupInfo " +

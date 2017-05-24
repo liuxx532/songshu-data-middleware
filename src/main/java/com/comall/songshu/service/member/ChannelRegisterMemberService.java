@@ -1,6 +1,7 @@
 package com.comall.songshu.service.member;
 
 import com.comall.songshu.repository.member.ChannelRegisterMemberRepository;
+import com.comall.songshu.web.rest.util.JsonStringBuilder;
 import com.comall.songshu.web.rest.util.TransferUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,8 +35,6 @@ public class ChannelRegisterMemberService {
             channelMemberRegisterCountResult = channelRegisterMemberRepository.getChannelMemberRegisterCountSinglePlatform(beginTime,endTime,platform,topCount);
         }
 
-        List<Object[] > channelMemberRegisterCount = Optional.ofNullable(channelMemberRegisterCountResult).orElse(null);
-        //TODO 返回数据拼装
-        return channelMemberRegisterCount.toString();
+        return JsonStringBuilder.buildHistogramPanelJsonString(channelMemberRegisterCountResult,"渠道人数",true);
     }
 }

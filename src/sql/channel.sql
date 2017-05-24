@@ -269,7 +269,7 @@ SELECT ageGroupInfo.ageGroup AS ageGroup , COALESCE(SUM(ageGroupInfo.memberCount
               ,COUNT(DISTINCT(m.id)) as memberCount
               FROM  songshu_cs_member m
               INNER JOIN songshu_cs_member_info info ON info."memberId" = m.id
-              WHERE m."regTime"  BETWEEN '2016-05-01 00:00:00' AND '2016-06-01 00:00:00' AND m."multipleChannelsId" = 1
+              WHERE m."regTime"  BETWEEN '2016-05-01 00:00:00' AND '2016-06-01 00:00:00' AND m."multipleChannelsId" = 1 AND info.birthday IS NOT NULL
               GROUP BY age ORDER BY age ASC
             ) birthInfo
 )ageGroupInfo

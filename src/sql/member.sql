@@ -312,8 +312,8 @@ SELECT COALESCE(sum(main.pay) / sum(main.register), 0) AS consumeTransferRate FR
      GROUP BY date) main;
 
 -- 统计时间段内有复购行为的用户占比（去重）。 PS:复购用户概念:统计时间段之前有过成功购买行为的用户在统计时间段内再次消费。公式：（复购用户数÷消费用户数）*100% 对应 MemberDetailRepository 复购率
-SELECT count(DISTINCT (n."MemberId")) AS rebuyMemberCount FROM
-    (SELECT DISTINCT (o."MemberId") FROM songshu_cs_order o
+SELECT count(DISTINCT (n.memberId)) AS rebuyMemberCount FROM
+    (SELECT DISTINCT (o."MemberId") AS memberId FROM songshu_cs_order o
          INNER JOIN songshu_cs_order_payable op ON op."OrderId" = o."Id"
          INNER JOIN (SELECT pr."MergePaymentNo", MAX(pr."PaidTime") AS paidTime FROM
             (SELECT * FROM songshu_cs_payment_record WHERE "PaymentModeType" = 2
@@ -322,7 +322,7 @@ SELECT count(DISTINCT (n."MemberId")) AS rebuyMemberCount FROM
              GROUP BY "MergePaymentNo") prr ON prr."MergePaymentNo" = op."MergePaymentId"
          WHERE op."PaymentStatus" = 1 AND o."orderType" IN (0, 1) AND o."OrderStatus" NOT IN (6, 7)
          AND prr.paidTime BETWEEN '2016-08-01 00:00:00' AND '2017-08-01 00:00:00' AND o."Channel" = 1) n
-WHERE n."MemberId" IN
+WHERE n.memberId IN
       (SELECT DISTINCT (o."MemberId") FROM songshu_cs_order o
            INNER JOIN songshu_cs_order_payable op ON op."OrderId" = o."Id"
            INNER JOIN (SELECT "MergePaymentNo",  MAX("PaidTime") AS paidTime FROM songshu_cs_payment_record
@@ -342,19 +342,19 @@ AND e.times BETWEEN ?1 AND ?2 AND e.platform =?3 ;
 
 -- 统计时间段内，注册成功的用户数 对应 ChannelRegisterMemberRepository 渠道注册用户
 
-SELECT COUNT(DISTINCT base.memberId) AS memberCount , upper(base.utm_source) FROM
-(SELECT mem. "id " AS memberId,
+SELECT  upper(base.utm_source),COUNT(DISTINCT base.memberId) AS memberCount FROM
+(SELECT mem. "id" AS memberId,
     CASE
-    WHEN mem. "multipleChannelsId " = 1 AND u.utm_source IS NOT NULL THEN u.utm_source
-    WHEN mem. "multipleChannelsId " = 1 AND u.utm_source IS NULL THEN 'yingyongbao'
-    WHEN mem. "multipleChannelsId " = 2 THEN 'appstore'
-    WHEN mem. "multipleChannelsId " = 3 THEN 'weixin'
-    WHEN mem. "multipleChannelsId " = 5 THEN 'wap'
+    WHEN mem. "multipleChannelsId" = 1 AND u.utm_source IS NOT NULL THEN u.utm_source
+    WHEN mem. "multipleChannelsId" = 1 AND u.utm_source IS NULL THEN 'yingyongbao'
+    WHEN mem. "multipleChannelsId" = 2 THEN 'appstore'
+    WHEN mem. "multipleChannelsId" = 3 THEN 'weixin'
+    WHEN mem. "multipleChannelsId" = 5 THEN 'wap'
     ELSE 'wap'
     END  AS utm_source
 FROM songshu_cs_member mem
-LEFT JOIN songshu_shence_users u  ON u.second_id = mem. "id "
-WHERE  mem. "regTime " BETWEEN ?1 AND ?2 AND mem. "multipleChannelsId " = ?3)base
+LEFT JOIN songshu_shence_users u  ON u.second_id = mem. "id"
+WHERE  mem. "regTime" BETWEEN ?1 AND ?2 AND mem. "multipleChannelsId" = ?3)base
 GROUP BY base.utm_source ORDER BY memberCount DESC LIMIT  ?4;
 
 -- 根据时间获取事件次数 对应 MemberShareRepository 获取用户分享

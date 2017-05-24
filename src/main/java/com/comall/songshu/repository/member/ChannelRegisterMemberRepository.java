@@ -23,7 +23,7 @@ public interface ChannelRegisterMemberRepository extends JpaRepository<Author,Lo
      * @param topCount
      * @return
      */
-    @Query(value = "    SELECT COUNT(DISTINCT base.memberId) AS memberCount , upper(base.utm_source) FROM " +
+    @Query(value = "    SELECT upper(base.utm_source), COUNT(DISTINCT base.memberId) AS memberCount   FROM " +
         "        (SELECT mem.\"id\" AS memberId, " +
         "         CASE " +
         "             WHEN mem.\"multipleChannelsId\" = 1 AND u.utm_source IS NOT NULL THEN u.utm_source " +
@@ -47,7 +47,7 @@ public interface ChannelRegisterMemberRepository extends JpaRepository<Author,Lo
      * @param topCount
      * @return
      */
-    @Query(value = "SELECT COUNT(DISTINCT base.memberId) AS memberCount , upper(base.utm_source) FROM " +
+    @Query(value = "SELECT upper(base.utm_source), COUNT(DISTINCT base.memberId) AS memberCount  FROM " +
         " (SELECT mem.\"id\" AS memberId, " +
         "        CASE " +
         "        WHEN mem.\"multipleChannelsId\" = 1 AND u.utm_source IS NOT NULL THEN u.utm_source " +
