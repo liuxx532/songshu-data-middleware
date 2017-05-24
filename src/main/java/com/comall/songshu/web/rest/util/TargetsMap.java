@@ -80,4 +80,12 @@ public class TargetsMap {
         return mockTargets;
     }
 
+    static Map<String,String> fakeTargets= new HashMap<>();
+    public static Map<String,String> fakeTargets() {
+        fakeTargets.putAll(getTargets());
+        fakeTargets.putAll(memberTargets());
+        fakeTargets.putAll(channelTargets());
+        fakeTargets.putAll(productTargets());
+        return fakeTargets;
+    }
 }

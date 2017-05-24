@@ -10,11 +10,6 @@ import java.util.List;
  * @create 2017-05-08-15:43
  **/
 public class CommonConstants {
-    /**
-     * 是否使用假数据
-     */
-    public static boolean isFake = true;
-
 
     /**
      * 图片域名

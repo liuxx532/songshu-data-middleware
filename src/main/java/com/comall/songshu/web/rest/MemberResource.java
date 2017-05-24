@@ -1,18 +1,13 @@
 package com.comall.songshu.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
-import com.comall.songshu.constants.CommonConstants;
 import com.comall.songshu.constants.TrendConstants;
-import com.comall.songshu.service.FakeDataService;
 import com.comall.songshu.service.member.ChannelRegisterMemberService;
 import com.comall.songshu.service.member.MemberDetailService;
 import com.comall.songshu.service.member.MemberFunnelService;
 import com.comall.songshu.service.member.MemberShareService;
 import com.comall.songshu.web.rest.util.ServiceUtil;
 import com.comall.songshu.web.rest.util.TargetsMap;
-import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -36,8 +31,6 @@ public class MemberResource {
 
     private final Logger log = LoggerFactory.getLogger(MemberResource.class);
 
-    @Autowired
-    private FakeDataService fakeDataService;
 
     @Autowired
     private MemberShareService memberShareService;
@@ -130,13 +123,6 @@ public class MemberResource {
 
             if (beginTime != null && endTime!= null
                 && target != null && platform != null){
-
-                if(CommonConstants.isFake){
-                    String result = fakeDataService.getFakeData(target);
-                    if(result != null){
-                        return result;
-                    }
-                }
 
                 switch (target) {
                     // 单个指标

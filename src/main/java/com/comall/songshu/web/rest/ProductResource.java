@@ -1,8 +1,6 @@
 package com.comall.songshu.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
-import com.comall.songshu.constants.CommonConstants;
-import com.comall.songshu.service.FakeDataService;
 import com.comall.songshu.service.product.ProductCategoryRankService;
 import com.comall.songshu.service.product.ProductLinkedSalesService;
 import com.comall.songshu.service.product.ProductRadarService;
@@ -32,8 +30,6 @@ import java.util.Optional;
 @RequestMapping("/product")
 public class ProductResource {
 
-    @Autowired
-    private FakeDataService fakeDataService;
 
     @Autowired
     private ProductRevenueService productRevenueService;
@@ -133,12 +129,6 @@ public class ProductResource {
             if (beginTime != null && endTime!= null
                 && target != null && platform != null){
 
-                if(CommonConstants.isFake){
-                    String result = fakeDataService.getFakeData(target);
-                    if(result != null){
-                        return result;
-                    }
-                }
                 switch (target) {
                     case "ProductRevenue":
                         return productRevenueService.getProductRevenue(target,platform,beginTime,endTime,20);
