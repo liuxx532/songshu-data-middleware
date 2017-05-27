@@ -34,33 +34,34 @@ public class ServiceUtil {
         return  Optional.ofNullable(dateTime)
             .map(String::trim)
             .filter( s -> s.length() > 0)
-            .map( t -> new DateTime(t))
-            .map( d -> d.getMillis())
-            .map( m -> new DateTime(m).withZone(DateTimeZone.forID("+00")).toString())
+            .map( t -> new DateTime(t).withZone(DateTimeZone.forID("+08")).toString())
             .orElse(null);
     }
 
     /**
      * 根据时间区间，获取环比的开始时间
-     * @param beginTime 2017-11-11 00:00:00 不能为空 null ""
-     * @param endTime 2017-11-11 00:00:00 不能为空 null ""
+     * @param beginTime 2017-11-11 00:00:00 不能为空 null
+     * @param endTime 2017-11-11 00:00:00 不能为空 null
      * @return
      */
     public String[] getChainIndexDateTime(String beginTime, String endTime) {
 
+        beginTime = formatDateTime(beginTime);
+        endTime = formatDateTime(endTime);
+
         Long bTime = Optional.ofNullable(beginTime)
             .map(String::trim)
-            .filter( s -> s.length() >0)
-            .map( t -> new DateTime(t))
+            .filter( s -> s.length() > 0)
+            .map( t -> new DateTime(t).withZone(DateTimeZone.forID("+08")))
             .map( d -> d.getMillis())
-            .orElseThrow(() ->  new IllegalArgumentException("Invalid datetime input string beginTime: " + beginTime ));
+            .orElseThrow(() ->  new IllegalArgumentException("Invalid datetime input string beginTime: "  ));
 
         Long eTime = Optional.ofNullable(endTime)
             .map(String::trim)
-            .filter( s -> s.length() >0)
-            .map( t -> new DateTime(t))
+            .filter( s -> s.length() > 0)
+            .map( t -> new DateTime(t).withZone(DateTimeZone.forID("+08")))
             .map( d -> d.getMillis())
-            .orElseThrow(() ->  new IllegalArgumentException("Invalid datetime input string endTime: " + endTime ));
+            .orElseThrow(() ->  new IllegalArgumentException("Invalid datetime input string endTime: " ));
 
         Long bwTimes = 2 * bTime - eTime;
         String endTime2 = endTime;
@@ -72,14 +73,14 @@ public class ServiceUtil {
         final String bEndWith = beginTime.substring(8, 19);
         final String eEndWith = endTime.substring(11, 19);
 
-        if ("23:59:59" == eEndWith) {
+        if (eEndWith.equals("23:59:59")) {
             eTime += 1000;
-            endTime2 = new DateTime(eTime).withZone(DateTimeZone.forID("+00")).toString();
+            endTime2 = new DateTime(eTime).withZone(DateTimeZone.forID("+08")).toString();
             eEndWith2 = endTime2.substring(8, 19);
         }
 
         //如果时间差超过27天，并且时分秒是00:00:00 或 23:59:59   2017-11-11 00:00:00
-        if ((eTime - bTime) > (27 * 24 * 3600 * 1000L) && "01T00:00:00" == bEndWith && "01T00:00:00" == eEndWith2) {
+        if ((eTime - bTime) > (27 * 24 * 3600 * 1000L) && bEndWith.equals("01T00:00:00") &&  eEndWith2.equals("01T00:00:00")) {
             final String bStartWith = beginTime.substring(0, 10);
             final String eStartWith = endTime2.substring(0, 10);
 
@@ -110,10 +111,10 @@ public class ServiceUtil {
             } else {
                 chainIndexStartTime = year + "-" + mon + "-01T00:00:00";
             }
-            chainIndexEndTime = new DateTime(bTime - 1000).withZone(DateTimeZone.forID("+00")).toString();
+            chainIndexEndTime = new DateTime(bTime - 1000).withZone(DateTimeZone.forID("+08")).toString();
         } else {
             //如果不超过27天,直接按时间做减法
-            chainIndexStartTime = new DateTime(bwTimes).withZone(DateTimeZone.forID("+00")).toString();
+            chainIndexStartTime = new DateTime(bwTimes).withZone(DateTimeZone.forID("+08")).toString();
         }
         if (null == chainIndexEndTime)
             chainIndexEndTime = beginTime;
@@ -136,7 +137,8 @@ public class ServiceUtil {
             .orElse(null);
         Long bTime = Optional.ofNullable(beginTime)
             .map(String::trim)
-            .map( t -> new DateTime(t))
+            .filter( s -> s.length() > 0)
+            .map( t -> new DateTime(t).withZone(DateTimeZone.forID("+00")))
             .map( d -> d.getMillis())
             .orElse(null);
 
@@ -189,5 +191,10 @@ public class ServiceUtil {
         return Timestamp.valueOf(parsedStrDatetime);
     }
 
-
+    public Timestamp parseUTCTimestamp(String strDatetime) {
+        strDatetime = formatDateTime(strDatetime);
+        DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
+        String parsedStrDatetime = DateTime.parse(strDatetime).toString(dateTimeFormatter);
+        return Timestamp.valueOf(parsedStrDatetime);
+    }
 }

@@ -57,12 +57,12 @@ public class AssembleUtil {
             beginTime = Optional.of(fromTimeStr)
                 .map(String::trim)
                 .filter(s -> s.length() >0)
-                .map(v -> ServiceUtil.getInstance().parseTimestamp(v))
+                .map(v -> ServiceUtil.getInstance().parseUTCTimestamp(v))
                 .orElse(null);
             endTime = Optional.of(toTimeStr)
                 .map(String::trim)
                 .filter(s -> s.length() >0)
-                .map( s -> ServiceUtil.getInstance().parseTimestamp(s))
+                .map( s -> ServiceUtil.getInstance().parseUTCTimestamp(s))
                 .orElse(null);
             //环比时间
             String[] chainCreateTime = ServiceUtil.getInstance().getChainIndexDateTime(fromTimeStr,toTimeStr);
@@ -89,6 +89,12 @@ public class AssembleUtil {
         dateMap.put("endTime",endTime);
         dateMap.put("chainBeginTime",chainBeginTime);
         dateMap.put("chainEndTime",chainEndTime);
+//        System.out.println("===fromTimeStr=="+fromTimeStr);
+//        System.out.println("====toTimeStr="+toTimeStr);
+//        System.out.println("===beginTime=="+beginTime);
+//        System.out.println("====endTime="+endTime);
+//        System.out.println("====chainBeginTime="+chainBeginTime);
+//        System.out.println("===chainEndTime=="+chainEndTime);
         return dateMap;
     }
 
