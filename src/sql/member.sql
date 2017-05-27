@@ -340,6 +340,12 @@ AND e.times BETWEEN ?1 AND ?2;
 SELECT count(1) FROM songshu_shence_events e WHERE e.event ='$pageview'
 AND e.times BETWEEN ?1 AND ?2 AND e.platform =?3 ;
 
+-- 统计时间段内，访问时长 对应 MemberDetailRepository 访问时长
+SELECT COALESCE(SUM(e.staytime),0) FROM songshu_shence_events e where e.event = '$userStayTime'
+AND e.times BETWEEN ?1 AND ?2 AND e.platform =?3 ;
+
+
+
 -- 统计时间段内，注册成功的用户数 对应 ChannelRegisterMemberRepository 渠道注册用户
 
 SELECT  upper(base.utm_source),COUNT(DISTINCT base.memberId) AS memberCount FROM

@@ -25,7 +25,7 @@ public class ChannelUniqueVisitorsService {
         Double chainUniqueVisitors;
 
         int platform = TransferUtil.getPlatform(platformName);
-        boolean isChannelNameEmpty = channelName == null || channelName == "";
+        boolean isChannelNameEmpty = channelName == null || channelName.equals("");
 
         if (platform<0){//全部
             if(isChannelNameEmpty){

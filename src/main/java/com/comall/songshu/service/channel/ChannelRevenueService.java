@@ -24,10 +24,10 @@ public class ChannelRevenueService {
     public String getChannelRevenue(String target, String platformName,String channelName, Timestamp beginTime, Timestamp endTime, Timestamp chainBeginTime, Timestamp chainEndTime) {
 
         int platform = TransferUtil.getPlatform(platformName);
-        Double revenueResult = null;
-        Double chainRevenueResult = null;
+        Double revenueResult;
+        Double chainRevenueResult;
 
-        boolean isChannelNameEmpty = channelName == null || channelName == "";
+        boolean isChannelNameEmpty = channelName == null || channelName.equals("");
 
         if (platform<0){
             if(isChannelNameEmpty){

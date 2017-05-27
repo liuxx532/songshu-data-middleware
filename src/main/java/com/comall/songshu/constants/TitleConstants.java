@@ -72,4 +72,16 @@ public class TitleConstants {
      * 注册用户数
      */
     public static  String REGISTER_COUNT = "registerCount";
+
+
+    /**
+     * 指标名
+     */
+    public static  String TAG_NAME = "tagName";
+
+
+    /**
+     * 指标值
+     */
+    public static  String TAG_VALUE = "tagValue";
 }

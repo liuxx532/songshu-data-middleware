@@ -9,10 +9,7 @@ import springfox.documentation.spring.web.json.Json;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 
 /**
@@ -23,19 +20,22 @@ public class JsonStringBuilder {
 
     public static String buildCommonJsonString(String target, JSONArray dataPointsArray, String columnName) {
         JSONArray resultArray = new JSONArray();
-        try {
-            JSONObject result = new JSONObject();
-            result.put("target",target);
-            result.put("datapoints",dataPointsArray);
-            result.put("columnName",columnName);
-            resultArray.put(result);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        JSONObject result = buildCommonJsonObject(target, dataPointsArray,columnName);
+        resultArray.put(result);
         return resultArray.toString();
     }
 
-
+    public static JSONObject buildCommonJsonObject(String target, Object dataPointsArray, String columnName) {
+        JSONObject result = new JSONObject();
+        try {
+            result.put("target",target);
+            result.put("datapoints",dataPointsArray);
+            result.put("columnName",columnName);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
 
     /**
      * 构建index首页头部指标
@@ -376,4 +376,107 @@ public class JsonStringBuilder {
 
         return  result.toString();
     }
+
+    /**
+     * 封装表格类型
+     * @param valueList 表内具体内容 valueList中的数据顺序要和title对应的顺序一致
+     * @param titleList 表title
+     * @param targetName
+     * @return
+     */
+    public static  String buildTableJsonString(List<Object[]> valueList,List<Object[]> titleList,String targetName){
+
+        if(titleList != null && titleList.size()>0 && valueList != null && valueList.size()>0){
+            try {
+                //标题指标数
+                int titleLength = titleList.size();
+                long currentMills = System.currentTimeMillis();
+
+                //表头
+                Map<String,String> titleMap = new LinkedHashMap<>();
+                for (Object[] oTile : titleList){
+                    titleMap.put((String) oTile[0],(String)oTile[1]);
+                }
+                JSONArray titleArray = new JSONArray();
+
+                titleArray.put(titleMap);
+                titleArray.put(currentMills);
+
+                //表内具体内容
+                List<JSONObject> valueJsonList = new LinkedList<>();
+                for (int i=0;i<valueList.size();i++){
+                    JSONObject valueJson = new JSONObject();
+                    Object[] oValue = valueList.get(i);
+                    if(oValue.length != titleLength){
+                        break;
+                    }
+                    for (int j=0;j<titleList.size();j++){
+                        valueJson.put((String) titleList.get(j)[0],oValue[j]);
+                    }
+                    valueJsonList.add(valueJson);
+                }
+                JSONArray valueArray = new JSONArray();
+                valueArray.put(valueJsonList);
+                valueArray.put(currentMills);
+
+                //构建主数据源
+                JSONArray dataPointArray = new JSONArray();
+                dataPointArray.put(valueArray);
+                dataPointArray.put(titleArray);
+
+                return buildCommonJsonString(targetName,dataPointArray,"");
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        }
+
+        return  null;
+    }
+
+    /**
+     * 封装漏斗图josn
+     * @param arrayList 支持多类别漏斗图（如：需要展示访客漏斗图及注册会员漏斗图等，无上限）
+     * @param targetArray  漏斗名称
+     * @return
+     */
+    public static  String buildFunnelJsonString(List<Object[]> arrayList,Object[] targetArray){
+        List<JSONObject> funnelList = new LinkedList<>();
+        if(arrayList != null && arrayList.size() >0 && targetArray != null && targetArray.length >0){
+            long currentMills = System.currentTimeMillis();
+            //1.校验数据格式是否正确
+            //漏斗数
+            int funnelCount = 0;
+            int targetLength = targetArray.length;
+            for (Object[] array : arrayList){
+                int length  = array.length;
+                if(funnelCount == 0){
+                    funnelCount = length;
+                }else if(funnelCount != length || targetLength != funnelCount){//数据错误，各类别漏斗图漏斗数不一致
+                    break;
+                }
+            }
+
+            //2.封装数据
+            if(funnelCount >0){
+                for(int i=0;i<funnelCount;i++){
+
+                    List<JSONArray> dataPointList= new LinkedList<>();
+
+                    for (int j=0;j<arrayList.size();j++){
+                        JSONArray point = new JSONArray();
+                        point.put(arrayList.get(j)[i]);
+                        point.put(currentMills);
+                        dataPointList.add(point);
+                    }
+
+                    JSONObject dataObject =  buildCommonJsonObject((String) targetArray[i],dataPointList,"");
+                    funnelList.add(dataObject);
+                }
+            }
+        }
+        return  new JSONArray(funnelList).toString();
+    }
+
 }

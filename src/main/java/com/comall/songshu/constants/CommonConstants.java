@@ -77,6 +77,34 @@ public class CommonConstants {
     public static final String VISIT_DEEP_LEVEL_SIX  = ">41";
 
 
+    /**访问时长*/
+    /**
+     * 访问时长1-3秒
+     */
+    public static final String VISIT_TIME_LEVEL_ONE = "1-3秒";
+    /**
+     * 访问时长4-10秒
+     */
+    public static final String VISIT_TIME_LEVEL_TWO = "4-10秒";
+    /**
+     * 访问时长11-30秒
+     */
+    public static final String VISIT_TIME_LEVEL_THREE  = "11-30秒";
+    /**
+     * 访问时长31-60秒
+     */
+    public static final String VISIT_TIME_LEVEL_FOUR = "31-60秒";
+    /**
+     * 访问时长1-2分
+     */
+    public static final String VISIT_TIME_LEVEL_FIVE  = "1-2分";
+    /**
+     * 访问时长2分+
+     */
+    public static final String VISIT_TIME_LEVEL_SIX  = "2分+";
+
+
+
     /**
      * 无用渠道过滤
      */

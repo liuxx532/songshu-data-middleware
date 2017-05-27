@@ -26,9 +26,9 @@ public class ChannelAvgOrderRevenueService {
 
 
         int platform = TransferUtil.getPlatform(platformName);
-        boolean isChannelNameEmpty = channelName == null || channelName == "";
-        Double avgOrderRevenueResult = null;
-        Double chainAvgOrderRevenueResult = null;
+        boolean isChannelNameEmpty = channelName == null || channelName.equals("");
+        Double avgOrderRevenueResult;
+        Double chainAvgOrderRevenueResult;
 
         if (platform<0){//全部
             if(isChannelNameEmpty){

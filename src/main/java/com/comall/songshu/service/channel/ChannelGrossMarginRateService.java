@@ -28,12 +28,12 @@ public class ChannelGrossMarginRateService {
     public String  getChannelGrossMarginRate(String target,String platformName,String channelName, Timestamp beginTime,Timestamp endTime,Timestamp chainBeginTime,Timestamp chainEndTime) {
 
         int platform = TransferUtil.getPlatform(platformName);
-        boolean isChannelNameEmpty = channelName == null || channelName == "";
+        boolean isChannelNameEmpty = channelName == null || channelName.equals("");
 
         //毛利率 = （销售额 - 商品成本）／ 销售额 * 100%
         //注：这里毛利率先不用乘以100%
-        Double grossMarginRateResult = null;
-        Double chainGrossMarginRateResult = null;
+        Double grossMarginRateResult;
+        Double chainGrossMarginRateResult;
 
         if (platform<0){
             if(isChannelNameEmpty){

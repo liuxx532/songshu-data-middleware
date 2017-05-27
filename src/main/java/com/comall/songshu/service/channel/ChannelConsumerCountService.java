@@ -26,7 +26,7 @@ public class ChannelConsumerCountService {
 
 
         int platform = TransferUtil.getPlatform(platformName);
-        boolean isChannelNameEmpty = channelName == null || channelName == "";
+        boolean isChannelNameEmpty = channelName == null || channelName.equals("");
         Double channelConsumerResult;
         Double chainChannelConsumerResult;
 

@@ -28,10 +28,10 @@ public class ChannelOrderCountService {
     public String  getChannelOrderCount(String target,String platformName,String channelName,Timestamp beginTime,Timestamp endTime,Timestamp chainBeginTime,Timestamp chainEndTime) {
 
         int platform = TransferUtil.getPlatform(platformName);
-        boolean isChannelNameEmpty = channelName == null || channelName == "";
+        boolean isChannelNameEmpty = channelName == null || channelName.equals("");
 
-        Double orderCountResult = null;
-        Double chainOrderCountResult = null;
+        Double orderCountResult;
+        Double chainOrderCountResult;
 
         if (platform<0){
             if(isChannelNameEmpty){

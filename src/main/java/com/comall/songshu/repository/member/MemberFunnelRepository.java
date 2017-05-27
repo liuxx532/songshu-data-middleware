@@ -64,7 +64,7 @@ public interface MemberFunnelRepository  extends JpaRepository<Author,Long> {
         "     WHERE e.event = 'OrderPaymentEvent' " +
         "           AND e.times BETWEEN  ?1 AND  ?2 ) e " +
         "        ON d.distinct_id = e.distinct_id ", nativeQuery = true)
-    List<Integer[]> getMemberFunnelWithAllPlatformForVisitor(Timestamp beginTime, Timestamp endTime);
+    List<Object[]> getMemberFunnelWithAllPlatformForVisitor(Timestamp beginTime, Timestamp endTime);
     /**
      * 会员漏斗（访客）(单平台)
      * @param beginTime
@@ -117,7 +117,7 @@ public interface MemberFunnelRepository  extends JpaRepository<Author,Long> {
         "     WHERE e.event = 'OrderPaymentEvent' " +
         "           AND e.times BETWEEN  ?1 AND  ?2 AND e.platform =  ?4) e " +
         "        ON d.distinct_id = e.distinct_id ", nativeQuery = true)
-    List<Integer[]> getMemberFunnelWithSinglePlatformForVisitor(Timestamp beginTime, Timestamp endTime, String os, String plateFormName);
+    List<Object[]> getMemberFunnelWithSinglePlatformForVisitor(Timestamp beginTime, Timestamp endTime, String os, String plateFormName);
     /**
      * 会员漏斗（注册会员）(全平台)
      * @param beginTime
@@ -199,7 +199,7 @@ public interface MemberFunnelRepository  extends JpaRepository<Author,Long> {
         "                AND e.times BETWEEN  ?1 AND  ?2) register " +
         "             ON i5.distinct_id = register.memberId) e " +
         "        ON d.distinct_id = e.distinct_id ", nativeQuery = true)
-    List<Integer[]> getMemberFunnelWithAllPlatformForRegister(Timestamp beginTime, Timestamp endTime);
+    List<Object[]> getMemberFunnelWithAllPlatformForRegister(Timestamp beginTime, Timestamp endTime);
     /**
      * 会员漏斗（注册会员）(单平台)
      * @param beginTime
@@ -282,5 +282,5 @@ public interface MemberFunnelRepository  extends JpaRepository<Author,Long> {
         "                AND e.times BETWEEN  ?1 AND  ?2) register " +
         "             ON i5.distinct_id = register.memberId) e " +
         "        ON d.distinct_id = e.distinct_id", nativeQuery = true)
-    List<Integer[]> getMemberFunnelWithSinglePlatformForRegister(Timestamp beginTime, Timestamp endTime, String os, String plateFormName);
+    List<Object[]> getMemberFunnelWithSinglePlatformForRegister(Timestamp beginTime, Timestamp endTime, String os, String plateFormName);
 }

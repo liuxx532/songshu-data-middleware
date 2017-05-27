@@ -1,5 +1,6 @@
 package com.comall.songshu.service.member;
 
+import com.comall.songshu.constants.TitleConstants;
 import com.comall.songshu.repository.member.MemberShareRepository;
 import com.comall.songshu.web.rest.util.JsonStringBuilder;
 import com.comall.songshu.web.rest.util.ServiceUtil;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,6 +31,11 @@ public class MemberShareService {
         Integer shareOrderCount = 0;
         Integer shareSpecialPageCount = 0;
         Integer shareRegisterCount = 0;
+
+
+        List<Object[]> titleList = new LinkedList<>();
+        List<Object[]> valueList = new LinkedList<>();
+
         if (platform<0) {
             //TODO 填入对应的事件字段名
             shareProductCount = memberShareRepository.getMemberShareWithAllPlatformByName("对应事件名称", beginTime, endTime);
@@ -44,8 +51,16 @@ public class MemberShareService {
             shareRegisterCount = memberShareRepository.getMemberShareWithSinglePlatformByName("对应事件名称", beginTime, endTime,platformName);
         }
 
-        //TODO 组装数据
-        return null;
+        //表头信息
+        titleList.add(new Object[]{TitleConstants.TAG_NAME,"指标名"});
+        titleList.add(new Object[]{TitleConstants.TAG_VALUE,"指标值"});
+        //表内信息
+        valueList.add(new Object[]{"分享商品次数",shareProductCount});
+        valueList.add(new Object[]{"分享订单次数",shareOrderCount});
+        valueList.add(new Object[]{"分享专题页次数",shareSpecialPageCount});
+        valueList.add(new Object[]{"分享注册次数",shareRegisterCount});
+
+        return JsonStringBuilder.buildTableJsonString(valueList,titleList,target);
     }
     public String getMemberShareTrendByName(String target, String platformName, Timestamp beginTime, Timestamp endTime,int aggCount){
 

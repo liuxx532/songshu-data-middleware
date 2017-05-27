@@ -29,7 +29,6 @@ public class ProductCategoryRankService {
         int platform = TransferUtil.getPlatform(platformName);
 
         List<Object[] > productCategoryRankResult;
-        List<Object[] > productCategoryRankAddResult = new ArrayList<>();//[[name,rate],[name,rate]]
 
         if (platform<0){
             productCategoryRankResult = productCategoryRankRepository.getProductCategoryRankWithAllPlatform(beginTime,endTime);
@@ -39,6 +38,9 @@ public class ProductCategoryRankService {
 
         //品类总销售额
         BigDecimal totalAmount = BigDecimal.ZERO;
+
+        List<Object[]> titleList = new LinkedList<>();
+        List<Object[]> valueList = new LinkedList<>();
 
         if(productCategoryRankResult != null){
             //计算品类总销售额
@@ -51,48 +53,15 @@ public class ProductCategoryRankService {
                 if(totalAmount.doubleValue() >0){
                     rankRate = ((BigDecimal) o[1]).doubleValue()/totalAmount.doubleValue();
                 }
-                productCategoryRankAddResult.add(new Object[]{o[0],rankRate});
+                valueList.add(new Object[]{o[0],rankRate});
             }
-            //只要前十
-//            if(productCategoryRankAddResult.size() > 10){
-//                productCategoryRankAddResult = productCategoryRankAddResult.subList(0,10);
-//            }
         }
 
-        return buildJson(productCategoryRankAddResult,target);
+        //表头信息
+        titleList.add(new Object[]{TitleConstants.CATEGORY_NAME,"品类名称"});
+        titleList.add(new Object[]{TitleConstants.REVENUE_RATE,"销售额占比"});
+
+        return JsonStringBuilder.buildTableJsonString(valueList,titleList,target);
     }
 
-    private String buildJson(List<Object[]> src,String target) {
-        JSONArray dataPointsArray = new JSONArray();
-        long currentMills = System.currentTimeMillis();
-        JSONArray titleDataPoint = new JSONArray();
-        List dataPoint = new LinkedList();
-        JSONArray dataPointParent = new JSONArray();
-        Map<String,String> titleDateItem = new LinkedHashMap<>();
-
-        //标题
-        titleDateItem.put(TitleConstants.CATEGORY_NAME, "品类名称");
-        titleDateItem.put(TitleConstants.REVENUE_RATE, "销售额占比");
-        titleDataPoint.put(titleDateItem);
-        titleDataPoint.put(currentMills);
-
-        //数据
-        for (Object[] item : src) {
-            JSONObject productCategoryData = new JSONObject();
-            try {
-                productCategoryData.put(TitleConstants.CATEGORY_NAME, item[0]);
-                productCategoryData.put(TitleConstants.REVENUE_RATE, item[1]);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            dataPoint.add(productCategoryData);
-        }
-        dataPointParent.put(dataPoint);
-        dataPointParent.put(currentMills);
-
-        dataPointsArray.put(dataPointParent);
-        dataPointsArray.put(titleDataPoint);
-
-        return JsonStringBuilder.buildCommonJsonString(target,dataPointsArray,"");
-    }
 }

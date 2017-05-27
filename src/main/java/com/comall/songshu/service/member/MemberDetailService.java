@@ -1,16 +1,19 @@
 package com.comall.songshu.service.member;
 
+import com.comall.songshu.constants.TitleConstants;
 import com.comall.songshu.repository.index.UniqueVisitorsRepository;
 import com.comall.songshu.repository.member.ChannelRegisterMemberRepository;
 import com.comall.songshu.repository.member.MemberDetailRepository;
+import com.comall.songshu.web.rest.util.JsonStringBuilder;
 import com.comall.songshu.web.rest.util.TransferUtil;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * 用户数据
@@ -29,10 +32,9 @@ public class MemberDetailService {
 
     public String getMemberDetail(String target, String platformName, Timestamp beginTime, Timestamp endTime) {
 
-
         int platform = TransferUtil.getPlatform(platformName);
         String os = TransferUtil.getSensorsOS(platform);
-        List<Object[] > memberDetailResult;
+
         //访客数
         Double uniqueVisitorCount;
         //消费用户数
@@ -51,9 +53,10 @@ public class MemberDetailService {
         //页面浏览量
         Integer visitDepth;
 
+        List<Object[]> titleList = new LinkedList<>();
+        List<Object[]> valueList = new LinkedList<>();
 
 
-        //TODO REPOSITORY层神策相关sql编写
         if (platform<0){//全部
             uniqueVisitorCount = uniqueVisitorsRepository.getUniqueVisitorsAllPlatform(beginTime,endTime);
             consumerCount = memberDetailRepository.getConsumerCountAllPlatform(beginTime,endTime);
@@ -75,7 +78,7 @@ public class MemberDetailService {
             }else{
                 openTimes = 0;
             }
-            visitTime = memberDetailRepository.getVisitTimeSinglePlatform(beginTime,endTime,platform);
+            visitTime = memberDetailRepository.getVisitTimeSinglePlatform(beginTime,endTime,platformName);
             visitDepth = memberDetailRepository.getVisitDepthSinglePlatform(beginTime,endTime,platformName);
         }
         //复购率
@@ -94,15 +97,21 @@ public class MemberDetailService {
             .map(d -> (int)(visitDepth/uniqueVisitorCount))
             .orElse(0);
 
-        //TODO 返回数据拼装
-        return "uniqueVisitorCount:"+uniqueVisitorCount+"==="
-            + "consumerCount:"+consumerCount+"==="
-            + "newRegisterCount:"+newRegisterCount+"==="
-            + "logonConsumeRate:"+logonConsumeRate+"==="
-            + "repeatPurchaseRate:"+repeatPurchaseRate+"==="
-            + "openTimes:"+openTimes+"==="
-            + "avgVisitTime:"+avgVisitTime+"==="
-            + "avgVisitDepth:"+avgVisitDepth;
+        //表头信息
+        titleList.add(new Object[]{TitleConstants.TAG_NAME,"指标名"});
+        titleList.add(new Object[]{TitleConstants.TAG_VALUE,"指标值"});
+        //表内信息
+        valueList.add(new Object[]{"访客数",uniqueVisitorCount});
+        valueList.add(new Object[]{"注册用户数",newRegisterCount});
+        valueList.add(new Object[]{"注册-消费转化率",logonConsumeRate});
+        valueList.add(new Object[]{"消费用户数",consumerCount});
+        valueList.add(new Object[]{"复购率",repeatPurchaseRate});
+        valueList.add(new Object[]{"启动次数",openTimes});
+        valueList.add(new Object[]{"平均访问时长",avgVisitTime});
+        valueList.add(new Object[]{"平均访问深度",avgVisitDepth});
+
+
+        return JsonStringBuilder.buildTableJsonString(valueList,titleList,target);
     }
 
 

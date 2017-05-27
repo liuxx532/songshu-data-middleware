@@ -28,7 +28,7 @@ public class ChannelPageInfoService {
 
 
     public String getChannelPageInfo(String target, String platformName, Timestamp beginTime, Timestamp endTime){
-        long currentMills = System.currentTimeMillis();
+
         int platform = TransferUtil.getPlatform(platformName);
         String os = TransferUtil.getSensorsOS(platform);
 
@@ -38,6 +38,9 @@ public class ChannelPageInfoService {
         List<Object[]> channelPageInfoAppResult = null;
         //非app返回值（微信和wap）
         List<Object[]> channelPageInfoWebResult = null;
+
+        List<Object[]> titleList = new LinkedList<>();
+        List<Object[]> valueList = new LinkedList<>();
 
         if (platform<0) {
             channelPageInfoAppResult = channelPageInfoRepository.getChannelPageInfoWithAllAppPlatform(beginTime,endTime);
@@ -49,57 +52,29 @@ public class ChannelPageInfoService {
         }
 
 
-        //封装表头
-        JSONArray channelPageInfoTitleArray =  new JSONArray();
-        Map<String,String> channelPageInfoTitleMap = new LinkedHashMap<>();
-        channelPageInfoTitleMap.put(TitleConstants.CHANNEL_NAME,"渠道名称");
-        channelPageInfoTitleMap.put(TitleConstants.INSTALL_COUNT,"下载量");
-        channelPageInfoTitleMap.put(TitleConstants.REGISTER_COUNT,"注册用户数");
-        channelPageInfoTitleArray.put(channelPageInfoTitleMap);
-        channelPageInfoTitleArray.put(currentMills);
-
-        JSONArray dataPointsArray =  new JSONArray();
-        JSONArray channelPageInfoDataPointArray =  new JSONArray();
-        List<JSONObject> channelPageInfoList = new LinkedList<>();
-
-        if(Optional.ofNullable(channelPageInfoAppResult)
-            .filter(c -> c.size()>0).isPresent()){
+        if(channelPageInfoAppResult != null && channelPageInfoAppResult.size() >0){
             channelPageInfoResult.addAll(channelPageInfoAppResult);
         }
 
-        if(Optional.ofNullable(channelPageInfoWebResult)
-            .filter(c -> c.size()>0).isPresent()){
+        if(channelPageInfoWebResult != null && channelPageInfoWebResult.size() >0){
             channelPageInfoResult.addAll(channelPageInfoWebResult);
         }
 
-        if(Optional.ofNullable(channelPageInfoResult)
-            .filter(c -> c.size()>0).isPresent()){
+        if(channelPageInfoResult.size()>0){
             for(Object[] o : channelPageInfoResult){
                 String channelName = (String) o[0];
                 if(CommonConstants.channelFilter.contains(channelName)){
                     continue;
                 }
-                JSONObject channelPageInfo;
-                try {
-                    channelPageInfo = new JSONObject();
-                    channelPageInfo.put(TitleConstants.CHANNEL_NAME,o[0]);
-                    channelPageInfo.put(TitleConstants.INSTALL_COUNT,o[1]);
-                    channelPageInfo.put(TitleConstants.REGISTER_COUNT,o[2]);
-                    channelPageInfoList.add(channelPageInfo);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                valueList.add(new Object[]{o[0],o[1],o[2]});
             }
         }
 
+        //表头信息
+        titleList.add(new Object[]{TitleConstants.CHANNEL_NAME,"渠道名称"});
+        titleList.add(new Object[]{TitleConstants.INSTALL_COUNT,"下载量"});
+        titleList.add(new Object[]{TitleConstants.REGISTER_COUNT,"注册用户数"});
 
-        channelPageInfoDataPointArray.put(channelPageInfoList);
-        channelPageInfoDataPointArray.put(currentMills);
-        dataPointsArray.put(channelPageInfoDataPointArray);
-        dataPointsArray.put(channelPageInfoTitleArray);
-        long end = System.currentTimeMillis();
-
-        System.out.println("===总耗时==="+(end-currentMills));
-        return JsonStringBuilder.buildCommonJsonString(target,dataPointsArray,"");
+        return JsonStringBuilder.buildTableJsonString(valueList,titleList,target);
     }
 }

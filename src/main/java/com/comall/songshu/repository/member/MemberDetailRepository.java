@@ -213,7 +213,8 @@ public interface MemberDetailRepository extends JpaRepository<Author,Long> {
      * @param endTime
      * @return
      */
-    @Query(value = "SELECT now()", nativeQuery = true)
+    @Query(value = "SELECT COALESCE(SUM(e.staytime),0) FROM songshu_shence_events e WHERE e.event = '$userStayTime' " +
+        "AND e.times BETWEEN ?1 AND ?2 ", nativeQuery = true)
     Integer getVisitTimeAllPlatform(Timestamp beginTime, Timestamp endTime);
 
     /**
@@ -223,8 +224,9 @@ public interface MemberDetailRepository extends JpaRepository<Author,Long> {
      * @param plateForm
      * @return
      */
-    @Query(value = "SELECT now()", nativeQuery = true)
-    Integer getVisitTimeSinglePlatform(Timestamp beginTime, Timestamp endTime, Integer plateForm);
+    @Query(value = "SELECT COALESCE(SUM(e.staytime),0) FROM songshu_shence_events e WHERE e.event = '$userStayTime' " +
+        "AND e.times BETWEEN ?1 AND ?2 AND e.platform =?3 ", nativeQuery = true)
+    Integer getVisitTimeSinglePlatform(Timestamp beginTime, Timestamp endTime, String plateForm);
 
     /**
      * 页面浏览量（全平台）

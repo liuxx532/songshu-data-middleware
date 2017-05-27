@@ -290,7 +290,7 @@ WHERE se.event = '$pageview' AND se.times BETWEEN '2016-01-01 00:00:00' AND '201
 AND se.platform = 'ios' AND se.city IS NOT NULL AND se.city != '未知'
 GROUP BY se.city ORDER BY tcount DESC LIMIT 10;
 
--- 指定时间内用户的访问深度（页面访问数）  对应 ManufacturerRankRepository  访问深度
+-- 指定时间内用户的访问深度（页面访问数）  对应 VisitDeepDistributionRepository  访问深度
 SELECT tcomm.tdeep,COUNT(tcomm.did)
 FROM(SELECT CASE WHEN tcom.tcount = 1 THEN '"+ CommonConstants.VISIT_DEEP_LEVEL_ONE+"'
         WHEN tcom.tcount >= 2 AND tcom.tcount <= 5 THEN '"+ CommonConstants.VISIT_DEEP_LEVEL_TWO+"'
@@ -304,3 +304,19 @@ FROM(SELECT CASE WHEN tcom.tcount = 1 THEN '"+ CommonConstants.VISIT_DEEP_LEVEL_
              ) tcom
 ) tcomm
 where tcomm.tdeep IS NOT NULL GROUP BY tcomm.tdeep;
+
+
+-- 指定时间内用户的访问时长（用户停留时长）  对应 VisitTimeDistributionRepository  访问时长
+SELECT tcomm.ttime,COUNT(tcomm.did)
+FROM(SELECT CASE WHEN tcom.stime >= 1 AND tcom.stime <= 3 THEN '"+ CommonConstants.VISIT_TIME_LEVEL_ONE+"'
+            WHEN tcom.stime >= 4 AND tcom.stime <= 10 THEN '"+ CommonConstants.VISIT_TIME_LEVEL_TWO+"'
+            WHEN tcom.stime >= 11 AND tcom.stime <= 39 THEN '"+ CommonConstants.VISIT_TIME_LEVEL_THREE+"'
+            WHEN tcom.stime >= 31 AND tcom.stime <= 60 THEN '"+ CommonConstants.VISIT_TIME_LEVEL_FOUR+"'
+            WHEN tcom.stime > 60 AND tcom.stime <= 120 THEN '"+ CommonConstants.VISIT_TIME_LEVEL_FIVE+"'
+            WHEN tcom.stime > 120 THEN '"+ CommonConstants.VISIT_TIME_LEVEL_SIX+"' END AS ttime, tcom.distinct_id AS did
+     FROM (SELECT COALESCE(SUM(se.staytime),0)/1000 AS stime, distinct_id
+           FROM songshu_shence_events se WHERE se.event = '$userStayTime' AND se.platform = 'ios'
+           AND se.times BETWEEN '2016-05-01 00:00:00' AND '2017-09-01 00:00:00' GROUP BY se.distinct_id
+          ) tcom
+    ) tcomm
+where tcomm.ttime IS NOT NULL GROUP BY tcomm.ttime;
