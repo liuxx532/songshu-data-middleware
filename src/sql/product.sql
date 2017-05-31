@@ -31,7 +31,7 @@ FROM (SELECT base.categoryName, COALESCE(SUM(base."AfterFoldingPrice"),0) AS rev
                       INNER JOIN songshu_cs_order_payable p ON o."Id" = p."OrderId"
                       WHERE p."PaymentStatus" = 1 AND o."OrderStatus" NOT IN (6, 7) AND o."Channel" IN (0, 1, 2, 3, 5)
                     ) oo ON oo."ProductId" = p."Id"
-         )base  WHERE base.categoryId != 1 AND  base."Searchable" = 1  GROUP BY base.categoryName  ORDER BY revenue DESC
+         )base  WHERE base.categoryId != 1   GROUP BY base.categoryName  ORDER BY revenue DESC
 )main WHERE  main.productCount>0;
 
 --  统计时间段内所有已支付品类金额，不包含已取消/已关闭状态。 对应 ProductCategoryRankRepository 商品品类销售额
@@ -52,7 +52,7 @@ LEFT JOIN (SELECT o."Id",i."ProductId",i."AfterFoldingPrice" FROM songshu_cs_ord
             INNER JOIN songshu_cs_order_payable p ON o."Id" = p."OrderId"
             WHERE p."PaymentStatus" = 1 AND o."OrderStatus" NOT IN (6, 7) AND o."Channel" IN (0, 1, 2, 3, 5)
           ) oo ON oo."ProductId" = p."Id"
-WHERE c."Id" != 1 AND c."Searchable" =1  GROUP BY c."Name" ORDER BY tamount DESC
+WHERE c."Id" != 1   GROUP BY c."Name" ORDER BY tamount DESC
 )base WHERE base.productCount >0 ;
 
 -- 商品销售详情 包括：销售额、成本、订单量、毛利率 对应 ProductRevenueRepository 商品的品类、名称、销售额、成本、订单量、毛利率

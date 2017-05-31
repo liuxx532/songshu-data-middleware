@@ -36,7 +36,7 @@ public interface ProductCategoryRankRepository extends JpaRepository<Author,Long
         "            INNER JOIN songshu_cs_order_payable p ON o.\"Id\" = p.\"OrderId\" " +
         "            WHERE p.\"PaymentStatus\" = 1 AND o.\"OrderStatus\" NOT IN (6, 7) AND o.\"Channel\" IN (0, 1, 2, 3, 5) " +
         "          ) oo ON oo.\"ProductId\" = p.\"Id\" " +
-        "WHERE c.\"Id\" != 1 AND c.\"Searchable\" =1  GROUP BY c.\"Name\" ORDER BY tamount DESC " +
+        "WHERE c.\"Id\" != 1  GROUP BY c.\"Name\" ORDER BY tamount DESC " +
         ")base WHERE base.productCount >0", nativeQuery = true)
     List<Object[]> getProductCategoryRankWithAllPlatform(Timestamp beginTime, Timestamp endTime);
 
@@ -64,7 +64,7 @@ public interface ProductCategoryRankRepository extends JpaRepository<Author,Long
         "            INNER JOIN songshu_cs_order_payable p ON o.\"Id\" = p.\"OrderId\" " +
         "            WHERE p.\"PaymentStatus\" = 1 AND o.\"OrderStatus\" NOT IN (6, 7) AND o.\"Channel\" = ?3  " +
         "          ) oo ON oo.\"ProductId\" = p.\"Id\" " +
-        "WHERE c.\"Id\" != 1 AND c.\"Searchable\" =1  GROUP BY c.\"Name\" ORDER BY tamount DESC " +
+        "WHERE c.\"Id\" != 1  GROUP BY c.\"Name\" ORDER BY tamount DESC " +
         ")base WHERE base.productCount >0", nativeQuery = true)
     List<Object[]> getProductCategoryRankWithSinglePlatform(Timestamp beginTime, Timestamp endTime, Integer platform);
 }

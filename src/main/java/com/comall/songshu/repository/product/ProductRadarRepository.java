@@ -41,7 +41,7 @@ public interface ProductRadarRepository  extends JpaRepository<Author,Long> {
         "                      INNER JOIN songshu_cs_order_payable p ON o.\"Id\" = p.\"OrderId\"\n" +
         "                      WHERE p.\"PaymentStatus\" = 1 AND o.\"OrderStatus\" NOT IN (6, 7) AND o.\"Channel\" IN (0, 1, 2, 3, 5)\n" +
         "                    ) oo ON oo.\"ProductId\" = p.\"Id\"\n" +
-        "         )base  WHERE base.categoryId != 1 AND  base.\"Searchable\" = 1  GROUP BY base.categoryName  ORDER BY revenue DESC\n" +
+        "         )base  WHERE base.categoryId != 1   GROUP BY base.categoryName  ORDER BY revenue DESC\n" +
         ")main WHERE  main.productCount>0", nativeQuery = true)
     List<Object[]> getProductRadarWithAllPlatform(Timestamp beginTime, Timestamp endTime);
 
@@ -74,7 +74,7 @@ public interface ProductRadarRepository  extends JpaRepository<Author,Long> {
         "                      INNER JOIN songshu_cs_order_payable p ON o.\"Id\" = p.\"OrderId\"\n" +
         "                      WHERE p.\"PaymentStatus\" = 1 AND o.\"OrderStatus\" NOT IN (6, 7) AND o.\"Channel\" = ?3 \n" +
         "                    ) oo ON oo.\"ProductId\" = p.\"Id\"\n" +
-        "         )base  WHERE base.categoryId != 1 AND  base.\"Searchable\" = 1  GROUP BY base.categoryName  ORDER BY revenue DESC\n" +
+        "         )base  WHERE base.categoryId != 1   GROUP BY base.categoryName  ORDER BY revenue DESC\n" +
         ")main WHERE  main.productCount>0", nativeQuery = true)
     List<Object[]> getProductRadarWithSinglePlatform(Timestamp beginTime, Timestamp endTime,Integer platform);
 }
