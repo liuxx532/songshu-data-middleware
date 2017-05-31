@@ -80,7 +80,9 @@ public class ServiceUtil {
         }
 
         //如果时间差超过27天，并且时分秒是00:00:00 或 23:59:59   2017-11-11 00:00:00
-        if ((eTime - bTime) > (27 * 24 * 3600 * 1000L) && bEndWith.equals("01T00:00:00") &&  eEndWith2.equals("01T00:00:00")) {
+        if ((eTime - bTime) > (27 * 24 * 3600 * 1000L)
+            && bEndWith.equals("01T00:00:00")
+            && eEndWith2 != null && eEndWith2.equals("01T00:00:00")) {
             final String bStartWith = beginTime.substring(0, 10);
             final String eStartWith = endTime2.substring(0, 10);
 
