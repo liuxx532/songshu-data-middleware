@@ -7,52 +7,53 @@ GROUP BY "MergePaymentNo", "PaymentModeType";
 -- 包含商品数：统计时间段内品类包含的商品数量
 -- 商品成本：统计时间段内所有已支付订单商品成本，不包含已取消/已关闭状态
 -- 毛利率：统计时间段内，（销售额-商品成本)÷销售额
+-- 注：如果分类下商品总数为0 则自动过滤掉
 
-
-SELECT main.categoryName, COALESCE(main.revenue,0) AS revenue,COALESCE(main.saleNum,0) AS saleNum, COALESCE(main.cost,0) AS cost,
-COALESCE((main.revenue-main.cost)/(CASE WHEN main.revenue = 0 THEN null ELSE main.revenue END),0) as gross ,COALESCE(main.productCount,0) AS productCount
-FROM(SELECT base.categoryName, sum(base."AfterFoldingPrice") AS revenue,sum(base."Quantity") as saleNum, sum(base.cost*base."Quantity") AS cost,
-          count(DISTINCT base."ProductId") as productCount ,base.categoryId
-  FROM(SELECT c."Name" as categoryName,i."AfterFoldingPrice",i."Quantity",i."ProductId",c."Id" AS categoryId
-        ,CASE WHEN COALESCE(i."ReferCost",0) =0 THEN g."CostPrice" ELSE i."ReferCost" END  AS cost
-        FROM songshu_cs_category c
-           INNER JOIN songshu_cs_product p ON p."CategoryId" = c."Id"
-           INNER JOIN songshu_cs_goods g ON g."ProductId" = p."Id"
-           INNER JOIN songshu_cs_order_item i ON i."GoodsId" = g."Id"
-           INNER JOIN (SELECT o."Id" FROM songshu_cs_order o
-                       JOIN (SELECT DISTINCT "MergePaymentNo"
-                       FROM (SELECT pr."MergePaymentNo", MAX(pr."PaidTime") AS paidTime
-                             FROM (select * from songshu_cs_payment_record
-                             WHERE "PaymentModeType" = 2 AND "PaidTime" BETWEEN (CAST('2016-06-01 00:00:00' AS TIMESTAMP) - INTERVAL '1 D')
-                             AND (CAST('2016-08-01 00:00:00' AS TIMESTAMP) + INTERVAL '1 D')) pr
-                             GROUP BY "MergePaymentNo") prr
-                       WHERE  prr.paidTime BETWEEN '2016-06-01 00:00:00' AND '2016-08-01 00:00:00') r
-                       ON o."OrderNumber" = r."MergePaymentNo"
-                       JOIN songshu_cs_order_payable p ON o."Id" = p."OrderId"
-                       WHERE p."PaymentStatus" = 1 AND o."OrderStatus"
-                       NOT IN (6, 7) AND o."Channel" IN (0, 1, 2, 3, 5)
-                       ) oo ON oo."Id" = i."OrderId"
-       )base  WHERE base.categoryId != 1 GROUP BY base.categoryName ,base.categoryId ORDER BY revenue DESC
-)main;
+SELECT main.categoryName, main.revenue,main.saleNum, main.cost,COALESCE((main.revenue-main.cost)/(CASE WHEN main.revenue = 0 THEN NULL ELSE main.revenue END),0) AS gross
+      ,COALESCE(main.productCount,0) AS productCount
+FROM (SELECT base.categoryName, COALESCE(SUM(base."AfterFoldingPrice"),0) AS revenue,COALESCE(SUM(base."Quantity"),0) AS saleNum,
+             COALESCE(SUM(base.cost*base."Quantity"),0) AS cost,COUNT(DISTINCT base."ProductId") AS productCount
+     FROM(SELECT c."Name" as categoryName,oo."AfterFoldingPrice",oo."Quantity",oo."ProductId",c."Id" AS categoryId,c."Searchable"
+          ,CASE WHEN COALESCE(oo."ReferCost",0) =0 THEN g."CostPrice" ELSE oo."ReferCost" END  AS cost
+          FROM songshu_cs_category c
+          LEFT JOIN songshu_cs_product p ON p."CategoryId" = c."Id"
+          LEFT JOIN songshu_cs_goods g ON g."ProductId" = p."Id"
+          LEFT JOIN (SELECT o."Id",i."ProductId",i."AfterFoldingPrice",i."Quantity",i."ReferCost" FROM songshu_cs_order o
+                      INNER JOIN songshu_cs_order_item i ON i."OrderId" = o."Id"
+                      INNER JOIN (SELECT DISTINCT "MergePaymentNo"
+                                  FROM (SELECT pr."MergePaymentNo",MAX(pr."PaidTime") AS paidTime
+                                        FROM (SELECT * FROM songshu_cs_payment_record WHERE "PaymentModeType" = 2 AND "PaidTime"
+                                        BETWEEN (CAST('2016-06-01 00:00:00' AS TIMESTAMP) - INTERVAL '1 D')
+                                        AND (CAST('2016-08-01 00:00:00' AS TIMESTAMP) + INTERVAL '1 D')
+                                             ) pr GROUP BY "MergePaymentNo"
+                                       ) prr
+                                  WHERE prr.paidTime  BETWEEN '2016-06-01 00:00:00' AND '2016-08-01 00:00:00') r ON o."OrderNumber" = r."MergePaymentNo"
+                      INNER JOIN songshu_cs_order_payable p ON o."Id" = p."OrderId"
+                      WHERE p."PaymentStatus" = 1 AND o."OrderStatus" NOT IN (6, 7) AND o."Channel" IN (0, 1, 2, 3, 5)
+                    ) oo ON oo."ProductId" = p."Id"
+         )base  WHERE base.categoryId != 1 AND  base."Searchable" = 1  GROUP BY base.categoryName  ORDER BY revenue DESC
+)main WHERE  main.productCount>0;
 
 --  统计时间段内所有已支付品类金额，不包含已取消/已关闭状态。 对应 ProductCategoryRankRepository 商品品类销售额
-SELECT tcom.tname,COALESCE(tcom.tamount, 0)FROM
-(SELECT c."Name" AS tname,sum(i."AfterFoldingPrice") AS tamount FROM
-    (SELECT o.* FROM songshu_cs_order o JOIN
-        (SELECT DISTINCT "MergePaymentNo" FROM
-            (SELECT pr."MergePaymentNo",MAX(pr."PaidTime") AS paidTime FROM
-                (SELECT * FROM songshu_cs_payment_record WHERE "PaymentModeType" = 2 AND "PaidTime"
-                 BETWEEN (CAST('2016-06-01 00:00:00' AS TIMESTAMP) - INTERVAL '1 D')
-                 AND (CAST('2016-08-01 00:00:00' AS TIMESTAMP) + INTERVAL '1 D')) pr
-                 GROUP BY "MergePaymentNo") prr
-                 WHERE prr.paidTime
-                 BETWEEN '2016-06-01 00:00:00' AND '2016-08-01 00:00:00') r ON o."OrderNumber" = r."MergePaymentNo"
-            JOIN songshu_cs_order_payable p ON o."Id" = p."OrderId"
-        WHERE p."PaymentStatus" = 1 AND o."OrderStatus" NOT IN (6, 7) AND o."Channel" IN (0, 1, 2, 3, 5)) oo
-    LEFT JOIN songshu_cs_order_item i ON oo."Id" = i."OrderId"
-    LEFT JOIN songshu_cs_product p ON i."ProductId" = p."Id"
-    INNER JOIN songshu_cs_category c ON p."CategoryId" = c."Id"
-WHERE c."Id" != 1 GROUP BY c."Name" ORDER BY tamount DESC) tcom;
+SELECT base.tname,base.tamount FROM
+(SELECT c."Name" AS tname,COALESCE(SUM(oo."AfterFoldingPrice"),0) AS tamount,COUNT(DISTINCT "ProductId") AS  productCount
+FROM songshu_cs_category c
+LEFT JOIN songshu_cs_product p ON c."Id" = p."CategoryId"
+LEFT JOIN (SELECT o."Id",i."ProductId",i."AfterFoldingPrice" FROM songshu_cs_order o
+            INNER JOIN songshu_cs_order_item i ON i."OrderId" = o."Id"
+            INNER JOIN (SELECT DISTINCT "MergePaymentNo"
+                        FROM (SELECT pr."MergePaymentNo",MAX(pr."PaidTime") AS paidTime
+                              FROM (SELECT * FROM songshu_cs_payment_record WHERE "PaymentModeType" = 2 AND "PaidTime"
+                                    BETWEEN (CAST('2016-06-01 00:00:00' AS TIMESTAMP) - INTERVAL '1 D')
+                                    AND (CAST('2016-08-01 00:00:00' AS TIMESTAMP) + INTERVAL '1 D')
+                                   ) pr GROUP BY "MergePaymentNo"
+                             ) prr
+                        WHERE prr.paidTime  BETWEEN '2016-06-01 00:00:00' AND '2016-08-01 00:00:00') r ON o."OrderNumber" = r."MergePaymentNo"
+            INNER JOIN songshu_cs_order_payable p ON o."Id" = p."OrderId"
+            WHERE p."PaymentStatus" = 1 AND o."OrderStatus" NOT IN (6, 7) AND o."Channel" IN (0, 1, 2, 3, 5)
+          ) oo ON oo."ProductId" = p."Id"
+WHERE c."Id" != 1 AND c."Searchable" =1  GROUP BY c."Name" ORDER BY tamount DESC
+)base WHERE base.productCount >0 ;
 
 -- 商品销售详情 包括：销售额、成本、订单量、毛利率 对应 ProductRevenueRepository 商品的品类、名称、销售额、成本、订单量、毛利率
 -- 销售额：统计时间段内所有已支付金额，不包含已取消/已关闭状态

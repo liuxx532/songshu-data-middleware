@@ -19,31 +19,30 @@ public interface ProductRadarRepository  extends JpaRepository<Author,Long> {
      * @param endTime
      * @return
      */
-    @Query(value = "SELECT main.categoryName, COALESCE(main.revenue,0) AS revenue,COALESCE(main.saleNum,0) AS saleNum, COALESCE(main.cost,0) AS cost," +
-        "COALESCE((main.revenue-main.cost)/(CASE WHEN main.revenue = 0 THEN null ELSE main.revenue END),0) as gross ,COALESCE(main.productCount,0) AS productCount " +
-        "FROM(SELECT base.categoryName, sum(base.\"AfterFoldingPrice\") AS revenue,sum(base.\"Quantity\") as saleNum, sum(base.cost*base.\"Quantity\") AS cost," +
-        "          count(DISTINCT base.\"ProductId\") as productCount ,base.categoryId" +
-        "  FROM(SELECT c.\"Name\" as categoryName,i.\"AfterFoldingPrice\",i.\"Quantity\",i.\"ProductId\",c.\"Id\" AS categoryId" +
-        "        ,CASE WHEN COALESCE(i.\"ReferCost\",0) =0 THEN g.\"CostPrice\" ELSE i.\"ReferCost\" END  AS cost" +
-        "        FROM songshu_cs_category c" +
-        "           INNER JOIN songshu_cs_product p ON p.\"CategoryId\" = c.\"Id\"" +
-        "           INNER JOIN songshu_cs_goods g ON g.\"ProductId\" = p.\"Id\"" +
-        "           INNER JOIN songshu_cs_order_item i ON i.\"GoodsId\" = g.\"Id\"" +
-        "           INNER JOIN (SELECT o.\"Id\" FROM songshu_cs_order o" +
-        "                       JOIN (SELECT DISTINCT \"MergePaymentNo\"" +
-        "                       FROM (SELECT pr.\"MergePaymentNo\", MAX(pr.\"PaidTime\") AS paidTime" +
-        "                             FROM (select * from songshu_cs_payment_record" +
-        "                             WHERE \"PaymentModeType\" = 2 AND \"PaidTime\" BETWEEN (CAST(?1 AS TIMESTAMP) - INTERVAL '1 D')" +
-        "                             AND (CAST(?2 AS TIMESTAMP) + INTERVAL '1 D')) pr" +
-        "                             GROUP BY \"MergePaymentNo\") prr" +
-        "                       WHERE  prr.paidTime BETWEEN ?1 AND ?2) r" +
-        "                       ON o.\"OrderNumber\" = r.\"MergePaymentNo\"" +
-        "                       JOIN songshu_cs_order_payable p ON o.\"Id\" = p.\"OrderId\"" +
-        "                       WHERE p.\"PaymentStatus\" = 1 AND o.\"OrderStatus\"" +
-        "                       NOT IN (6, 7) AND o.\"Channel\" IN (0, 1, 2, 3, 5)" +
-        "                       ) oo ON oo.\"Id\" = i.\"OrderId\"" +
-        "       )base  WHERE base.categoryId != 1 GROUP BY base.categoryName ,base.categoryId ORDER BY revenue DESC" +
-        ")main", nativeQuery = true)
+    @Query(value = "SELECT main.categoryName, main.revenue,main.saleNum, main.cost,COALESCE((main.revenue-main.cost)/(CASE WHEN main.revenue = 0 THEN NULL ELSE main.revenue END),0) AS gross\n" +
+        "      ,COALESCE(main.productCount,0) AS productCount\n" +
+        "FROM (SELECT base.categoryName, COALESCE(SUM(base.\"AfterFoldingPrice\"),0) AS revenue,COALESCE(SUM(base.\"Quantity\"),0) AS saleNum,\n" +
+        "             COALESCE(SUM(base.cost*base.\"Quantity\"),0) AS cost,COUNT(DISTINCT base.\"ProductId\") AS productCount\n" +
+        "     FROM(SELECT c.\"Name\" as categoryName,oo.\"AfterFoldingPrice\",oo.\"Quantity\",oo.\"ProductId\",c.\"Id\" AS categoryId,c.\"Searchable\"\n" +
+        "          ,CASE WHEN COALESCE(oo.\"ReferCost\",0) =0 THEN g.\"CostPrice\" ELSE oo.\"ReferCost\" END  AS cost\n" +
+        "          FROM songshu_cs_category c\n" +
+        "          LEFT JOIN songshu_cs_product p ON p.\"CategoryId\" = c.\"Id\"\n" +
+        "          LEFT JOIN songshu_cs_goods g ON g.\"ProductId\" = p.\"Id\"\n" +
+        "          LEFT JOIN (SELECT o.\"Id\",i.\"ProductId\",i.\"AfterFoldingPrice\",i.\"Quantity\",i.\"ReferCost\" FROM songshu_cs_order o\n" +
+        "                      INNER JOIN songshu_cs_order_item i ON i.\"OrderId\" = o.\"Id\"\n" +
+        "                      INNER JOIN (SELECT DISTINCT \"MergePaymentNo\"\n" +
+        "                                  FROM (SELECT pr.\"MergePaymentNo\",MAX(pr.\"PaidTime\") AS paidTime\n" +
+        "                                        FROM (SELECT * FROM songshu_cs_payment_record WHERE \"PaymentModeType\" = 2 AND \"PaidTime\"\n" +
+        "                                        BETWEEN (CAST(?1 AS TIMESTAMP) - INTERVAL '1 D')\n" +
+        "                                        AND (CAST(?2 AS TIMESTAMP) + INTERVAL '1 D')\n" +
+        "                                             ) pr GROUP BY \"MergePaymentNo\"\n" +
+        "                                       ) prr\n" +
+        "                                  WHERE prr.paidTime  BETWEEN ?1 AND ?2) r ON o.\"OrderNumber\" = r.\"MergePaymentNo\"\n" +
+        "                      INNER JOIN songshu_cs_order_payable p ON o.\"Id\" = p.\"OrderId\"\n" +
+        "                      WHERE p.\"PaymentStatus\" = 1 AND o.\"OrderStatus\" NOT IN (6, 7) AND o.\"Channel\" IN (0, 1, 2, 3, 5)\n" +
+        "                    ) oo ON oo.\"ProductId\" = p.\"Id\"\n" +
+        "         )base  WHERE base.categoryId != 1 AND  base.\"Searchable\" = 1  GROUP BY base.categoryName  ORDER BY revenue DESC\n" +
+        ")main WHERE  main.productCount>0", nativeQuery = true)
     List<Object[]> getProductRadarWithAllPlatform(Timestamp beginTime, Timestamp endTime);
 
     /**
@@ -53,30 +52,29 @@ public interface ProductRadarRepository  extends JpaRepository<Author,Long> {
      * @param platform
      * @return
      */
-    @Query(value = "SELECT main.categoryName, COALESCE(main.revenue,0) AS revenue,COALESCE(main.saleNum,0) AS saleNum, COALESCE(main.cost,0) AS cost," +
-        "COALESCE((main.revenue-main.cost)/(CASE WHEN main.revenue = 0 THEN null ELSE main.revenue END),0) as gross ,COALESCE(main.productCount,0) AS productCount " +
-        "FROM(SELECT base.categoryName, sum(base.\"AfterFoldingPrice\") AS revenue,sum(base.\"Quantity\") as saleNum, sum(base.cost*base.\"Quantity\") AS cost," +
-        "          count(DISTINCT base.\"ProductId\") as productCount ,base.categoryId" +
-        "  FROM(SELECT c.\"Name\" as categoryName,i.\"AfterFoldingPrice\",i.\"Quantity\",i.\"ProductId\",c.\"Id\" AS categoryId" +
-        "        ,CASE WHEN COALESCE(i.\"ReferCost\",0) =0 THEN g.\"CostPrice\" ELSE i.\"ReferCost\" END  AS cost" +
-        "        FROM songshu_cs_category c" +
-        "           INNER JOIN songshu_cs_product p ON p.\"CategoryId\" = c.\"Id\"" +
-        "           INNER JOIN songshu_cs_goods g ON g.\"ProductId\" = p.\"Id\"" +
-        "           INNER JOIN songshu_cs_order_item i ON i.\"GoodsId\" = g.\"Id\"" +
-        "           INNER JOIN (SELECT o.\"Id\" FROM songshu_cs_order o" +
-        "                       JOIN (SELECT DISTINCT \"MergePaymentNo\"" +
-        "                       FROM (SELECT pr.\"MergePaymentNo\", MAX(pr.\"PaidTime\") AS paidTime" +
-        "                             FROM (select * from songshu_cs_payment_record" +
-        "                             WHERE \"PaymentModeType\" = 2 AND \"PaidTime\" BETWEEN (CAST(?1 AS TIMESTAMP) - INTERVAL '1 D')" +
-        "                             AND (CAST(?2 AS TIMESTAMP) + INTERVAL '1 D')) pr" +
-        "                             GROUP BY \"MergePaymentNo\") prr" +
-        "                       WHERE  prr.paidTime BETWEEN ?1 AND ?2) r" +
-        "                       ON o.\"OrderNumber\" = r.\"MergePaymentNo\"" +
-        "                       JOIN songshu_cs_order_payable p ON o.\"Id\" = p.\"OrderId\"" +
-        "                       WHERE p.\"PaymentStatus\" = 1 AND o.\"OrderStatus\"" +
-        "                       NOT IN (6, 7) AND o.\"Channel\" = ?3 " +
-        "                       ) oo ON oo.\"Id\" = i.\"OrderId\"" +
-        "       )base  WHERE base.categoryId != 1 GROUP BY base.categoryName ,base.categoryId ORDER BY revenue DESC" +
-        ")main", nativeQuery = true)
+    @Query(value = "SELECT main.categoryName, main.revenue,main.saleNum, main.cost,COALESCE((main.revenue-main.cost)/(CASE WHEN main.revenue = 0 THEN NULL ELSE main.revenue END),0) AS gross\n" +
+        "      ,COALESCE(main.productCount,0) AS productCount\n" +
+        "FROM (SELECT base.categoryName, COALESCE(SUM(base.\"AfterFoldingPrice\"),0) AS revenue,COALESCE(SUM(base.\"Quantity\"),0) AS saleNum,\n" +
+        "             COALESCE(SUM(base.cost*base.\"Quantity\"),0) AS cost,COUNT(DISTINCT base.\"ProductId\") AS productCount\n" +
+        "     FROM(SELECT c.\"Name\" as categoryName,oo.\"AfterFoldingPrice\",oo.\"Quantity\",oo.\"ProductId\",c.\"Id\" AS categoryId,c.\"Searchable\"\n" +
+        "          ,CASE WHEN COALESCE(oo.\"ReferCost\",0) =0 THEN g.\"CostPrice\" ELSE oo.\"ReferCost\" END  AS cost\n" +
+        "          FROM songshu_cs_category c\n" +
+        "          LEFT JOIN songshu_cs_product p ON p.\"CategoryId\" = c.\"Id\"\n" +
+        "          LEFT JOIN songshu_cs_goods g ON g.\"ProductId\" = p.\"Id\"\n" +
+        "          LEFT JOIN (SELECT o.\"Id\",i.\"ProductId\",i.\"AfterFoldingPrice\",i.\"Quantity\",i.\"ReferCost\" FROM songshu_cs_order o\n" +
+        "                      INNER JOIN songshu_cs_order_item i ON i.\"OrderId\" = o.\"Id\"\n" +
+        "                      INNER JOIN (SELECT DISTINCT \"MergePaymentNo\"\n" +
+        "                                  FROM (SELECT pr.\"MergePaymentNo\",MAX(pr.\"PaidTime\") AS paidTime\n" +
+        "                                        FROM (SELECT * FROM songshu_cs_payment_record WHERE \"PaymentModeType\" = 2 AND \"PaidTime\"\n" +
+        "                                        BETWEEN (CAST(?1 AS TIMESTAMP) - INTERVAL '1 D')\n" +
+        "                                        AND (CAST(?2 AS TIMESTAMP) + INTERVAL '1 D')\n" +
+        "                                             ) pr GROUP BY \"MergePaymentNo\"\n" +
+        "                                       ) prr\n" +
+        "                                  WHERE prr.paidTime  BETWEEN ?1 AND ?2) r ON o.\"OrderNumber\" = r.\"MergePaymentNo\"\n" +
+        "                      INNER JOIN songshu_cs_order_payable p ON o.\"Id\" = p.\"OrderId\"\n" +
+        "                      WHERE p.\"PaymentStatus\" = 1 AND o.\"OrderStatus\" NOT IN (6, 7) AND o.\"Channel\" = ?3 \n" +
+        "                    ) oo ON oo.\"ProductId\" = p.\"Id\"\n" +
+        "         )base  WHERE base.categoryId != 1 AND  base.\"Searchable\" = 1  GROUP BY base.categoryName  ORDER BY revenue DESC\n" +
+        ")main WHERE  main.productCount>0", nativeQuery = true)
     List<Object[]> getProductRadarWithSinglePlatform(Timestamp beginTime, Timestamp endTime,Integer platform);
 }

@@ -6,6 +6,7 @@ import com.comall.songshu.service.member.ChannelRegisterMemberService;
 import com.comall.songshu.service.member.MemberDetailService;
 import com.comall.songshu.service.member.MemberFunnelService;
 import com.comall.songshu.service.member.MemberShareService;
+import com.comall.songshu.web.rest.util.AssembleUtil;
 import com.comall.songshu.web.rest.util.ServiceUtil;
 import com.comall.songshu.web.rest.util.TargetsMap;
 import org.json.JSONArray;
@@ -79,24 +80,15 @@ public class MemberResource {
                 toTimeStr = (String)range.get("to");
             }
 
-
+            Map<String,Timestamp> dateMap = AssembleUtil.assemblerDateMap(fromTimeStr,toTimeStr);
             //开始时间
-            Timestamp beginTime = null;
+            Timestamp beginTime = dateMap.get("beginTime");
             //结束时间
-            Timestamp endTime = null;
+            Timestamp endTime = dateMap.get("endTime");
+            //环比时间
+//            Timestamp chainBeginTime = dateMap.get("chainBeginTime");
+//            Timestamp chainEndTime = dateMap.get("chainEndTime");
 
-            if(fromTimeStr != null && toTimeStr != null){
-                beginTime = Optional.of(fromTimeStr)
-                    .map(String::trim)
-                    .filter(s -> s.length() >0)
-                    .map(v -> ServiceUtil.getInstance().parseTimestamp(v))
-                    .orElse(null);
-                endTime = Optional.of(toTimeStr)
-                    .map(String::trim)
-                    .filter(s -> s.length() >0)
-                    .map( s -> ServiceUtil.getInstance().parseTimestamp(s))
-                    .orElse(null);
-            }
 
 
             //指标中文名称

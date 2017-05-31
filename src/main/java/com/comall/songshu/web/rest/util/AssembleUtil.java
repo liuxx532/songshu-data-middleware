@@ -4,6 +4,8 @@ import com.comall.songshu.web.rest.vm.TopStat;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.Timestamp;
 import java.util.HashMap;
@@ -15,6 +17,8 @@ import java.util.Optional;
  * Created by wdc on 2017/4/14.
  */
 public class AssembleUtil {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(AssembleUtil.class);
 
     /**
      * 封装TopStat
@@ -89,12 +93,9 @@ public class AssembleUtil {
         dateMap.put("endTime",endTime);
         dateMap.put("chainBeginTime",chainBeginTime);
         dateMap.put("chainEndTime",chainEndTime);
-//        System.out.println("===fromTimeStr=="+fromTimeStr);
-//        System.out.println("====toTimeStr="+toTimeStr);
-//        System.out.println("===beginTime=="+beginTime);
-//        System.out.println("====endTime="+endTime);
-//        System.out.println("====chainBeginTime="+chainBeginTime);
-//        System.out.println("===chainEndTime=="+chainEndTime);
+        LOGGER.debug("UTC日期——fromTimeStr:{},toTimeStr:{}####转换后日期——beginTime:{},endTime:{},chainBeginTime:{},chainEndTime:{}"
+            ,fromTimeStr,toTimeStr,beginTime,endTime,chainBeginTime,chainEndTime);
+
         return dateMap;
     }
 
