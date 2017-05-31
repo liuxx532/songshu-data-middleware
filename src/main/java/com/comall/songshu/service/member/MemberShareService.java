@@ -33,34 +33,30 @@ public class MemberShareService {
         Integer shareRegisterCount = 0;
 
 
-        List<Object[]> titleList = new LinkedList<>();
         List<Object[]> valueList = new LinkedList<>();
 
-        if (platform<0) {
-            //TODO 填入对应的事件字段名
-            shareProductCount = memberShareRepository.getMemberShareWithAllPlatformByName("对应事件名称", beginTime, endTime);
-            shareOrderCount = memberShareRepository.getMemberShareWithAllPlatformByName("对应事件名称", beginTime, endTime);
-            shareSpecialPageCount = memberShareRepository.getMemberShareWithAllPlatformByName("对应事件名称", beginTime, endTime);
-            shareRegisterCount = memberShareRepository.getMemberShareWithAllPlatformByName("对应事件名称", beginTime, endTime);
+//        if (platform<0) {
+//            //TODO 填入对应的事件字段名
+//            shareProductCount = memberShareRepository.getMemberShareWithAllPlatformByName("对应事件名称", beginTime, endTime);
+//            shareOrderCount = memberShareRepository.getMemberShareWithAllPlatformByName("对应事件名称", beginTime, endTime);
+//            shareSpecialPageCount = memberShareRepository.getMemberShareWithAllPlatformByName("对应事件名称", beginTime, endTime);
+//            shareRegisterCount = memberShareRepository.getMemberShareWithAllPlatformByName("对应事件名称", beginTime, endTime);
+//
+//        }else{
+//            //TODO 填入对应的事件字段名
+//            shareProductCount = memberShareRepository.getMemberShareWithSinglePlatformByName("对应事件名称", beginTime, endTime,platformName);
+//            shareOrderCount = memberShareRepository.getMemberShareWithSinglePlatformByName("对应事件名称", beginTime, endTime,platformName);
+//            shareSpecialPageCount = memberShareRepository.getMemberShareWithSinglePlatformByName("对应事件名称", beginTime, endTime,platformName);
+//            shareRegisterCount = memberShareRepository.getMemberShareWithSinglePlatformByName("对应事件名称", beginTime, endTime,platformName);
+//        }
 
-        }else{
-            //TODO 填入对应的事件字段名
-            shareProductCount = memberShareRepository.getMemberShareWithSinglePlatformByName("对应事件名称", beginTime, endTime,platformName);
-            shareOrderCount = memberShareRepository.getMemberShareWithSinglePlatformByName("对应事件名称", beginTime, endTime,platformName);
-            shareSpecialPageCount = memberShareRepository.getMemberShareWithSinglePlatformByName("对应事件名称", beginTime, endTime,platformName);
-            shareRegisterCount = memberShareRepository.getMemberShareWithSinglePlatformByName("对应事件名称", beginTime, endTime,platformName);
-        }
-
-        //表头信息
-        titleList.add(new Object[]{TitleConstants.TAG_NAME,"指标名"});
-        titleList.add(new Object[]{TitleConstants.TAG_VALUE,"指标值"});
         //表内信息
         valueList.add(new Object[]{"分享商品次数",shareProductCount});
         valueList.add(new Object[]{"分享订单次数",shareOrderCount});
         valueList.add(new Object[]{"分享专题页次数",shareSpecialPageCount});
         valueList.add(new Object[]{"分享注册次数",shareRegisterCount});
 
-        return JsonStringBuilder.buildTableJsonString(valueList,titleList,target);
+        return JsonStringBuilder.buildTransverseTableJsonString(valueList,target);
     }
     public String getMemberShareTrendByName(String target, String platformName, Timestamp beginTime, Timestamp endTime,int aggCount){
 

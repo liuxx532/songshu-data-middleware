@@ -378,7 +378,7 @@ public class JsonStringBuilder {
     }
 
     /**
-     * 封装表格类型
+     * 封装表格类型（有title）
      * @param valueList 表内具体内容 valueList中的数据顺序要和title对应的顺序一致
      * @param titleList 表title
      * @param targetName
@@ -433,6 +433,27 @@ public class JsonStringBuilder {
         }
 
         return  null;
+    }
+
+    /**
+     * 封装横向表格类型
+     * @param valueList 表内具体内容
+     * @param targetName
+     * @return
+     */
+    public static  String buildTransverseTableJsonString(List<Object[]> valueList,String targetName){
+        JSONArray result = new JSONArray();
+        if(valueList != null && valueList.size()>0){
+            JSONArray dataPoints = new JSONArray(valueList);
+            JSONObject valueJson = new JSONObject();
+            try {
+                valueJson.put("datapoints",dataPoints);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            result.put(valueJson);
+        }
+        return  result.toString();
     }
 
     /**

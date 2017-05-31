@@ -53,7 +53,6 @@ public class MemberDetailService {
         //页面浏览量
         Integer visitDepth;
 
-        List<Object[]> titleList = new LinkedList<>();
         List<Object[]> valueList = new LinkedList<>();
 
 
@@ -97,9 +96,6 @@ public class MemberDetailService {
             .map(d -> (int)(visitDepth/uniqueVisitorCount))
             .orElse(0);
 
-        //表头信息
-        titleList.add(new Object[]{TitleConstants.TAG_NAME,"指标名"});
-        titleList.add(new Object[]{TitleConstants.TAG_VALUE,"指标值"});
         //表内信息
         valueList.add(new Object[]{"访客数",uniqueVisitorCount});
         valueList.add(new Object[]{"注册用户数",newRegisterCount});
@@ -111,7 +107,7 @@ public class MemberDetailService {
         valueList.add(new Object[]{"平均访问深度",avgVisitDepth});
 
 
-        return JsonStringBuilder.buildTableJsonString(valueList,titleList,target);
+        return JsonStringBuilder.buildTransverseTableJsonString(valueList,target);
     }
 
 
