@@ -25,7 +25,7 @@ FROM(SELECT r.amount AS Amount ,r.paidTime AS PaidTime,o."Id" AS Id
      AND (r.paidTime BETWEEN '2016-06-01 00:00:00' AND '2016-08-01 00:00:00') AND o."Channel" = 1
     )comt
     RIGHT JOIN (SELECT ts.generate_series AS stime, ts.generate_series + 86400 * INTERVAL '1 second' AS etime
-                FROM (SELECT generate_series('2016-06-01 00:00:00', '2016-08-01 00:00:00', 86400 * INTERVAL '1 second')) ts
+                FROM (SELECT generate_series('2016-06-01 01:00:00', '2016-08-01 01:00:00', 86400 * INTERVAL '1 second')) ts
                ) tss ON (comt.PaidTime < tss.etime AND comt.PaidTime >= tss.stime)
 GROUP BY tss.stime, tss.etime ORDER BY tss.stime;
 
@@ -182,7 +182,8 @@ RIGHT JOIN (SELECT ts.generate_series AS stime, ts.generate_series + 86400 * INT
         ON (comt.PaidTime < tss.etime AND comt.PaidTime >= tss.stime)
 GROUP BY tss.stime, tss.etime ORDER BY tss.stime;
 
-
+-- 访客数现在有2种计算方式
+-- 1。从神策pageview事件种获取
 -- 时间段内访客数趋势图统计 对应 UniqueVisitorsRepository 访客数趋势图
 SELECT COUNT(DISTINCT se.distinct_id) FROM songshu_shence_events se
 WHERE se.event = '$pageview' AND se.times BETWEEN '2016-06-01 00:00:00' AND '2016-08-01 00:00:00' AND se.platform ='ios';
@@ -195,4 +196,23 @@ FROM(SELECT se.times, se.distinct_id FROM songshu_shence_events se
 RIGHT JOIN(SELECT ts.generate_series AS stime, ts.generate_series + 86400 * INTERVAL '1 second' AS etime
           FROM (SELECT generate_series('2016-06-01 00:00:00','2016-08-01 00:00:00', 86400 * INTERVAL '1 second')) ts) tss
           ON (comt.times < tss.etime AND comt.times >= tss.stime)
+GROUP BY tss.stime, tss.etime ORDER BY tss.stime;
+
+-- 2。从nginx日志中获取
+-- 时间段内访客数趋势图统计 对应 UniqueVisitorsRepository 访客数趋势图
+SELECT COUNT(DISTINCT CASE WHEN userid <> '' AND userid <> '-' THEN userid END )
++ COUNT(DISTINCT CASE WHEN userid = '' OR userid = '-' THEN ss."unique" END)
+FROM songshu_log ss
+WHERE os = 'ios' AND logTime BETWEEN '2016-01-01 00:00:00' AND '2017-08-01 00:00:00';
+
+-- 时间段内访客数趋势图统计 对应 UniqueVisitorsRepository 访客数趋势图
+SELECT tss.stime, tss.etime, COUNT(DISTINCT CASE WHEN comt.userid <> '' AND comt.userid <> '-' THEN comt.userid END)
++ COUNT(DISTINCT CASE WHEN comt.userid = '' OR comt.userid = '-' THEN comt.unique END) AS uv
+FROM (select ss.logtime,ss."unique",ss.userid
+      FROM songshu_log ss
+      WHERE ss.os = 'ios'  AND  ss.logTime BETWEEN '2016-01-01 00:00:00' AND '2017-08-01 00:00:00'
+     ) comt
+RIGHT JOIN (SELECT ts.generate_series AS stime, ts.generate_series + 86400 * INTERVAL '1 second' AS etime
+            FROM (SELECT generate_series('2016-01-01 00:00:00', '2017-08-01 00:00:00', 86400 * INTERVAL '1 second')) ts) tss
+            ON (comt.logTime < tss.etime AND comt.logTime >= tss.stime)
 GROUP BY tss.stime, tss.etime ORDER BY tss.stime;

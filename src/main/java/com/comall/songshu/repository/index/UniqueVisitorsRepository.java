@@ -9,9 +9,10 @@ import java.util.List;
 
 /**
  * Created by lgx on 17/4/25.
- * 访客数统计
+ * 访客数统计(kafka——nginx日志)
  */
 public interface UniqueVisitorsRepository extends JpaRepository<Author,Long> {
+
 
     /**
      * 访客数（全平台）
@@ -19,8 +20,10 @@ public interface UniqueVisitorsRepository extends JpaRepository<Author,Long> {
      * @param endTime
      * @return
      */
-    @Query(value = "SELECT COUNT(DISTINCT se.distinct_id) FROM songshu_shence_events se " +
-        "WHERE se.event = '$pageview' AND se.times BETWEEN ?1 AND ?2", nativeQuery = true)
+    @Query(value = "SELECT COUNT(DISTINCT CASE WHEN userid <> '' AND userid <> '-' THEN userid END ) " +
+        "+ COUNT(DISTINCT CASE WHEN userid = '' OR userid = '-' THEN ss.\"unique\" END) " +
+        "FROM songshu_log ss " +
+        "WHERE  logTime BETWEEN ?1 AND ?2 ", nativeQuery = true)
     Double getUniqueVisitorsAllPlatform(Timestamp beginTime, Timestamp endTime);
 
     /**
@@ -30,8 +33,10 @@ public interface UniqueVisitorsRepository extends JpaRepository<Author,Long> {
      * @param endTime
      * @return
      */
-    @Query(value = "SELECT COUNT(DISTINCT se.distinct_id) FROM songshu_shence_events se " +
-        "WHERE se.event = '$pageview' AND se.times BETWEEN ?2 AND ?3 AND se.platform =?1", nativeQuery = true)
+    @Query(value = "SELECT COUNT(DISTINCT CASE WHEN userid <> '' AND userid <> '-' THEN userid END ) " +
+        "+ COUNT(DISTINCT CASE WHEN userid = '' OR userid = '-' THEN ss.\"unique\" END) " +
+        "FROM songshu_log ss " +
+        "WHERE os = ?1 AND logTime BETWEEN ?2 AND ?3 ", nativeQuery = true)
     Double getUniqueVisitorsSinglePlatform(String platform, Timestamp beginTime, Timestamp endTime);
 
     /**
@@ -41,14 +46,16 @@ public interface UniqueVisitorsRepository extends JpaRepository<Author,Long> {
      * @param intervals
      * @return
      */
-    @Query(value = "SELECT tss.stime, tss.etime, COUNT(DISTINCT comt.distinct_id) " +
-        "FROM(SELECT se.times, se.distinct_id FROM songshu_shence_events se " +
-        "    WHERE se.event = '$pageview' AND se.times BETWEEN ?1 AND ?2  " +
-        "    ) comt " +
-        "RIGHT JOIN(SELECT ts.generate_series AS stime, ts.generate_series + ?3 * INTERVAL '1 second' AS etime " +
-        "          FROM (SELECT generate_series(?1,?2, ?3 * INTERVAL '1 second')) ts) tss " +
-        "          ON (comt.times < tss.etime AND comt.times >= tss.stime) " +
-        "GROUP BY tss.stime, tss.etime ORDER BY tss.stime", nativeQuery = true)
+    @Query(value = "SELECT tss.stime, tss.etime, COUNT(DISTINCT CASE WHEN comt.userid <> '' AND comt.userid <> '-' THEN comt.userid END) " +
+        "+ COUNT(DISTINCT CASE WHEN comt.userid = '' OR comt.userid = '-' THEN comt.unique END) AS uv " +
+        "FROM (select ss.logtime,ss.\"unique\",ss.userid " +
+        "      FROM songshu_log ss " +
+        "      WHERE ss.logTime BETWEEN ?1 AND ?2 " +
+        "     ) comt " +
+        "RIGHT JOIN (SELECT ts.generate_series AS stime, ts.generate_series + ?3 * INTERVAL '1 second' AS etime " +
+        "            FROM (SELECT generate_series(?1, ?2, ?3 * INTERVAL '1 second')) ts) tss " +
+        "            ON (comt.logTime < tss.etime AND comt.logTime >= tss.stime) " +
+        "GROUP BY tss.stime, tss.etime ORDER BY tss.stime;", nativeQuery = true)
     List<Object[]> getUniqueVisitorsTrendAllPlatform(Timestamp beginTime, Timestamp endTime, Integer intervals);
 
     /**
@@ -59,14 +66,16 @@ public interface UniqueVisitorsRepository extends JpaRepository<Author,Long> {
      * @param intervals
      * @return
      */
-    @Query(value = "SELECT tss.stime, tss.etime, COUNT(DISTINCT comt.distinct_id) " +
-        "FROM(SELECT se.times, se.distinct_id FROM songshu_shence_events se " +
-        "    WHERE se.event = '$pageview' AND se.times BETWEEN ?2 AND ?3 AND se.platform = ?1  " +
-        "    ) comt " +
-        "RIGHT JOIN(SELECT ts.generate_series AS stime, ts.generate_series + ?4 * INTERVAL '1 second' AS etime " +
-        "          FROM (SELECT generate_series(?2,?3, ?4 * INTERVAL '1 second')) ts) tss " +
-        "          ON (comt.times < tss.etime AND comt.times >= tss.stime) " +
-        "GROUP BY tss.stime, tss.etime ORDER BY tss.stime", nativeQuery = true)
+    @Query(value = "SELECT tss.stime, tss.etime, COUNT(DISTINCT CASE WHEN comt.userid <> '' AND comt.userid <> '-' THEN comt.userid END) " +
+        "+ COUNT(DISTINCT CASE WHEN comt.userid = '' OR comt.userid = '-' THEN comt.unique END) AS uv " +
+        "FROM (select ss.logtime,ss.\"unique\",ss.userid " +
+        "      FROM songshu_log ss " +
+        "      WHERE ss.os = ?1  AND  ss.logTime BETWEEN ?2 AND ?3 " +
+        "     ) comt " +
+        "RIGHT JOIN (SELECT ts.generate_series AS stime, ts.generate_series + ?4 * INTERVAL '1 second' AS etime " +
+        "            FROM (SELECT generate_series(?2, ?3, ?4 * INTERVAL '1 second')) ts) tss " +
+        "            ON (comt.logTime < tss.etime AND comt.logTime >= tss.stime) " +
+        "GROUP BY tss.stime, tss.etime ORDER BY tss.stime;", nativeQuery = true)
     List<Object[]> getUniqueVisitorsTrendSinglePlatform(String platform, Timestamp beginTime, Timestamp endTime, Integer intervals);
 
 }

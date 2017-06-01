@@ -112,7 +112,14 @@ AND prr.paidTime BETWEEN '2016-06-01 00:00:00' AND '2016-08-01 00:00:00';
 
 -- 退出率：统计时间段内，从该页退出的访客数÷进入该页的访客数的百分比
 -- 退出商品页面访客数： 指进入到该商品页面后退出应用的用户数 对应 ProductRevenueRepository 退出商品页面访客数
---TODO 需要前端埋点后添加
+SELECT COUNT(DISTINCT e.distinct_id)  FROM songshu_shence_events e
+WHERE e.event = '$pagepause'
+AND (e.url like '#/tabs/categories/productInfo?productId=100100436%'
+   OR e.url like '#/tabs/cart/productInfo?productId=100100436%'
+   OR e.url like '#/tabs/index/productInfo?productId=100100436%'
+   OR e.url like '#/tabs/user/productInfo?productId=100100436%'
+   OR e.url like '#/tabs/integral/integralInfo?id=100100436&type=0%')
+AND e.times BETWEEN '2016-05-11 00:00:00' AND '2017-05-11 00:00:00' AND  e.platform = 'ios';
 
 -- 统计时间段内，所有访问过该商品页面的的人数（去重）ProductRevenueRepository 商品页面访客数
 SELECT COUNT(DISTINCT e.distinct_id)  FROM songshu_shence_events e
@@ -122,7 +129,7 @@ AND (e.url like '#/tabs/categories/productInfo?productId=100100436%'
     OR e.url like '#/tabs/index/productInfo?productId=100100436%'
     OR e.url like '#/tabs/user/productInfo?productId=100100436%'
     OR e.url like '#/tabs/integral/integralInfo?id=100100436&type=0%')
-AND e.times BETWEEN '2016-05-11 00:00:00' AND '2017-05-11 00:00:00';
+AND e.times BETWEEN '2016-05-11 00:00:00' AND '2017-05-11 00:00:00' AND  e.platform = 'ios';
 
 -- 统计时间段内所有已支付订单（不包含已取消/已关闭状态），销售数量最多的商品 对应 ProductLinkedSalesRepository 商品销售量TOP
 SELECT p."Id" AS productId, p."Name" AS productName, base.salesCount AS salesCount FROM
