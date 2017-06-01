@@ -117,7 +117,7 @@ public class AgeAndSexDistributionService {
                     .filter(s -> s.length()>0)
                     .orElse(null);
                 BigDecimal count = Optional.ofNullable(o[1])
-                    .map(obj -> (String)obj)
+                    .map(obj -> obj.toString())
                     .map(BigDecimal::new)
                     .orElse(BigDecimal.ZERO);
 
