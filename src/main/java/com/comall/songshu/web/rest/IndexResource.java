@@ -164,7 +164,7 @@ public class IndexResource {
                         return grossMarginRateService.getGrossMarginRateTrend(platform, beginTime, endTime, chainBeginTime, chainEndTime,TrendConstants.aggCount);
                     // 饼图
                     case "NewRegisterRate":
-                        return newRegisterCountService.getNewRegisterCount(platform,beginTime,endTime);
+                        return newRegisterCountService.getNewRegisterCount(beginTime,endTime);
                     case "FirstOrderedRate":
                         return  orderedConsumerCountService.getOrderedConsumerCount(platform, beginTime, endTime);
                     // 品类销售排行榜

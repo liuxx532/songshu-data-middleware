@@ -35,29 +35,21 @@ public class NewRegisterCountService {
     }
 
 
-    public String getNewRegisterCount( String platformName, Timestamp startTime, Timestamp endTime) {
+    public String getNewRegisterCount(Timestamp startTime, Timestamp endTime) {
 
-        Integer platform = TransferUtil.getPlatform(platformName);
         List<Object[]> list = new ArrayList();
 
+        Integer androidResult = Optional.ofNullable(getNewRegisterCountWithSinglePlatform(TransferUtil.CHANNEL_ANDROID,startTime,endTime)).orElse(0);
+        Integer iosResult = Optional.ofNullable(getNewRegisterCountWithSinglePlatform(TransferUtil.CHANNEL_IOS,startTime,endTime)).orElse(0);
+        Integer weChatResult = Optional.ofNullable(getNewRegisterCountWithSinglePlatform(TransferUtil.CHANNEL_WECHAT,startTime,endTime)).orElse(0);
+        Integer wapResult = Optional.ofNullable(getNewRegisterCountWithSinglePlatform(TransferUtil.CHANNEL_WAP,startTime,endTime)).orElse(0);
+        Integer othersResult = Optional.ofNullable(getNewRegisterCountWithOthersPlatform(startTime,endTime)).orElse(0);
+        list.add(new Object[]{TransferUtil.getPlatFormName(TransferUtil.CHANNEL_ANDROID),androidResult});
+        list.add(new Object[]{TransferUtil.getPlatFormName(TransferUtil.CHANNEL_IOS),iosResult});
+        list.add(new Object[]{TransferUtil.getPlatFormName(TransferUtil.CHANNEL_WECHAT),weChatResult});
+        list.add(new Object[]{TransferUtil.getPlatFormName(TransferUtil.CHANNEL_WAP),wapResult});
+        list.add(new Object[]{TransferUtil.getPlatFormName(TransferUtil.CHANNEL_OTHERS),othersResult});
 
-        if (platform < 0){ //所有
-            Integer androidResult = Optional.ofNullable(getNewRegisterCountWithSinglePlatform(1,startTime,endTime)).orElse(0);
-            Integer iosResult = Optional.ofNullable(getNewRegisterCountWithSinglePlatform(2,startTime,endTime)).orElse(0);
-            Integer weChatResult = Optional.ofNullable(getNewRegisterCountWithSinglePlatform(3,startTime,endTime)).orElse(0);
-            Integer wapResult = Optional.ofNullable(getNewRegisterCountWithSinglePlatform(5,startTime,endTime)).orElse(0);
-            Integer othersResult = Optional.ofNullable(getNewRegisterCountWithOthersPlatform(startTime,endTime)).orElse(0);
-            list.add(new Object[]{TransferUtil.getPlatFormName(TransferUtil.CHANNEL_ANDROID),androidResult});
-            list.add(new Object[]{TransferUtil.getPlatFormName(TransferUtil.CHANNEL_IOS),iosResult});
-            list.add(new Object[]{TransferUtil.getPlatFormName(TransferUtil.CHANNEL_WECHAT),weChatResult});
-            list.add(new Object[]{TransferUtil.getPlatFormName(TransferUtil.CHANNEL_WAP),wapResult});
-            list.add(new Object[]{TransferUtil.getPlatFormName(TransferUtil.CHANNEL_OTHERS),othersResult});
-        }else {
-            Integer platformResult = Optional.ofNullable(getNewRegisterCountWithSinglePlatform(platform,startTime,endTime)).orElse(0);
-            log.info("platformResult",platformResult);
-            list.add(new Object[]{TransferUtil.getPlatFormName(platform),platformResult});
-        }
-        log.info("list",list);
         return JsonStringBuilder.buildPieJsonString(list);
     }
 
