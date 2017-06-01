@@ -17,13 +17,13 @@ public interface ProductRevenueRepository extends JpaRepository<Author,Long> {
 
 
     /**
-     * 商品的品类、名称、销售额、成本、订单量、毛利率（全平台）
+     * 商品的品类、名称、销售额、订单量、成本、、毛利率（全平台）
      * @param beginTime
      * @param endTime
      * @param topCount
      * @return
      */
-    @Query(value = "SELECT c.\"Name\" AS categoryName,p.\"Name\" AS productName,main.revenue,main.cost,main.salesCount," +
+    @Query(value = "SELECT c.\"Name\" AS categoryName,p.\"Name\" AS productName,main.revenue,main.salesCount,main.cost," +
         "    main.grossMaringRate,p.\"Id\" AS productId,p.\"Code\" AS productCode FROM" +
         "    (SELECT calbase.\"ProductId\",calbase.revenue,calbase.cost,calbase.salesCount," +
         "         COALESCE((calbase.revenue - calbase.cost) / (CASE WHEN calbase.revenue = 0 THEN null ELSE calbase.revenue END), 0) AS grossMaringRate FROM" +
@@ -54,14 +54,14 @@ public interface ProductRevenueRepository extends JpaRepository<Author,Long> {
 
 
     /**
-     * 商品的品类、名称、销售额、成本、订单量、毛利率（单平台）
+     * 商品的品类、名称、销售额、订单量、成本、毛利率（单平台）
      * @param beginTime
      * @param endTime
      * @param plateForm
      * @param topCount
      * @return
      */
-    @Query(value = "SELECT c.\"Name\" AS categoryName,p.\"Name\" AS productName,main.revenue,main.cost,main.salesCount," +
+    @Query(value = "SELECT c.\"Name\" AS categoryName,p.\"Name\" AS productName,main.revenue,main.salesCount,main.cost," +
         "    main.grossMaringRate,p.\"Id\" AS productId,p.\"Code\" AS productCode FROM" +
         "    (SELECT calbase.\"ProductId\",calbase.revenue,calbase.cost,calbase.salesCount," +
         "         COALESCE((calbase.revenue - calbase.cost) / (CASE WHEN calbase.revenue = 0 THEN null ELSE calbase.revenue END), 0) AS grossMaringRate FROM" +

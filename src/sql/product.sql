@@ -23,11 +23,11 @@ FROM (SELECT base.categoryName, COALESCE(SUM(base."AfterFoldingPrice"),0) AS rev
                       INNER JOIN (SELECT DISTINCT "MergePaymentNo"
                                   FROM (SELECT pr."MergePaymentNo",MAX(pr."PaidTime") AS paidTime
                                         FROM (SELECT * FROM songshu_cs_payment_record WHERE "PaymentModeType" = 2 AND "PaidTime"
-                                        BETWEEN (CAST('3016-06-01 00:00:00' AS TIMESTAMP) - INTERVAL '1 D')
-                                        AND (CAST('3016-08-01 00:00:00' AS TIMESTAMP) + INTERVAL '1 D')
+                                        BETWEEN (CAST('2016-10-01 00:00:00' AS TIMESTAMP) - INTERVAL '1 D')
+                                        AND (CAST('2017-04-01 00:00:00' AS TIMESTAMP) + INTERVAL '1 D')
                                              ) pr GROUP BY "MergePaymentNo"
                                        ) prr
-                                  WHERE prr.paidTime  BETWEEN '3016-06-01 00:00:00' AND '3016-08-01 00:00:00') r ON o."OrderNumber" = r."MergePaymentNo"
+                                  WHERE prr.paidTime  BETWEEN '2016-10-01 00:00:00' AND '2017-04-01 00:00:00') r ON o."OrderNumber" = r."MergePaymentNo"
                       INNER JOIN songshu_cs_order_payable p ON o."Id" = p."OrderId"
                       WHERE p."PaymentStatus" = 1 AND o."OrderStatus" NOT IN (6, 7) AND o."Channel" IN (0, 1, 2, 3, 5)
                     ) oo ON oo."ProductId" = p."Id"
@@ -44,11 +44,11 @@ LEFT JOIN (SELECT o."Id",i."ProductId",i."AfterFoldingPrice" FROM songshu_cs_ord
             INNER JOIN (SELECT DISTINCT "MergePaymentNo"
                         FROM (SELECT pr."MergePaymentNo",MAX(pr."PaidTime") AS paidTime
                               FROM (SELECT * FROM songshu_cs_payment_record WHERE "PaymentModeType" = 2 AND "PaidTime"
-                                    BETWEEN (CAST('3016-11-01 00:00:00' AS TIMESTAMP) - INTERVAL '1 D')
-                                    AND (CAST('3017-08-01 00:00:00' AS TIMESTAMP) + INTERVAL '1 D')
+                                    BETWEEN (CAST('2016-10-01 00:00:00' AS TIMESTAMP) - INTERVAL '1 D')
+                                    AND (CAST('2017-04-01 00:00:00' AS TIMESTAMP) + INTERVAL '1 D')
                                    ) pr GROUP BY "MergePaymentNo"
                              ) prr
-                        WHERE prr.paidTime  BETWEEN '3016-11-01 00:00:00' AND '3017-08-01 00:00:00') r ON o."OrderNumber" = r."MergePaymentNo"
+                        WHERE prr.paidTime  BETWEEN '2016-10-01 00:00:00' AND '2017-04-01 00:00:00') r ON o."OrderNumber" = r."MergePaymentNo"
             INNER JOIN songshu_cs_order_payable p ON o."Id" = p."OrderId"
             WHERE p."PaymentStatus" = 1 AND o."OrderStatus" NOT IN (6, 7) AND o."Channel" IN (0, 1, 2, 3, 5)
           ) oo ON oo."ProductId" = p."Id"
@@ -61,7 +61,7 @@ WHERE c."Id" !=1  AND c."Name" != '投食卡' GROUP BY c."Name" ORDER BY tamount
 -- 统计时间段内包含该商品所有已支付订单，不包含已取消/已关闭状态。
 -- 统计时间段内，（销售额-商品成本)÷销售额
 
-SELECT c."Name" AS categoryName,p."Name" AS productName,main.revenue,main.cost,main.salesCount,
+SELECT c."Name" AS categoryName,p."Name" AS productName,main.revenue,main.salesCount,main.cost,
     main.grossMaringRate,p."Id" AS productId,p."Code" AS productCode FROM
     (SELECT calbase."ProductId",calbase.revenue,calbase.cost,calbase.salesCount,
          COALESCE((calbase.revenue - calbase.cost) / (CASE WHEN calbase.revenue = 0 THEN null ELSE calbase.revenue END), 0) AS grossMaringRate FROM
@@ -74,9 +74,9 @@ SELECT c."Name" AS categoryName,p."Name" AS productName,main.revenue,main.cost,m
                     INNER JOIN (SELECT DISTINCT t."MergePaymentNo" FROM
                     (SELECT pr."MergePaymentNo",MAX(pr."PaidTime") AS paidTime FROM
                         (SELECT * FROM songshu_cs_payment_record WHERE "PaymentModeType" = 2 AND "PaidTime"
-                         BETWEEN (CAST('2016-06-01 00:00:00' AS TIMESTAMP) - INTERVAL '1 D')
-                         AND (CAST('2016-08-01 00:00:00' AS TIMESTAMP) + INTERVAL '1 D')) pr GROUP BY "MergePaymentNo") t
-                         WHERE t.paidTime BETWEEN '2016-06-01 00:00:00' AND '2016-08-01 00:00:00') cpr
+                         BETWEEN (CAST('016-10-01 00:00:00' AS TIMESTAMP) - INTERVAL '1 D')
+                         AND (CAST('2017-04-01 00:00:00' AS TIMESTAMP) + INTERVAL '1 D')) pr GROUP BY "MergePaymentNo") t
+                         WHERE t.paidTime BETWEEN '2016-10-01 00:00:00' AND '2017-04-01 00:00:00') cpr
                          ON cpr."MergePaymentNo" = op."MergePaymentId"
                     INNER JOIN songshu_cs_goods g ON g."Id" = i."GoodsId"
                 WHERE op."PaymentStatus" = 1 AND o."orderType" IN (0, 1) AND o."OrderStatus" NOT IN (6, 7)

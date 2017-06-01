@@ -73,7 +73,6 @@ public class ChannelResource {
                         @RequestBody String requestBody) throws Exception{
         log.debug("[RequestBody] {}", requestBody);
 
-        DateTimeFormatter dateTimeFormat = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
 
         if(Optional.ofNullable(requestBody).isPresent()){
 
@@ -81,8 +80,15 @@ public class ChannelResource {
 
             JSONObject range = (JSONObject)obj.get("range");
 
-            //TODO 渠道名称，六大指标联动时需要，目前还没和前端商量好怎么获取，先写死测试，日后补充
-            String channelName = System.currentTimeMillis() % 2 == 0 ? null : "YINGYONGBAO";
+
+            //指定平台（渠道）
+            Object channelNameObj = null;
+            if(obj.has("channel")){
+                channelNameObj = obj.get("channel");
+            }
+            String channelName = Optional.ofNullable(channelNameObj)
+                .map( o -> o.toString())
+                .orElse(null);
 
             //开始时间str
             String fromTimeStr = null;

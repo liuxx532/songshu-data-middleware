@@ -7,6 +7,7 @@ import com.comall.songshu.service.FakeDataService;
 import com.comall.songshu.web.rest.util.ServiceUtil;
 import com.comall.songshu.web.rest.util.TargetsMap;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -51,13 +52,27 @@ public class FakeResource {
 
             JSONObject obj = new JSONObject(requestBody);
 
+            //指定平台（渠道）
 
+            Object channelNameObj = null;
+
+            if(obj.has("channel")){
+                channelNameObj = obj.get("channel");
+            }
+
+            String channelName = Optional.ofNullable(channelNameObj)
+                .map( o -> o.toString())
+                .orElse(null);
+            boolean isChannelNameEmpty = channelName == null || channelName.equals("") || channelName.equalsIgnoreCase("null");
 
             //指标中文名称
             JSONArray targets = (JSONArray)obj.get("targets");
             JSONObject targetJsonObj = (JSONObject)targets.get(0);
             String targetName =  (String)targetJsonObj.get("target");
             String target = TargetsMap.fakeTargets().get(targetName);
+            if(!isChannelNameEmpty){
+                target +="#channel";
+            }
             String result = fakeDataService.getFakeData(target);
             if(result != null){
                 return result;
