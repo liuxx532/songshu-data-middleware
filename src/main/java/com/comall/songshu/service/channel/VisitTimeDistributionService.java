@@ -73,7 +73,7 @@ public class VisitTimeDistributionService {
         visitTimeDistributionResult.add(new Object[]{CommonConstants.VISIT_TIME_LEVEL_FIVE,levelFive});
         visitTimeDistributionResult.add(new Object[]{CommonConstants.VISIT_TIME_LEVEL_SIX,levelSix});
 
-        return JsonStringBuilder.buildRankJsonString(visitTimeDistributionResult);
+        return JsonStringBuilder.buildRankJsonString(visitTimeDistributionResult,"访问时长分布");
     }
 
 }

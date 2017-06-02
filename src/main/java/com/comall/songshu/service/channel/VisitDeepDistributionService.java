@@ -72,6 +72,6 @@ public class VisitDeepDistributionService {
         visitDeepDistributionResult.add(new Object[]{CommonConstants.VISIT_DEEP_LEVEL_FIVE,levelFive});
         visitDeepDistributionResult.add(new Object[]{CommonConstants.VISIT_DEEP_LEVEL_SIX,levelSix});
 
-        return JsonStringBuilder.buildRankJsonString(visitDeepDistributionResult);
+        return JsonStringBuilder.buildRankJsonString(visitDeepDistributionResult,"访问深度分布");
     }
 }

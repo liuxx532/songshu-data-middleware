@@ -231,10 +231,11 @@ public class JsonStringBuilder {
     /**
      * 构建排行榜数据
      * @param rank
+     * @param columnName
      * @return
      * [{"dataPoints":[[333,1493780277417]],"columnName":""},{"dataPoints":[[444,1493780277417]],"columnName":""}]
      */
-    public static  String buildRankJsonString(List<Object[]> rank) {
+    public static  String buildRankJsonString(List<Object[]> rank,String columnName) {
         JSONArray resultArray = new JSONArray();
         if (rank != null && rank.size() > 0) {
             for (Object[] r : rank) {
@@ -250,7 +251,7 @@ public class JsonStringBuilder {
                     JSONObject result = new JSONObject();
                     result.put("target",name);
                     result.put("datapoints",dataPointsArray);
-                    result.put("columnName","");
+                    result.put("columnName",columnName);
                     resultArray.put(result);
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -318,7 +319,7 @@ public class JsonStringBuilder {
                     dataArray.put(data);
                 }
             }
-            result.put("tagValue",tagValue);
+            result.put("columnName",tagValue);
             result.put("items",dataArray);
         } catch (JSONException e) {
             e.printStackTrace();

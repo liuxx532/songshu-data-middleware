@@ -30,6 +30,6 @@ public class ManufacturerRankService {
             manufacturerRank = manufacturerRankRepository.getManufacturerRankWithSinglePlatform(beginTime,endTime,platformName,topCount);
         }
 
-        return JsonStringBuilder.buildHistogramPanelJsonString(manufacturerRank,"机型人数",true);
+        return JsonStringBuilder.buildHistogramPanelJsonString(manufacturerRank,"机型分布",true);
     }
 }
