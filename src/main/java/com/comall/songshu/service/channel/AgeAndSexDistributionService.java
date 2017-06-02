@@ -90,8 +90,7 @@ public class AgeAndSexDistributionService {
                 e.printStackTrace();
             }
         }
-        //TODO 临时用饼状图数据结构提交 后续需要修改
-        return JsonStringBuilder.buildPieJsonString(sexGroupList);
+        return JsonStringBuilder.buildPieJsonString(sexGroupList,"性别分布");
     }
 
     public String getAgeDistribution(String target, String platformName, Timestamp beginTime, Timestamp endTime){
@@ -128,7 +127,7 @@ public class AgeAndSexDistributionService {
             }
         }
 
-        return JsonStringBuilder.buildPieJsonString(ageGroupList);
+        return JsonStringBuilder.buildPieJsonString(ageGroupList,"年龄分布");
     }
 
 

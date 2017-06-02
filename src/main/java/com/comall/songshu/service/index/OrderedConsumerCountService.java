@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -28,7 +30,7 @@ public class OrderedConsumerCountService {
     public String getOrderedConsumerCount(String platformName, Timestamp startTime, Timestamp endTime) {
 
         int platform = TransferUtil.getPlatform(platformName);
-
+        List<Object[]> list = new LinkedList<>();
         Double order;
         Double notOrder;
 
@@ -44,8 +46,9 @@ public class OrderedConsumerCountService {
 
         order = Optional.ofNullable(order).orElse(0.0);
         notOrder = Optional.ofNullable(notOrder).orElse(0.0);
+        list.add(new Object[]{"首单",order});
+        list.add(new Object[]{"非首单",notOrder});
 
-
-        return JsonStringBuilder.buildOrderedConsumerCountJsonString(order, notOrder);
+        return JsonStringBuilder.buildPieJsonString(list, "是否首次消费占比");
     }
 }

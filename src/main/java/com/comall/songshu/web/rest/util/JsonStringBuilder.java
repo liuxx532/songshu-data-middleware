@@ -260,86 +260,36 @@ public class JsonStringBuilder {
         return resultArray.toString();
     }
 
+
+
     /**
-     * 首单，非首单占比
-     * @param order
-     * @param notOrder
+     * 构建饼状图
+     * @param list
+     * @param columnName
      * @return
-     * [{"dataPoints":[[1.11,1493780788540]],"target":"首单","columnName":""},{"dataPoints":[[2.22,1493780788550]],"target":"非首单","columnName":""}]
      */
-    public static String buildOrderedConsumerCountJsonString(Double order, Double notOrder) {
-        JSONArray resultArray = new JSONArray();
+    public static  String buildPieJsonString(List<Object[]> list,String columnName){
+        JSONObject result = new JSONObject();
+        List<JSONObject> dataPoints = new LinkedList<>();
         try {
+            if(Optional.ofNullable(list)
+                .filter(l -> l.size() >0)
+                .isPresent()){
 
-            JSONArray firstDataPointArray = new JSONArray();
-            firstDataPointArray.put(order);
-            firstDataPointArray.put(System.currentTimeMillis());
-            JSONArray firstDataPointsArray = new JSONArray();
-            firstDataPointsArray.put(firstDataPointArray);
-
-            JSONObject firstResult = new JSONObject();
-            firstResult.put("target","首单");
-            firstResult.put("datapoints",firstDataPointsArray);
-            firstResult.put("columnName","");
-            resultArray.put(firstResult);
-
-
-            JSONArray notFirstDataPointArray = new JSONArray();
-            notFirstDataPointArray.put(notOrder);
-            notFirstDataPointArray.put(System.currentTimeMillis());
-            JSONArray notFirstDataPointsArray = new JSONArray();
-            notFirstDataPointsArray.put(notFirstDataPointArray);
-
-            JSONObject notFirstResult = new JSONObject();
-            notFirstResult.put("target","非首单");
-            notFirstResult.put("datapoints",notFirstDataPointsArray);
-            notFirstResult.put("columnName","");
-            resultArray.put(notFirstResult);
-            return resultArray.toString();
+                for (Object[] o : list ){
+                    JSONObject columnObj = new JSONObject();
+                    columnObj.put("label",o[0]);
+                    columnObj.put("value",o[1]);
+                    dataPoints.add(columnObj);
+                }
+            }
+            result.put("datapoints",dataPoints);
+            result.put("columnName",columnName);
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return "[]";
-    }
 
-
-    //
-
-    /**
-     * 各渠道注册用户占比
-     * @param list
-     * @return
-     * [{"dataPoints":[[1,1493783848008]],"target":"安卓","columnName":""},{"dataPoints":[[2,1493783848010]],"target":"IOS","columnName":""},{"dataPoints":[[3,1493783848010]],"target":"微信","columnName":""}]
-     */
-    public static  String buildPieJsonString(List<Object[]> list){
-        JSONArray resultArray = new JSONArray();
-        if(Optional.ofNullable(list)
-            .filter(l -> l.size() >0)
-            .isPresent()){
-
-            for (Object[] o : list ){
-
-                String targetName = o[0].toString();
-
-                if(targetName != null){
-                    try {
-                        JSONArray dataPointArray = new JSONArray();
-                        dataPointArray.put(o[1]);
-                        dataPointArray.put(System.currentTimeMillis());
-                        JSONArray dataPointsArray = new JSONArray();
-                        dataPointsArray.put(dataPointArray);
-                        JSONObject result = new JSONObject();
-                        result.put("target",targetName);
-                        result.put("datapoints",dataPointsArray);
-                        result.put("columnName","");
-                        resultArray.put(result);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }
-        return  resultArray.toString();
+        return  result.toString();
     }
 
     /**

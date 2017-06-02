@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,7 +38,7 @@ public class NewRegisterCountService {
 
     public String getNewRegisterCount(Timestamp startTime, Timestamp endTime) {
 
-        List<Object[]> list = new ArrayList();
+        List<Object[]> list = new LinkedList<>();
 
         Integer androidResult = Optional.ofNullable(getNewRegisterCountWithSinglePlatform(TransferUtil.CHANNEL_ANDROID,startTime,endTime)).orElse(0);
         Integer iosResult = Optional.ofNullable(getNewRegisterCountWithSinglePlatform(TransferUtil.CHANNEL_IOS,startTime,endTime)).orElse(0);
@@ -50,7 +51,7 @@ public class NewRegisterCountService {
         list.add(new Object[]{TransferUtil.getPlatFormName(TransferUtil.CHANNEL_WAP),wapResult});
         list.add(new Object[]{TransferUtil.getPlatFormName(TransferUtil.CHANNEL_OTHERS),othersResult});
 
-        return JsonStringBuilder.buildPieJsonString(list);
+        return JsonStringBuilder.buildPieJsonString(list,"注册用户占比");
     }
 
 }
