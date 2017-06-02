@@ -84,17 +84,17 @@ public class FakeDataService {
                 return "[{\"datapoints\":[[{\"firstValue\":0.2836803264855245,\"flag\":1,\"ringsRation\":0.8616480412380056},1496305072239]],\"target\":\"ChannelGrossMarginRate\",\"columnName\":\"\"}]";
             //指定渠道的6大指标数据
             case "ChannelOrderCount#channel":
-                return "[{\"datapoints\":[[{\"firstValue\":61,\"flag\":1,\"ringsRation\":0.35555555555555557},1496305005005]],\"target\":\"ChannelOrderCount\",\"columnName\":\"\"}]";
+                return "[{\"datapoints\":[[{\"firstValue\":61,\"flag\":-1,\"ringsRation\":0.35555555555555557},1496305005005]],\"target\":\"ChannelOrderCount\",\"columnName\":\"\"}]";
             case "ChannelRevenue#channel":
-                return "[{\"datapoints\":[[{\"firstValue\":5548.42,\"flag\":1,\"ringsRation\":0.34287408483088283},1496304968547]],\"target\":\"ChannelRevenue\",\"columnName\":\"\"}]";
+                return "[{\"datapoints\":[[{\"firstValue\":5548.42,\"flag\":-1,\"ringsRation\":0.34287408483088283},1496304968547]],\"target\":\"ChannelRevenue\",\"columnName\":\"\"}]";
             case "ChannelAvgOrderRevenue#channel":
-                return "[{\"datapoints\":[[{\"firstValue\":92.87982968369829,\"flag\":-1,\"ringsRation\":0.026613907100691465},1496305022347]],\"target\":\"ChannelAvgOrderRevenue\",\"columnName\":\"\"}]";
+                return "[{\"datapoints\":[[{\"firstValue\":92.87982968369829,\"flag\":1,\"ringsRation\":0.026613907100691465},1496305022347]],\"target\":\"ChannelAvgOrderRevenue\",\"columnName\":\"\"}]";
             case "ChannelUniqueVisitors#channel":
-                return "[{\"datapoints\":[[{\"firstValue\":512226,\"flag\":1,\"ringsRation\":16.633171537746566},1496305197274]],\"target\":\"ChannelUniqueVisitors\",\"columnName\":\"\"}]";
+                return "[{\"datapoints\":[[{\"firstValue\":512226,\"flag\":-1,\"ringsRation\":16.633171537746566},1496305197274]],\"target\":\"ChannelUniqueVisitors\",\"columnName\":\"\"}]";
             case "ChannelConsumerCount#channel":
-                return "[{\"datapoints\":[[{\"firstValue\":45,\"flag\":1,\"ringsRation\":0.45161290322580644},1496305085522]],\"target\":\"ChannelConsumerCount\",\"columnName\":\"\"}]";
+                return "[{\"datapoints\":[[{\"firstValue\":45,\"flag\":-1,\"ringsRation\":0.45161290322580644},1496305085522]],\"target\":\"ChannelConsumerCount\",\"columnName\":\"\"}]";
             case "ChannelGrossMarginRate#channel":
-                return "[{\"datapoints\":[[{\"firstValue\":0.2836803264855245,\"flag\":1,\"ringsRation\":0.8616480412380056},1496305072239]],\"target\":\"ChannelGrossMarginRate\",\"columnName\":\"\"}]";
+                return "[{\"datapoints\":[[{\"firstValue\":0.2836803264855245,\"flag\":-1,\"ringsRation\":0.8616480412380056},1496305072239]],\"target\":\"ChannelGrossMarginRate\",\"columnName\":\"\"}]";
 
 
             case "AgeDistribution":
