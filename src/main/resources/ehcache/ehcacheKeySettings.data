@@ -1,0 +1,43 @@
+[
+    {
+            "key":"common",
+            "ehCacheKeySetting":{
+                "eternal":false,
+                "timeToIdleSeconds":0,
+                "timeToLiveSeconds":604800
+            }
+    },
+    {
+            "key":"index",
+            "ehCacheKeySetting":{
+                "eternal":false,
+                "timeToIdleSeconds":0,
+                "timeToLiveSeconds":604800
+            }
+    },
+    {
+            "key":"product",
+            "ehCacheKeySetting":{
+                "eternal":false,
+                "timeToIdleSeconds":0,
+                "timeToLiveSeconds":604800
+            }
+    },
+    {
+            "key":"member",
+            "ehCacheKeySetting":{
+                "eternal":false,
+                "timeToIdleSeconds":0,
+                "timeToLiveSeconds":604800
+            }
+    },
+    {
+            "key":"channel",
+            "ehCacheKeySetting":{
+                "eternal":false,
+                "timeToIdleSeconds":0,
+                "timeToLiveSeconds":604800
+            }
+    }
+
+]

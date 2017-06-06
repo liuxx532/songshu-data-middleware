@@ -1,7 +1,9 @@
 package com.comall.songshu.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
+import com.comall.songshu.cache.util.EhCacheKey;
 import com.comall.songshu.constants.TrendConstants;
+import com.comall.songshu.service.RequestCacheService;
 import com.comall.songshu.service.index.*;
 import com.comall.songshu.web.rest.util.AssembleUtil;
 import com.comall.songshu.web.rest.util.ServiceUtil;
@@ -55,6 +57,9 @@ public class IndexResource {
     @Autowired
     private CategoryRevenueRankingService categoryRevenueRankingService;
 
+    @Autowired
+    private RequestCacheService requestCacheService;
+
     private final Logger log = LoggerFactory.getLogger(AuthorResource.class);
 
 
@@ -74,6 +79,12 @@ public class IndexResource {
         return TargetsMap.getTargets().keySet();
     }
 
+    @PostMapping("/removeCache")
+    @Timed
+    public boolean removeCache() {
+        return requestCacheService.removeAllRequestCache(EhCacheKey.INDEX_CACHE);
+    }
+
     @PostMapping("/query")
     @Timed
     public String query(HttpServletRequest request,
@@ -81,6 +92,12 @@ public class IndexResource {
                         @RequestBody String requestBody) throws Exception{
 
         log.debug("[RequestBody] {}", requestBody);
+
+
+        String result = requestCacheService.getRequestCache(request,requestBody);
+        if(result != null){
+            return result;
+        }
 
         DateTimeFormatter dateTimeFormat = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
 
@@ -137,43 +154,47 @@ public class IndexResource {
                 switch (target) {
                     // 单个指标
                     case "Revenue":
-                        return revenueService.getRevenue(target,platform,beginTime,endTime,chainBeginTime,chainEndTime);
+                        result =   revenueService.getRevenue(target,platform,beginTime,endTime,chainBeginTime,chainEndTime);break;
                     case "OrderCount":
-                        return orderCountService.getOrderCount(target,platform,beginTime,endTime,chainBeginTime,chainEndTime);
+                        result =   orderCountService.getOrderCount(target,platform,beginTime,endTime,chainBeginTime,chainEndTime);break;
                     case "AvgOrderRevenue":
-                        return avgOrderRevenueService.getAvgOrderRevenue(target,platform,beginTime,endTime,chainBeginTime,chainEndTime);
+                        result =   avgOrderRevenueService.getAvgOrderRevenue(target,platform,beginTime,endTime,chainBeginTime,chainEndTime);break;
                     case "UniqueVisitors":
-                        return uniqueVisitorsService.getUniqueVisitors(target,platform,beginTime,endTime,chainBeginTime,chainEndTime);
+                        result =   uniqueVisitorsService.getUniqueVisitors(target,platform,beginTime,endTime,chainBeginTime,chainEndTime);break;
                     case "Refund":
-                        return refundService.getRefund(target,platform,beginTime,endTime,chainBeginTime,chainEndTime);
+                        result =   refundService.getRefund(target,platform,beginTime,endTime,chainBeginTime,chainEndTime);break;
                     case "GrossMarginRate":
-                        return grossMarginRateService.getGrossMarginRate(target,platform,beginTime,endTime,chainBeginTime,chainEndTime);
+                        result =   grossMarginRateService.getGrossMarginRate(target,platform,beginTime,endTime,chainBeginTime,chainEndTime);break;
 
                     // 趋势
                     case "RevenueTrend" :
-                        return revenueService.getRevenueTrend(target,platform,beginTime,endTime,chainBeginTime,chainEndTime,TrendConstants.aggCount);
+                        result =   revenueService.getRevenueTrend(target,platform,beginTime,endTime,chainBeginTime,chainEndTime,TrendConstants.aggCount);break;
                     case "OrderCountTrend" :
-                        return orderCountService.getOrderCountTrend(platform, beginTime, endTime, chainBeginTime, chainEndTime,TrendConstants.aggCount);
+                        result =   orderCountService.getOrderCountTrend(platform, beginTime, endTime, chainBeginTime, chainEndTime,TrendConstants.aggCount);break;
                     case "AvgOrderRevenueTrend" :
-                        return avgOrderRevenueService.getAvgOrderRevenueTrend(platform, beginTime, endTime, chainBeginTime, chainEndTime,TrendConstants.aggCount);
+                        result =   avgOrderRevenueService.getAvgOrderRevenueTrend(platform, beginTime, endTime, chainBeginTime, chainEndTime,TrendConstants.aggCount);break;
                     case "UniqueVisitorsTrend" :
-                        return uniqueVisitorsService.getUniqueVisitorsTrend(platform, beginTime, endTime, chainBeginTime, chainEndTime,TrendConstants.aggCount);
+                        result =   uniqueVisitorsService.getUniqueVisitorsTrend(platform, beginTime, endTime, chainBeginTime, chainEndTime,TrendConstants.aggCount);break;
                     case "RefundTrend" :
-                        return refundService.getRefundTrend(platform, beginTime, endTime, chainBeginTime, chainEndTime,TrendConstants.aggCount);
+                        result =   refundService.getRefundTrend(platform, beginTime, endTime, chainBeginTime, chainEndTime,TrendConstants.aggCount);break;
                     case "GrossMarginRateTrend" :
-                        return grossMarginRateService.getGrossMarginRateTrend(platform, beginTime, endTime, chainBeginTime, chainEndTime,TrendConstants.aggCount);
+                        result =   grossMarginRateService.getGrossMarginRateTrend(platform, beginTime, endTime, chainBeginTime, chainEndTime,TrendConstants.aggCount);break;
                     // 饼图
                     case "NewRegisterRate":
-                        return newRegisterCountService.getNewRegisterCount(beginTime,endTime);
+                        result =   newRegisterCountService.getNewRegisterCount(beginTime,endTime);break;
                     case "FirstOrderedRate":
-                        return  orderedConsumerCountService.getOrderedConsumerCount(platform, beginTime, endTime);
+                        result =    orderedConsumerCountService.getOrderedConsumerCount(platform, beginTime, endTime);break;
                     // 品类销售排行榜
                     case "CategoryRevenueRanking":
-                        return categoryRevenueRankingService.getCategoryRevenueRanking(platform, beginTime, endTime);
+                        result =   categoryRevenueRankingService.getCategoryRevenueRanking(platform, beginTime, endTime);break;
 
                     default:
                         throw new IllegalArgumentException("target=" + target);
                 }
+            }
+            if(result != null){
+                requestCacheService.putRequestCache(request,requestBody,result);
+                return result;
             }
         }
         return null;

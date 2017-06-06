@@ -1,6 +1,8 @@
 package com.comall.songshu.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
+import com.comall.songshu.cache.util.EhCacheKey;
+import com.comall.songshu.service.RequestCacheService;
 import com.comall.songshu.service.channel.*;
 import com.comall.songshu.web.rest.util.AssembleUtil;
 import com.comall.songshu.web.rest.util.TargetsMap;
@@ -53,6 +55,8 @@ public class ChannelResource {
     private ChannelConsumerCountService channelConsumerCountService;
     @Autowired
     private ChannelPageInfoService channelPageInfoService;
+    @Autowired
+    private RequestCacheService requestCacheService;
 
     @GetMapping("")
     @Timed
@@ -66,6 +70,12 @@ public class ChannelResource {
         return TargetsMap.channelTargets().keySet();
     }
 
+    @PostMapping("/removeCache")
+    @Timed
+    public boolean removeCache() {
+        return requestCacheService.removeAllRequestCache(EhCacheKey.CHANNEL_CACHE);
+    }
+
     @PostMapping("/query")
     @Timed
     public String query(HttpServletRequest request,
@@ -73,6 +83,11 @@ public class ChannelResource {
                         @RequestBody String requestBody) throws Exception{
         log.debug("[RequestBody] {}", requestBody);
 
+
+        String result = requestCacheService.getRequestCache(request,requestBody);
+        if(result != null){
+            return result;
+        }
 
         if(Optional.ofNullable(requestBody).isPresent()){
 
@@ -136,34 +151,39 @@ public class ChannelResource {
 
                 switch (target) {
                     case "VisitTimeDistribution":
-                        return visitTimeDistributionService.getVisitTimeDistribution(target,platform,beginTime,endTime);
+                        result =   visitTimeDistributionService.getVisitTimeDistribution(target,platform,beginTime,endTime);break;
                     case "VisitDeepDistribution":
-                        return visitDeepDistributionService.getVisitDeepDistribution(target,platform,beginTime,endTime);
+                        result =   visitDeepDistributionService.getVisitDeepDistribution(target,platform,beginTime,endTime);break;
                     case "ManufacturerRank":
-                        return manufacturerRankService.getManufacturerRank(target,platform,beginTime,endTime,10);
+                        result =   manufacturerRankService.getManufacturerRank(target,platform,beginTime,endTime,10);break;
                     case "RegionRank":
-                        return regionRankService.getRegionRank(target,platform,beginTime,endTime,10);
+                        result =   regionRankService.getRegionRank(target,platform,beginTime,endTime,10);break;
                     case "AgeDistribution":
-                        return ageAndSexDistributionService.getAgeDistribution(target,platform,beginTime,endTime);
+                        result =   ageAndSexDistributionService.getAgeDistribution(target,platform,beginTime,endTime);break;
                     case "SexDistribution":
-                        return ageAndSexDistributionService.getSexDistribution(target,platform,beginTime,endTime);
+                        result =   ageAndSexDistributionService.getSexDistribution(target,platform,beginTime,endTime);break;
                     case "ChannelRevenue":
-                        return channelRevenueService.getChannelRevenue(target,platform,channelName,beginTime,endTime,chainBeginTime,chainEndTime);
+                        result =   channelRevenueService.getChannelRevenue(target,platform,channelName,beginTime,endTime,chainBeginTime,chainEndTime);break;
                     case "ChannelOrderCount":
-                        return channelOrderCountService.getChannelOrderCount(target,platform,channelName,beginTime,endTime,chainBeginTime,chainEndTime);
+                        result =   channelOrderCountService.getChannelOrderCount(target,platform,channelName,beginTime,endTime,chainBeginTime,chainEndTime);break;
                     case "ChannelAvgOrderRevenue":
-                        return channelAvgOrderRevenueService.getChannelAvgOrderRevenue(target,platform,channelName,beginTime,endTime,chainBeginTime,chainEndTime);
+                        result =   channelAvgOrderRevenueService.getChannelAvgOrderRevenue(target,platform,channelName,beginTime,endTime,chainBeginTime,chainEndTime);break;
                     case "ChannelUniqueVisitors":
-                        return channelUniqueVisitorsService.getChannelUniqueVisitors(target,platform,channelName,beginTime,endTime,chainBeginTime,chainEndTime);
+                        result =   channelUniqueVisitorsService.getChannelUniqueVisitors(target,platform,channelName,beginTime,endTime,chainBeginTime,chainEndTime);break;
                     case "ChannelGrossMarginRate":
-                        return channelGrossMarginRateService.getChannelGrossMarginRate(target,platform,channelName,beginTime,endTime,chainBeginTime,chainEndTime);
+                        result =   channelGrossMarginRateService.getChannelGrossMarginRate(target,platform,channelName,beginTime,endTime,chainBeginTime,chainEndTime);break;
                     case "ChannelConsumerCount":
-                        return channelConsumerCountService.getChannelConsumerRevenue(target,platform,channelName,beginTime,endTime,chainBeginTime,chainEndTime);
+                        result =   channelConsumerCountService.getChannelConsumerRevenue(target,platform,channelName,beginTime,endTime,chainBeginTime,chainEndTime);break;
                     case "ChannelPageInfo":
-                        return channelPageInfoService.getChannelPageInfo(target,platform,beginTime,endTime);
+                        result =   channelPageInfoService.getChannelPageInfo(target,platform,beginTime,endTime);break;
                     default:
                         throw new IllegalArgumentException("target=" + target);
                 }
+            }
+
+            if(result != null){
+                requestCacheService.putRequestCache(request,requestBody,result);
+                return result;
             }
         }
         return null;

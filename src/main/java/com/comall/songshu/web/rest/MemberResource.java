@@ -1,13 +1,14 @@
 package com.comall.songshu.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
+import com.comall.songshu.cache.util.EhCacheKey;
 import com.comall.songshu.constants.TrendConstants;
+import com.comall.songshu.service.RequestCacheService;
 import com.comall.songshu.service.member.ChannelRegisterMemberService;
 import com.comall.songshu.service.member.MemberDetailService;
 import com.comall.songshu.service.member.MemberFunnelService;
 import com.comall.songshu.service.member.MemberShareService;
 import com.comall.songshu.web.rest.util.AssembleUtil;
-import com.comall.songshu.web.rest.util.ServiceUtil;
 import com.comall.songshu.web.rest.util.TargetsMap;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -45,6 +46,9 @@ public class MemberResource {
     @Autowired
     private MemberFunnelService memberFunnelService;
 
+    @Autowired
+    private RequestCacheService requestCacheService;
+
     @GetMapping("")
     @Timed
     public Map<String,String> getTargets() {
@@ -57,6 +61,12 @@ public class MemberResource {
         return TargetsMap.memberTargets().keySet();
     }
 
+    @PostMapping("/removeCache")
+    @Timed
+    public boolean removeCache() {
+        return requestCacheService.removeAllRequestCache(EhCacheKey.MEMBER_CACHE);
+    }
+
     @PostMapping("/query")
     @Timed
     public String query(HttpServletRequest request,
@@ -65,6 +75,11 @@ public class MemberResource {
 
         log.debug("[RequestBody] {}", requestBody);
 
+
+        String result = requestCacheService.getRequestCache(request,requestBody);
+        if(result != null){
+            return result;
+        }
 
         if(Optional.ofNullable(requestBody).isPresent()){
 
@@ -113,30 +128,33 @@ public class MemberResource {
                 .orElse(null);
 
 
+
             if (beginTime != null && endTime!= null
                 && target != null && platform != null){
-
                 switch (target) {
                     // 单个指标
-                   case "MemberShareDetail":
-                       return memberShareService.getMemberShareDetailByName(target,platform,beginTime,endTime);
+                    case "MemberShareDetail":
+                        result =  memberShareService.getMemberShareDetailByName(target,platform,beginTime,endTime);break;
                     case "ChannelRegisterMember":
-                       return channelRegisterMemberService.getChannelMemberRegisterCount(target,platform,beginTime,endTime,10);
+                        result =  channelRegisterMemberService.getChannelMemberRegisterCount(target,platform,beginTime,endTime,10);break;
                     case "MemberDetail":
-                        return memberDetailService.getMemberDetail(target,platform,beginTime,endTime);
-
+                        result =  memberDetailService.getMemberDetail(target,platform,beginTime,endTime);break;
                     // 趋势
                     case "MemberShareTrend" :
-                        return memberShareService.getMemberShareTrendByName(target,platform,beginTime,endTime, TrendConstants.aggCount);
-
+                        result =  memberShareService.getMemberShareTrendByName(target,platform,beginTime,endTime, TrendConstants.aggCount);break;
                     //漏斗
                     case "MemberFunnel" :
-                        return memberFunnelService.getMemberFunnel(target,platform,beginTime,endTime);
+                        result =  memberFunnelService.getMemberFunnel(target,platform,beginTime,endTime);break;
                     default:
                         throw new IllegalArgumentException("target=" + target);
                 }
             }
+
+            if(result != null){
+                requestCacheService.putRequestCache(request,requestBody,result);
+                return result;
+            }
         }
-        return null;
+        return result;
     }
 }

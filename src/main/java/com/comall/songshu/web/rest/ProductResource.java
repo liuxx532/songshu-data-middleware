@@ -1,6 +1,8 @@
 package com.comall.songshu.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
+import com.comall.songshu.cache.util.EhCacheKey;
+import com.comall.songshu.service.RequestCacheService;
 import com.comall.songshu.service.product.ProductCategoryRankService;
 import com.comall.songshu.service.product.ProductLinkedSalesService;
 import com.comall.songshu.service.product.ProductRadarService;
@@ -44,7 +46,8 @@ public class ProductResource {
     @Autowired
     private ProductCategoryRankService productCategoryRankService;
 
-
+    @Autowired
+    private RequestCacheService requestCacheService;
 
     private final Logger log = LoggerFactory.getLogger(AuthorResource.class);
 
@@ -60,6 +63,12 @@ public class ProductResource {
         return TargetsMap.productTargets().keySet();
     }
 
+    @PostMapping("/removeCache")
+    @Timed
+    public boolean removeCache() {
+        return requestCacheService.removeAllRequestCache(EhCacheKey.PRODUCT_CACHE);
+    }
+
     @PostMapping("/query")
     @Timed
     public String query(HttpServletRequest request,
@@ -67,6 +76,12 @@ public class ProductResource {
                         @RequestBody String requestBody) throws Exception{
 
         log.debug("[RequestBody] {}", requestBody);
+
+
+        String result = requestCacheService.getRequestCache(request,requestBody);
+        if(result != null){
+            return result;
+        }
 
         DateTimeFormatter dateTimeFormat = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
 
@@ -122,16 +137,20 @@ public class ProductResource {
 
                 switch (target) {
                     case "ProductRevenue":
-                        return productRevenueService.getProductRevenue(target,platform,beginTime,endTime,20);
+                        result =   productRevenueService.getProductRevenue(target,platform,beginTime,endTime,20);break;
                     case "ProductLinkedSales":
-                        return productLinkedSalesService.getProductLinkedSales(target,platform,beginTime,endTime,3);
+                        result =   productLinkedSalesService.getProductLinkedSales(target,platform,beginTime,endTime,3);break;
                    case "ProductRadar":
-                        return productRadarService.getProductRadar(platform,beginTime,endTime);
+                        result =   productRadarService.getProductRadar(platform,beginTime,endTime);break;
                     case "ProductCategoryRank":
-                        return productCategoryRankService.getProductCategoryRank(target,platform,beginTime,endTime);
+                        result =   productCategoryRankService.getProductCategoryRank(target,platform,beginTime,endTime);break;
                     default:
                         throw new IllegalArgumentException("target=" + target);
                 }
+            }
+            if(result != null){
+                requestCacheService.putRequestCache(request,requestBody,result);
+                return result;
             }
         }
         return null;
